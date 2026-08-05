@@ -13,28 +13,9 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('last_name');
-            $table->string('first_name');
-            $table->string('middle_name')->nullable();
-            $table->date('birthdate');
-            $table->enum('gender', ['MALE', 'FEMALE']);
-            $table->string('religion');
-            $table->string('nationality');
-            $table->string('address');
-            $table->string('contact_number');
-            $table->enum('education_level', ['BASIC_ED', 'COLLEGE']);
-            $table->unsignedInteger('year_level');
-            $table->foreignId('course_id')->nullable()->constrained('courses')->onDelete('set null');
-            $table->string('section');
-            $table->string('mother_name');
-            $table->string('father_name');
-            $table->string('guardian_name');
-            $table->string('guardian_contact_number');
-            $table->string('emergency_contact_name');
-            $table->string('emergency_contact_number');
-            $table->boolean('covid_19_vaccination')->default(false);
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('username')->unique();
+            // $table->string('email')->unique();
+            // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();

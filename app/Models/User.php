@@ -10,30 +10,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\LaravelPermission\Traits\HasRoles;
+use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable([
-    'last_name',
-    'first_name',
-    'middle_name',
-    'birthdate',
-    'gender',
-    'religion',
-    'nationality',
-    'address',
-    'contact_number',
-    'education_level',
-    'year_level',
-    'course',
-    'section',
-    'mother_name',
-    'father_name',
-    'guardian_name',
-    'guardian_contact_number',
-    'emergency_contact_name',
-    'emergency_contact_number',
-    'covid_19_vaccination',
-    'email',
+    'username',
     'password'
 ])]
 #[Hidden(['password', 'remember_token'])]
@@ -53,6 +33,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function studentInfo()
+    {
+        return $this->hasOne(StudentInfo::class, 'user_id');
     }
 
     public function userMedicalHistory()
