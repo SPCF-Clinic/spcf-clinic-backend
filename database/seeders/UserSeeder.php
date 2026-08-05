@@ -50,7 +50,7 @@ class UserSeeder extends Seeder
     private function generateStudentInfo() {
         $prefixes = ['0123', '0124', '0125', '0126'];
         $prefix = fake()->randomElement($prefixes);
-        $lastStudentId = StudentInfo::whereNotNull('student_id')->latest()->value('student_id');
+        $lastStudentId = StudentInfo::orderByDesc('student_id')->value('student_id');
         if ($lastStudentId) {
             $lastStudentId = substr($lastStudentId, 4);
         }
@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
             $course = Course::whereHas('department', function ($query) use ($department) {
                 $query->where('name', $department);
             })->inRandomOrder()->value('id');
-            $section = Department::where('name', $department)->value('code') . string($yearlevel*2) . fake()->randomElement(['A', 'B', 'C', 'D']);
+            $section = Department::where('name', $department)->value('code') . (string)($yearLevel * 2) . fake()->randomElement(['A', 'B', 'C', 'D']);
         }
 
         return [
