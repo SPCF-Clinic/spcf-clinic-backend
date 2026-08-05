@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\LaravelPermission\Traits\HasRoles;
 
 #[Fillable([
     'last_name',
@@ -23,7 +24,6 @@ use Laravel\Sanctum\HasApiTokens;
     'contact_number',
     'education_level',
     'year_level',
-    'department',
     'course',
     'section',
     'mother_name',
@@ -40,7 +40,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles;
 
     /**
      * Get the attributes that should be cast.

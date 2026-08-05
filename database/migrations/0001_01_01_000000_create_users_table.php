@@ -24,27 +24,7 @@ return new class extends Migration
             $table->string('contact_number');
             $table->enum('education_level', ['BASIC_ED', 'COLLEGE']);
             $table->unsignedInteger('year_level');
-            $table->enum('department', ['CCIS', 'COE', 'CON', 'COC', 'COB', 'CHTM', 'CASSED'])->nullable();
-            $table->enum('course', [
-                'BSIT',
-                'BSCS',
-                'BSEMC',
-                'BSIS',
-                'BSCE',
-                'BSECE',
-                'BSN',
-                'BSC',
-                'BSA',
-                'BSBA',
-                'BSCA',
-                'BSREM',
-                'BST',
-                'BSHM',
-                'BEE',
-                'BSE',
-                'BAC',
-                'BSS',
-            ])->nullable();
+            $table->foreignId('course_id')->nullable()->constrained('courses')->onDelete('set null');
             $table->string('section');
             $table->string('mother_name');
             $table->string('father_name');
