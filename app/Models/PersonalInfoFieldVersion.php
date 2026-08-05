@@ -10,7 +10,7 @@ class PersonalInfoFieldVersion extends Model
         'personal_info_field_id',
         'version_number',
         'field_name',
-        'field_type',
+        'form_field_type_id',
         'is_required',
     ];
 
@@ -21,6 +21,11 @@ class PersonalInfoFieldVersion extends Model
 
     public function options()
     {
-        return $this->hasMany(PersonalInfoFieldOption::class, 'personal_info_field_version_id');
+        return $this->hasMany(PersonalInfoFieldOption::class, 'field_version_id');
+    }
+
+    public function formFieldType()
+    {
+        return $this->belongsTo(FormFieldType::class, 'form_field_type_id');
     }
 }

@@ -1,0 +1,61 @@
+<?php
+
+namespace App\Repositories\PersonalInfoField;
+
+use App\Repositories\BaseRepository;
+use App\Models\{
+    FormFieldType,
+    PersonalInfoField,
+    PersonalInfoFieldVersion,
+    PersonalInfoFieldOption,
+};
+use Illuminate\Support\Facades\DB;
+
+class StorePersonalInfoField extends BaseRepository
+{
+    public function execute($request){
+        DB::beginTransaction();
+
+        try {
+            $validated = $request->validated();
+
+            $formFieldType = FormFieldType::where('name', $validated['type'])->first();
+
+            if (!$formFieldType) {
+                throw new \InvalidArgumentException('Invalid form field type.');
+            }
+
+            $baseField = PersonalInfoField::create();
+
+            $fieldVersion = $baseField->versions()->create([
+                'version_number' => 1,
+                'field_name' => $validated['name'],
+                'form_field_type_id' => $formFieldType->id,
+                'is_required' => $validated['is_required'] ?? false,
+            ]);
+
+            try {
+                if ($formFieldType->has_options && !empty($validated['options'])) {
+                    foreach ($validated['options'] as $option) {
+                        PersonalInfoFieldOption::create([
+                            'field_version_id' => $fieldVersion->id,
+                            'option_value' => $option,
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return $this->error('Failed to create personal info field options.', 500, $e->getMessage());
+            }            
+
+            DB::commit();
+
+            $baseField->load('latestVersion.options');
+
+            return $this->success('Personal info field created successfully.', $baseField, 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('Failed to create personal info field.', 500, $e->getMessage());
+        }
+    }
+}

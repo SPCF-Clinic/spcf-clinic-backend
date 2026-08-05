@@ -10,7 +10,7 @@ class MedicalHistoryFieldVersion extends Model
         'medical_history_field_id',
         'version_number',
         'field_name',
-        'field_type',
+        'form_field_type_id',
         'is_required',
     ];
 
@@ -22,5 +22,10 @@ class MedicalHistoryFieldVersion extends Model
     public function options()
     {
         return $this->hasMany(MedicalHistoryFieldOption::class, 'field_version_id');
+    }
+
+    public function formFieldType()
+    {
+        return $this->belongsTo(FormFieldType::class, 'form_field_type_id');
     }
 }
