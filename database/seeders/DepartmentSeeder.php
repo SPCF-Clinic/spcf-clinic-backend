@@ -18,7 +18,7 @@ class DepartmentSeeder extends Seeder
         $departments = [
             [
                 'code' => 'CCIS',
-                'name' => 'College of Computing and Information Technology',
+                'name' => 'College of Computing and Information Sciences',
                 'courses' => [
                     ['code' => 'BSIT', 'name' => 'Bachelor of Science in Information Technology'],
                     ['code' => 'BSCS', 'name' => 'Bachelor of Science in Computer Science'],

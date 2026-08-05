@@ -6,7 +6,9 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\{
     User,
-    StudentInfo
+    StudentInfo,
+    Department,
+    Course,
 };
 use Illuminate\Support\Facades\Hash;
 
