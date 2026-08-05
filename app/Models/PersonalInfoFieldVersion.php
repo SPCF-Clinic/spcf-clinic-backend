@@ -14,6 +14,11 @@ class PersonalInfoFieldVersion extends Model
         'is_required',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function personalInfoField()
     {
         return $this->belongsTo(PersonalInfoField::class, 'personal_info_field_id');

@@ -11,6 +11,11 @@ class PersonalInfoFieldOption extends Model
         'option_value',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function personalInfoFieldVersion()
     {
         return $this->belongsTo(PersonalInfoFieldVersion::class, 'field_version_id');

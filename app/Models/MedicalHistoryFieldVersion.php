@@ -14,6 +14,11 @@ class MedicalHistoryFieldVersion extends Model
         'is_required',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function medicalHistoryField()
     {
         return $this->belongsTo(MedicalHistoryField::class, 'medical_history_field_id');

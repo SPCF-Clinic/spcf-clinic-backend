@@ -11,6 +11,11 @@ class MedicalHistoryFieldOption extends Model
         'option_value',
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function medicalHistoryFieldVersion()
     {
         return $this->belongsTo(MedicalHistoryFieldVersion::class, 'field_version_id');

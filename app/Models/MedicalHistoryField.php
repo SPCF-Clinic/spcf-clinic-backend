@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class MedicalHistoryField extends Model
 {
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+    
     public function versions()
     {
         return $this->hasMany(MedicalHistoryFieldVersion::class, 'medical_history_field_id');

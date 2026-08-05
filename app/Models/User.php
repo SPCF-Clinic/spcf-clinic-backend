@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
     'username',
     'password'
 ])]
-#[Hidden(['password', 'remember_token'])]
+#[Hidden(['password', 'remember_token', 'created_at', 'updated_at'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

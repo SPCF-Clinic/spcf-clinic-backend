@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class PersonalInfoField extends Model
 {
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+    
     public function latestVersion()
     {
         return $this->hasOne(PersonalInfoFieldVersion::class, 'personal_info_field_id')
