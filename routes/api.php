@@ -17,5 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('personal-info-fields')->group(function () {
         Route::post('/', [PersonalInfoFieldController::class, 'store']);
+        Route::put('/{field}', [PersonalInfoFieldController::class, 'update']);
     });
 });
