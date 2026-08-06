@@ -14,13 +14,13 @@ class FormFieldTypesSeeder extends Seeder
     public function run(): void
     {
         $formFieldTypes = [
-            ['name' => 'divider', 'is_answerable' => false, 'has_options' => false, 'can_select_multiple' => false],
-            ['name' => 'short_text', 'is_answerable' => true, 'has_options' => false, 'can_select_multiple' => false],
-            ['name' => 'long_text', 'is_answerable' => true, 'has_options' => false, 'can_select_multiple' => false],
-            ['name' => 'checkbox', 'is_answerable' => true, 'has_options' => true, 'can_select_multiple' => true],
-            ['name' => 'dropdown', 'is_answerable' => true, 'has_options' => true, 'can_select_multiple' => false],
-            ['name' => 'date', 'is_answerable' => true, 'has_options' => false, 'can_select_multiple' => false],
-            ['name' => 'radio', 'is_answerable' => true, 'has_options' => true, 'can_select_multiple' => false],
+            ['name' => 'Divider', 'is_answerable' => false, 'has_options' => false, 'can_select_multiple' => false],
+            ['name' => 'Short Text', 'is_answerable' => true, 'has_options' => false, 'can_select_multiple' => false],
+            ['name' => 'Long Text', 'is_answerable' => true, 'has_options' => false, 'can_select_multiple' => false],
+            ['name' => 'Checkbox', 'is_answerable' => true, 'has_options' => true, 'can_select_multiple' => true],
+            ['name' => 'Dropdown', 'is_answerable' => true, 'has_options' => true, 'can_select_multiple' => false],
+            ['name' => 'Date', 'is_answerable' => true, 'has_options' => false, 'can_select_multiple' => false],
+            ['name' => 'Radio', 'is_answerable' => true, 'has_options' => true, 'can_select_multiple' => false],
         ];
 
         foreach ($formFieldTypes as $type) {

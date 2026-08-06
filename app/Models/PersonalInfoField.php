@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PersonalInfoField extends Model
 {
     use SoftDeletes;
-    
+
     protected $hidden = [
         'created_at',
         'updated_at',
@@ -32,7 +32,7 @@ class PersonalInfoField extends Model
             PersonalInfoFieldOption::class,
             PersonalInfoFieldVersion::class,
             'personal_info_field_id',
-            'personal_info_field_version_id',
+            'field_version_id',
             'id',
             'id'
         );
