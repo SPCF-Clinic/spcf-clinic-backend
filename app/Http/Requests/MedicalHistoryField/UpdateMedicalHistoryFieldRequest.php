@@ -6,6 +6,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\FormFieldType;
 use Illuminate\Validation\Rule;
+use App\Models\MedicalHistoryField;
 
 class UpdateMedicalHistoryFieldRequest extends FormRequest
 {
@@ -46,10 +47,18 @@ class UpdateMedicalHistoryFieldRequest extends FormRequest
                 if ($this->is_required && $value) {
                     $fail('The required_with_field_id field must be null when is_required is true.');
                 }
+                $requiredWithField = MedicalHistoryField::find($value);
+                if ($requiredWithField && $requiredWithField->latestVersion->required_with_field_id) {
+                    $fail('The selected required_with_field_id field is an additional field and cannot be required by another field.');
+                }
             }],
             'required_with_field_value' => ['sometimes', 'nullable', 'string', 'max:255', function ($attribute, $value, $fail) {
                 if ($this->is_required && $value) {
                     $fail('The required_with_field_value field must be null when is_required is true.');
+                }
+                $requiredWithField = MedicalHistoryField::find($this->required_with_field_id);
+                if ($requiredWithField && $requiredWithField->latestVersion->required_with_field_id) {
+                    $fail('The selected required_with_field_id field is an additional field and cannot have a required_with_field_value.');
                 }
             }],
         ];

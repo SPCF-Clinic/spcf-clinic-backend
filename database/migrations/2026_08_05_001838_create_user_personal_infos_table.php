@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_personal_infos', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('personal_info_field_id')->constrained('personal_info_fields')->onDelete('cascade');
+            $table->foreignId('personal_info_field_id')->nullable()->constrained('personal_info_fields')->onDelete('set null');
             $table->string('value');
             $table->timestamps();
         });
