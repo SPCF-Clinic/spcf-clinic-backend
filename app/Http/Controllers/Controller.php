@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Traits\ResponseApi;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
-abstract class Controller
+abstract class Controller extends BaseController
 {
-    use ResponseApi;
+    use ResponseApi, AuthorizesRequests;
 }

@@ -11,7 +11,7 @@ use App\Models\{
 };
 use Illuminate\Support\Facades\DB;
 
-class UpdatePersonalInfoField extends BaseRepository
+class UpdatePersonalInfoFieldRepository extends BaseRepository
 {
     public function execute($request, $field)
     {

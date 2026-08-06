@@ -10,8 +10,9 @@ use App\Http\Requests\PersonalInfoField\{
 };
 
 use App\Repositories\PersonalInfoField\{
-    StorePersonalInfoField,
-    UpdatePersonalInfoField,
+    StorePersonalInfoFieldRepository,
+    UpdatePersonalInfoFieldRepository,
+    IndexPersonalInfoFieldRepository
 };
 
 use App\Models\PersonalInfoField;
@@ -21,22 +22,29 @@ class PersonalInfoFieldController extends Controller
     protected $index, $store, $show, $update, $delete;
 
     public function __construct(
-        StorePersonalInfoField $store,
-        UpdatePersonalInfoField $update
+        IndexPersonalInfoFieldRepository $index,
+        StorePersonalInfoFieldRepository $store,
+        UpdatePersonalInfoFieldRepository $update
     ) {
+        $this->authorizeResource(PersonalInfoField::class, 'field');
+
+        $this->index = $index;
         $this->store = $store;
         $this->update = $update;
     }
 
+    public function index()
+    {
+        return $this->index->execute();
+    }
+
     public function store(StorePersonalInfoFieldRequest $request)
     {
-        // $this->authorize('create', PersonalInfoField::class);
         return $this->store->execute($request);
     }
 
     public function update(UpdatePersonalInfoFieldRequest $request, PersonalInfoField $field)
     {
-        // $this->authorize('update', $field);
         return $this->update->execute($request, $field);
     }
 }

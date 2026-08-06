@@ -11,7 +11,7 @@ use App\Models\{
 };
 use Illuminate\Support\Facades\DB;
 
-class StorePersonalInfoField extends BaseRepository
+class StorePersonalInfoFieldRepository extends BaseRepository
 {
     public function execute($request){
         DB::beginTransaction();
