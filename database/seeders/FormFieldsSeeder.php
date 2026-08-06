@@ -28,6 +28,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 1,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Last Name',
@@ -36,6 +38,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 2,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Middle Name',
@@ -44,6 +48,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 3,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Date of Birth',
@@ -52,6 +58,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 4,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Gender',
@@ -63,6 +71,8 @@ class FormFieldsSeeder extends Seeder
                 ],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 5,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Religion',
@@ -71,6 +81,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 6,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Nationality',
@@ -79,6 +91,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 7,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Address',
@@ -87,6 +101,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 8,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Contact Number',
@@ -95,6 +111,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 9,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'EDUCATION LEVEL',
@@ -103,6 +121,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 10,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Education Level',
@@ -114,6 +134,8 @@ class FormFieldsSeeder extends Seeder
                 ],
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
+                'form_order' => 11,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Grade Level',
@@ -122,6 +144,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [0,1,2,3,4,5,6,7,8,9,10,11,12],
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'BASIC_ED',
+                'form_order' => 12,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Year Level',
@@ -130,6 +154,8 @@ class FormFieldsSeeder extends Seeder
                 'options' => [13,14,15,16],
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
+                'form_order' => 13,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Department',
@@ -138,6 +164,8 @@ class FormFieldsSeeder extends Seeder
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
                 'options' => ['CCIS', 'COE', 'CON', 'COC', 'COB', 'CHTM', 'CASSED'],
+                'form_order' => 14,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Course',
@@ -163,7 +191,9 @@ class FormFieldsSeeder extends Seeder
                     'BSE',
                     'BAC',
                     'BSSW',
-                ]
+                ],
+                'form_order' => 15,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Section',
@@ -171,7 +201,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 16,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'PARENT INFORMATION',
@@ -179,7 +211,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 17,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Mother\'s Name',
@@ -187,7 +221,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 18,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Father\'s Name',
@@ -195,7 +231,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 19,
+                'description_text' => null,
             ],
             [
                 'field_name' =>  'GUARDIAN INFORMATION',
@@ -203,7 +241,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 20,
+                'description_text' => null,
             ],
             [
                 'field_name' => 'Guardian\'s Name',
@@ -211,7 +251,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 21,
+                'description_text' => '(If parents are not around)',
             ],
             [
                 'field_name' => 'Contact No. of Guardian',
@@ -219,7 +261,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 22,
+                'description_text' => null
             ],
             [
                 'field_name' => 'EMERGENCY CONTACT',
@@ -227,7 +271,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 23,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Contact Name',
@@ -235,7 +281,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 24,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Contact No.',
@@ -243,7 +291,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 25,
+                'description_text' => null
             ]
         ];
 
@@ -254,7 +304,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 1,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Any present illnesses?',
@@ -262,7 +314,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 2,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Any Physical injuries/serious illness within the last 5 years?',
@@ -270,7 +324,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 3,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Have you been hospitalized within the last 5 years?',
@@ -278,7 +334,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 4,
+                'description_text' => null
             ],
             [
                 'field_name' => 'LIFESTYLE',
@@ -286,7 +344,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 5,
+                'description_text' => '(For Adult Students Only)'
             ],
             [
                 'field_name' => 'Cigarette smoking?',
@@ -294,7 +354,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 6,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Alcohol beverage use?',
@@ -302,7 +364,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 7,
+                'description_text' => null
             ],
             [
                 'field_name' => 'VACCINATION RECORDS',
@@ -310,7 +374,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 8,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Vaccinated for COVID-19?',
@@ -318,7 +384,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 9,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Vaccine Name',
@@ -326,39 +394,49 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
-                'options' => []
+                'options' => [],
+                'form_order' => 10,
+                'description_text' => null
             ],
             [
                 'field_name' => '1st Dose',
-                'form_field_type_id' => 6,
+                'form_field_type_id' => 2,
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
-                'options' => []
+                'options' => [],
+                'form_order' => 11,
+                'description_text' => 'If you are uncertain about the exact date, please just indicate the year it was administered.'
             ],
             [
                 'field_name' => '2nd Dose',
-                'form_field_type_id' => 6,
+                'form_field_type_id' => 2,
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
-                'options' => []
+                'options' => [],
+                'form_order' => 12,
+                'description_text' => null
             ],
             [
                 'field_name' => '1st Booster',
-                'form_field_type_id' => 6,
+                'form_field_type_id' => 2,
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
-                'options' => []
+                'options' => [],
+                'form_order' => 13,
+                'description_text' => null
             ],
             [
                 'field_name' => '2nd Booster',
-                'form_field_type_id' => 6,
+                'form_field_type_id' => 2,
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
-                'options' => []
+                'options' => [],
+                'form_order' => 14,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Other Vaccines',
@@ -371,7 +449,9 @@ class FormFieldsSeeder extends Seeder
                     'Tetanus Diptheria',
                     'Human Papiloma Virus',
                     'Measles Rubella',
-                ]
+                ],
+                'form_order' => 15,
+                'description_text' => null
             ],
             [
                 'field_name' => 'ILLNESSES',
@@ -379,7 +459,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 16,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Illnesses',
@@ -395,7 +477,9 @@ class FormFieldsSeeder extends Seeder
                     'Heart Disorder',
                     'Tuberculosis or Seizure',
                     'Other'
-                ]
+                ],
+                'form_order' => 17,
+                'description_text' => 'Please check if you have any of the following illnesses.'
             ],
             [
                 'field_name' => 'SPECIAL CARE NEEDS',
@@ -403,7 +487,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => []
+                'options' => [],
+                'form_order' => 18,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Has any special medication:',
@@ -411,7 +497,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 19,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Requires Special care/precaution concerning health:',
@@ -419,7 +507,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 20,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Is allergic to any drug/food preparation:',
@@ -427,7 +517,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 21,
+                'description_text' => null
             ],
             [
                 'field_name' => 'Have limitations or restrictions on certain activities:',
@@ -435,7 +527,9 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => true,
                 'required_with_field_id' => null,
                 'required_with_field_value' => null,
-                'options' => ['YES', 'NO']
+                'options' => ['YES', 'NO'],
+                'form_order' => 22,
+                'description_text' => null
             ]
         ];
 
@@ -452,6 +546,8 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => $fieldData['is_required'],
                 'required_with_field_id' => $fieldData['required_with_field_id'],
                 'required_with_field_value' => $fieldData['required_with_field_value'],
+                'form_order' => $fieldData['form_order'],
+                'description_text' => $fieldData['description_text'],
             ]);
 
             foreach ($fieldData['options'] as $optionValue) {
@@ -475,6 +571,8 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => $fieldData['is_required'],
                 'required_with_field_id' => $fieldData['required_with_field_id'],
                 'required_with_field_value' => $fieldData['required_with_field_value'],
+                'form_order' => $fieldData['form_order'],
+                'description_text' => $fieldData['description_text'],
             ]);
 
             foreach ($fieldData['options'] as $optionValue) {

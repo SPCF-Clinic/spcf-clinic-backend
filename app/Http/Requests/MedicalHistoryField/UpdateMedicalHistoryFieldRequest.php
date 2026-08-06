@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\FormFieldType;
 use Illuminate\Validation\Rule;
 use App\Models\MedicalHistoryField;
+use App\Models\MedicalHistoryFieldVersion;
 
 class UpdateMedicalHistoryFieldRequest extends FormRequest
 {
@@ -61,6 +62,7 @@ class UpdateMedicalHistoryFieldRequest extends FormRequest
                     $fail('The selected required_with_field_id field is an additional field and cannot have a required_with_field_value.');
                 }
             }],
+            'description_text' => 'sometimes|nullable|string',
         ];
     }
 }

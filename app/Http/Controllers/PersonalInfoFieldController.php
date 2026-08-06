@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PersonalInfoField\{
     StorePersonalInfoFieldRequest,
     UpdatePersonalInfoFieldRequest,
+    SwitchFormOrderRequest,
 };
 
 use App\Repositories\PersonalInfoField\{
@@ -14,19 +15,21 @@ use App\Repositories\PersonalInfoField\{
     UpdatePersonalInfoFieldRepository,
     IndexPersonalInfoFieldRepository,
     DeletePersonalInfoFieldRepository,
+    SwitchFormOrderRepository,
 };
 
 use App\Models\PersonalInfoField;
 
 class PersonalInfoFieldController extends Controller
 {
-    protected $index, $store, $update, $delete;
+    protected $index, $store, $update, $delete, $switch;
 
     public function __construct(
         IndexPersonalInfoFieldRepository $index,
         StorePersonalInfoFieldRepository $store,
         UpdatePersonalInfoFieldRepository $update,
-        DeletePersonalInfoFieldRepository $delete
+        DeletePersonalInfoFieldRepository $delete,
+        SwitchFormOrderRepository $switch
     ) {
         // $this->authorizeResource(PersonalInfoField::class, 'field');
 
@@ -34,6 +37,7 @@ class PersonalInfoFieldController extends Controller
         $this->store = $store;
         $this->update = $update;
         $this->delete = $delete;
+        $this->switch = $switch;
     }
 
     public function index()
@@ -58,5 +62,11 @@ class PersonalInfoFieldController extends Controller
     {
         $this->authorize('delete', $field);
         return $this->delete->execute($field);
+    }
+
+    public function switchFormOrder(SwitchFormOrderRequest $request)
+    {
+        $this->authorize('switchFormOrder', PersonalInfoField::class);
+        return $this->switch->execute($request);
     }
 }

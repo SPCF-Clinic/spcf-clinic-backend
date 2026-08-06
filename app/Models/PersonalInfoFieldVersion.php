@@ -14,6 +14,8 @@ class PersonalInfoFieldVersion extends Model
         'is_required',
         'required_with_field_id',
         'required_with_field_value',
+        'form_order',
+        'description_text',
     ];
 
     protected $hidden = [

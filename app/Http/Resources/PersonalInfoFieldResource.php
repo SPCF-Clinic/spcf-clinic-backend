@@ -59,6 +59,8 @@ class PersonalInfoFieldResource extends JsonResource
             'id' => $this->id,
             'name' => $latestVersion?->field_name ?? $this->name,
             'type' => $type,
+            'form_order' => $latestVersion?->form_order,
+            'description_text' => $latestVersion?->description_text,
             'options' => $options ?? [],
             'is_required' => (bool) ($latestVersion?->is_required ?? false),
             'required_with_field' => $requiredWithField,

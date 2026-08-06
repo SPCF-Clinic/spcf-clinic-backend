@@ -35,6 +35,8 @@ class StorePersonalInfoFieldRepository extends BaseRepository
                 'is_required' => $validated['is_required'] ?? false,
                 'required_with_field_id' => $validated['required_with_field_id'] ?? null,
                 'required_with_field_value' => $validated['required_with_field_value'] ?? null,
+                'form_order' => $validated['form_order'],
+                'description_text' => $validated['description_text'] ?? null,
             ]);
 
             try {
