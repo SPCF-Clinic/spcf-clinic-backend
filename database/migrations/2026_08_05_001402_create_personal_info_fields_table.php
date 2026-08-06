@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('personal_info_fields', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

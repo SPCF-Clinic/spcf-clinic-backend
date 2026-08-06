@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PersonalInfoFieldVersion extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'personal_info_field_id',
         'version_number',
@@ -22,7 +19,6 @@ class PersonalInfoFieldVersion extends Model
     protected $hidden = [
         'created_at',
         'updated_at',
-        'deleted_at',
     ];
 
     public function personalInfoField()

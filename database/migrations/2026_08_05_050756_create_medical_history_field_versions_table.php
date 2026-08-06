@@ -21,7 +21,6 @@ return new class extends Migration
             $table->foreignId('required_with_field_id')->nullable()->constrained('medical_history_fields')->onDelete('cascade');
             $table->string('required_with_field_value')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

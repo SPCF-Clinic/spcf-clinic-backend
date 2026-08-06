@@ -3,16 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MedicalHistoryField extends Model
 {
-    use SoftDeletes;
-    
     protected $hidden = [
         'created_at',
         'updated_at',
-        'deleted_at',
     ];
     
     public function versions()
@@ -40,5 +36,10 @@ class MedicalHistoryField extends Model
     public function requiredByFields()
     {
         return $this->hasMany(MedicalHistoryFieldVersion::class, 'required_with_field_id');
+    }
+
+    public function userMedicalHistories()
+    {
+        return $this->hasMany(UserMedicalHistory::class, 'medical_history_field_id');
     }
 }

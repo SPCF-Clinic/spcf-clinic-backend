@@ -3,16 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PersonalInfoField extends Model
 {
-    use SoftDeletes;
-
     protected $hidden = [
         'created_at',
         'updated_at',
-        'deleted_at',
     ];
     
     public function latestVersion()
@@ -41,5 +37,10 @@ class PersonalInfoField extends Model
     public function requiredByFields()
     {
         return $this->hasMany(PersonalInfoFieldVersion::class, 'required_with_field_id');
+    }
+
+    public function userPersonalInfos()
+    {
+        return $this->hasMany(UserPersonalInfo::class, 'personal_info_field_id');
     }
 }
