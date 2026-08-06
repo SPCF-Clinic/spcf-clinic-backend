@@ -10,6 +10,7 @@ use App\Models\{
     FormFieldType,
 };
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\PersonalInfoFieldResource;
 
 class UpdatePersonalInfoFieldRepository extends BaseRepository
 {
@@ -63,7 +64,7 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
 
             $baseField->load('latestVersion.options');
 
-            return $this->success('Personal info field updated successfully.', $baseField, 200);
+            return $this->success('Personal info field updated successfully.', new PersonalInfoFieldResource($baseField), 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error('Failed to update personal info field.', 500, $e->getMessage());

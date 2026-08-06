@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     UserController,
     PersonalInfoFieldController,
+    MedicalHistoryFieldController,
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -17,4 +18,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::delete('personal-info-fields/{field}', [PersonalInfoFieldController::class, 'destroy']);
     Route::apiResource('personal-info-fields', PersonalInfoFieldController::class)->except(['destroy']);
+
+    Route::apiResource('medical-history-fields', MedicalHistoryFieldController::class);
 });
