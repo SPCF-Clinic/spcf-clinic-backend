@@ -28,6 +28,7 @@ class PersonalInfoFieldResource extends JsonResource
         })->values()->all();
 
         return [
+            'id' => $this->id,
             'name' => $latestVersion?->field_name ?? $this->name,
             'type' => $type,
             'options' => $options ?? [],

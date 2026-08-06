@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Repositories\PersonalInfoField;
+namespace App\Repositories\MedicalHistoryField;
 
 use App\Repositories\BaseRepository;
 use App\Models\{
-    PersonalInfoFieldVersion,
-    PersonalInfoFieldOption,
-    PersonalInfoField,
+    MedicalHistoryField,
+    MedicalHistoryFieldOption,
     FormFieldType,
 };
 use Illuminate\Support\Facades\DB;
-use App\Http\Resources\PersonalInfoFieldResource;
+use App\Http\Resources\MedicalHistoryFieldResource;
 
-class UpdatePersonalInfoFieldRepository extends BaseRepository
+class UpdateMedicalHistoryFieldRepository extends BaseRepository
 {
-    public function execute($request, $field)
-    {
+    public function execute($request, $field){
         DB::beginTransaction();
 
         try {
@@ -31,7 +29,7 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
                 throw new \InvalidArgumentException('Invalid form field type.');
             }
 
-            $baseField = PersonalInfoField::findOrFail($field->id);
+            $baseField = MedicalHistoryField::findOrFail($field->id);
             $latestVersion = $baseField->latestVersion;
 
             $newVersionNumber = $latestVersion->version_number + 1;
@@ -44,29 +42,27 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
             ]);
 
             try {
-                if ($formFieldType->has_options) {
-                    if (!empty($validated['options'])) {
-                        foreach ($validated['options'] as $option) {
-                            PersonalInfoFieldOption::create([
-                                'field_version_id' => $newVersion->id,
-                                'option_value' => $option,
-                            ]);
-                        }
+                if ($formFieldType->has_options && !empty($validated['options'])) {
+                    foreach ($validated['options'] as $option) {
+                        MedicalHistoryFieldOption::create([
+                            'field_version_id' => $newVersion->id,
+                            'option_value' => $option,
+                        ]);
                     }
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
-                return $this->error('Failed to create personal info field options.', 500, $e->getMessage());
+                return $this->error('Failed to create medical history field options.', 500, $e->getMessage());
             }
 
             DB::commit();
 
             $baseField->load('latestVersion.options');
 
-            return $this->success('Personal info field updated successfully.', new PersonalInfoFieldResource($baseField), 200);
+            return $this->success('Medical history field updated successfully.', new MedicalHistoryFieldResource($baseField), 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->error('Failed to update personal info field.', 500, $e->getMessage());
+            return $this->error('Failed to update medical history field.', 500, $e->getMessage());
         }
     }
 }
