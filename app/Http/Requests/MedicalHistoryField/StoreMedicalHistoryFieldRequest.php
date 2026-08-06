@@ -42,6 +42,16 @@ class StoreMedicalHistoryFieldRequest extends FormRequest
             }],
             'options.*' => 'required_with:options|string|max:255',
             'is_required' => 'required|boolean',
+            'required_with_field_id' => ['nullable', 'integer', 'exists:medical_history_fields,id', function ($attribute, $value, $fail) {
+                if ($this->is_required && $value) {
+                    $fail('The required_with_field_id field must be null when is_required is true.');
+                }
+            }],
+            'required_with_field_value' => ['nullable', 'string', 'max:255', function ($attribute, $value, $fail) {
+                if ($this->is_required && $value) {
+                    $fail('The required_with_field_value field must be null when is_required is true.');
+                }
+            }],
         ];
     }
 }

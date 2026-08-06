@@ -37,4 +37,9 @@ class PersonalInfoField extends Model
             'id'
         );
     }
+
+    public function requiredByFields()
+    {
+        return $this->hasMany(PersonalInfoFieldVersion::class, 'required_with_field_id');
+    }
 }

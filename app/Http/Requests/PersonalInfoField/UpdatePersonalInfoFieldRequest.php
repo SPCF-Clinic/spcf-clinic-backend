@@ -42,6 +42,16 @@ class UpdatePersonalInfoFieldRequest extends FormRequest
             }],
             'options.*' => 'required_with:options|string|max:255',
             'is_required' => 'sometimes|boolean',
+            'required_with_field_id' => ['sometimes', 'nullable', 'integer', 'exists:personal_info_fields,id', function ($attribute, $value, $fail) {
+                if ($this->is_required && $value) {
+                    $fail('The required_with_field_id field must be null when is_required is true.');
+                }
+            }],
+            'required_with_field_value' => ['sometimes', 'nullable', 'string', 'max:255', function ($attribute, $value, $fail) {
+                if ($this->is_required && $value) {
+                    $fail('The required_with_field_value field must be null when is_required is true.');
+                }
+            }],
         ];
     }
 }

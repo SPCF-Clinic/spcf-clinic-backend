@@ -36,4 +36,9 @@ class MedicalHistoryField extends Model
             'id'
         );
     }
+
+    public function requiredByFields()
+    {
+        return $this->hasMany(MedicalHistoryFieldVersion::class, 'required_with_field_id');
+    }
 }

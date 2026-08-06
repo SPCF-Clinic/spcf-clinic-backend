@@ -27,12 +27,19 @@ class PersonalInfoFieldResource extends JsonResource
             return $option->option_value;
         })->values()->all();
 
+        $requiredWithField = $latestVersion?->requiredWithField ? [
+            'id' => $latestVersion->requiredWithField->id,
+            'name' => $latestVersion->requiredWithField->latestVersion?->field_name ?? $latestVersion->requiredWithField->name,
+            'required_with_field_value' => $latestVersion->required_with_field_value,
+        ] : null;
+
         return [
             'id' => $this->id,
             'name' => $latestVersion?->field_name ?? $this->name,
             'type' => $type,
             'options' => $options ?? [],
             'is_required' => (bool) ($latestVersion?->is_required ?? false),
+            'required_with_field' => $requiredWithField,
         ];
     }
 }

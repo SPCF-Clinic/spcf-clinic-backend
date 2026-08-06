@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('field_version_id')->constrained('personal_info_field_versions')->onDelete('cascade');
             $table->string('option_value');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

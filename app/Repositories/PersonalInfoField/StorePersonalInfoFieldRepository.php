@@ -33,6 +33,8 @@ class StorePersonalInfoFieldRepository extends BaseRepository
                 'field_name' => $validated['name'],
                 'form_field_type_id' => $formFieldType->id,
                 'is_required' => $validated['is_required'] ?? false,
+                'required_with_field_id' => $validated['required_with_field_id'] ?? null,
+                'required_with_field_value' => $validated['required_with_field_value'] ?? null,
             ]);
 
             try {

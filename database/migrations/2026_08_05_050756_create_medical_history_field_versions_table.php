@@ -18,7 +18,10 @@ return new class extends Migration
             $table->string('field_name');
             $table->foreignId('form_field_type_id')->constrained('form_field_types')->onDelete('cascade');
             $table->boolean('is_required')->default(false);
+            $table->foreignId('required_with_field_id')->nullable()->constrained('medical_history_fields')->onDelete('cascade');
+            $table->string('required_with_field_value')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

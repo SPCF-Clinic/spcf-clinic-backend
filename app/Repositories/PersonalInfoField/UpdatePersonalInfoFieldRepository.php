@@ -41,6 +41,8 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
                 'field_name' => $validated['name'] ?? $latestVersion->field_name,
                 'form_field_type_id' => $formFieldType->id,
                 'is_required' => $validated['is_required'] ?? $latestVersion->is_required,
+                'required_with_field_id' => $validated['required_with_field_id'] ?? $latestVersion->required_with_field_id,
+                'required_with_field_value' => $validated['required_with_field_value'] ?? $latestVersion->required_with_field_value
             ]);
 
             try {

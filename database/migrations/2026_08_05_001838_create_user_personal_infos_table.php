@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('personal_info_field_id')->constrained('personal_info_fields')->onDelete('cascade');
             $table->string('value');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
