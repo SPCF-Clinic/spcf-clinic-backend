@@ -13,7 +13,14 @@ class IndexMedicalHistoryFieldRepository extends BaseRepository
             ->whereHas('latestVersion', function ($query) {
                 $query->where('required_with_field_id', '=', null);
             })
-            ->get();
+            ->get()
+            ->sortBy(function ($field) {
+                $order = $field->latestVersion?->form_order ?? PHP_INT_MAX;
+
+                return str_pad((string) $order, 10, '0', STR_PAD_LEFT)
+                    . '-' . str_pad((string) $field->id, 10, '0', STR_PAD_LEFT);
+            })
+            ->values();
 
         return $this->success(
             'Medical history fields retrieved successfully.',

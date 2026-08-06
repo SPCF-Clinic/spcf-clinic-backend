@@ -15,7 +15,7 @@ use App\Repositories\MedicalHistoryField\{
 use App\Http\Requests\MedicalHistoryField\{
     StoreMedicalHistoryFieldRequest,
     UpdateMedicalHistoryFieldRequest,
-    SwitchFormOrderRepositoryRequest,
+    SwitchFormOrderRequest,
 };
 
 use App\Models\MedicalHistoryField;
@@ -62,7 +62,7 @@ class MedicalHistoryFieldController extends Controller
         return $this->delete->execute($field);
     }
 
-    public function switchFormOrder(SwitchFormOrderRepositoryRequest $request)
+    public function switchFormOrder(SwitchFormOrderRequest $request)
     {
         $this->authorize('switchFormOrder', MedicalHistoryField::class);
         return $this->switch->execute($request);

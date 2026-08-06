@@ -23,8 +23,8 @@ class SwitchFormOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'field_ids' => 'required|array|min:2|max:2',
-            'field_ids.*' => 'exists:medical_history_fields,id'
+            'field_id' => 'required|integer|exists:medical_history_fields,id',
+            'target_form_order' => 'required|integer|min:1',
         ];
     }
 }
