@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class PersonalInfoField extends Model
 {
+    protected $fillable = [
+        'is_default',
+    ];
+    
     protected $hidden = [
         'created_at',
         'updated_at',

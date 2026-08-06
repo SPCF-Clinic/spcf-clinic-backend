@@ -8,6 +8,10 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
 {
     public function execute($field)
     {
+        if ($field->is_default) {
+            return $this->error('Default personal info fields cannot be deleted.', 400);
+        }
+        
         try {
             $field->delete();
             return $this->success('Personal info field deleted successfully.', null, 200);

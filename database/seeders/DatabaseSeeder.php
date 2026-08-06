@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             UserSeeder::class,
             FormFieldTypesSeeder::class,
+            FormFieldsSeeder::class,
         ]);
     }
 }

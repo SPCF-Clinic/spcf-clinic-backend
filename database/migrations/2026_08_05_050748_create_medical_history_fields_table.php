@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('medical_history_fields', function (Blueprint $table) {
             $table->id();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }

@@ -7,6 +7,10 @@ use App\Repositories\BaseRepository;
 class DeleteMedicalHistoryFieldRepository extends BaseRepository
 {
     public function execute($field){
+        if ($field->is_default) {
+            return $this->error('Default medical history fields cannot be deleted.', 400);
+        }
+        
         try {
             $field->delete();
             return $this->success('Medical history field deleted successfully.', null, 200);

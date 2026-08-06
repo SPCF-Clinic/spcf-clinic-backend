@@ -14,6 +14,10 @@ use App\Http\Resources\MedicalHistoryFieldResource;
 class UpdateMedicalHistoryFieldRepository extends BaseRepository
 {
     public function execute($request, $field){
+        if ($field->is_default) {
+            return $this->error('Default medical history fields cannot be updated.', 400);
+        }
+        
         DB::beginTransaction();
 
         try {

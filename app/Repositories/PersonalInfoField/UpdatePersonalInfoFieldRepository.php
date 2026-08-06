@@ -16,6 +16,10 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
 {
     public function execute($request, $field)
     {
+        if ($field->is_default) {
+            return $this->error('Default personal info fields cannot be updated.', 400);
+        }
+        
         DB::beginTransaction();
 
         try {
