@@ -35,6 +35,8 @@ return new class extends Migration
             $table->string('emergency_contact_name');
             $table->string('emergency_contact_number');
             $table->boolean('covid_19_vaccination')->default(false);
+            $table->date('covid_19_vaccination_date')->nullable();
+            $table->string('covid_19_vaccine_name')->nullable();
             $table->timestamps();
         });
     }

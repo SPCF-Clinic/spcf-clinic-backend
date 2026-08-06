@@ -64,6 +64,8 @@ class RegisterRequest extends FormRequest
             'student_info.emergency_contact_name' => 'required|string|max:255',
             'student_info.emergency_contact_number' => 'required|string|max:255',
             'student_info.covid_19_vaccination' => 'required|boolean',
+            'student_info.covid_19_vaccination_date' => 'nullable|date|required_if:student_info.covid_19_vaccination,true',
+            'student_info.covid_19_vaccine_name' => 'nullable|string|max:255|required_if:student_info.covid_19_vaccination,true',
         ];
     }
 }

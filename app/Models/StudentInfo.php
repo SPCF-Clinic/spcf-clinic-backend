@@ -29,6 +29,8 @@ class StudentInfo extends Model
         'emergency_contact_name',
         'emergency_contact_number',
         'covid_19_vaccination',
+        'covid_19_vaccination_date',
+        'covid_19_vaccine_name',
     ];
 
     protected $hidden = [

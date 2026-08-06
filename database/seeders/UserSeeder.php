@@ -72,6 +72,10 @@ class UserSeeder extends Seeder
             $section = Department::where('name', $department)->value('code') . (string)($yearLevel * 2) . fake()->randomElement(['A', 'B', 'C', 'D']);
         }
 
+        $covidVaccinated = fake()->boolean();
+        $covidVaccinationDate = $covidVaccinated ? fake()->date() : null;
+        $covidVaccineName = $covidVaccinated ? 'Pfizer' : null;
+
         return [
             'student_id' => $prefix . $newStudentId,
             'last_name' => $lastName,
@@ -93,7 +97,9 @@ class UserSeeder extends Seeder
             'guardian_contact_number' => fake()->phoneNumber(),
             'emergency_contact_name' => fake()->name(),
             'emergency_contact_number' => fake()->phoneNumber(),
-            'covid_19_vaccination' => fake()->boolean(),
+            'covid_19_vaccination' => $covidVaccinated,
+            'covid_19_vaccination_date' => $covidVaccinationDate,
+            'covid_19_vaccine_name' => $covidVaccineName,
         ];
     }
 }
