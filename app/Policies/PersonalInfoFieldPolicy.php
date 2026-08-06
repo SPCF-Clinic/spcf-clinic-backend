@@ -61,6 +61,6 @@ class PersonalInfoFieldPolicy
      */
     public function forceDelete(User $user, PersonalInfoField $personalInfoField): bool
     {
-        return false;
+        return $user->hasRole(['SUPER_ADMIN']);
     }
 }

@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //     Route::post('/', [PersonalInfoFieldController::class, 'store']);
     //     Route::put('/{field}', [PersonalInfoFieldController::class, 'update']);
     // });
-    Route::apiResource('personal-info-fields', PersonalInfoFieldController::class);
+    Route::delete('personal-info-fields/{field}', [PersonalInfoFieldController::class, 'destroy']);
+    Route::apiResource('personal-info-fields', PersonalInfoFieldController::class)->except(['destroy']);
 });

@@ -25,7 +25,7 @@ class StorePersonalInfoFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:personal_info_field_versions,field_name',
+            'name' => 'required|string|max:255',
             'type' => ['required', 'string', 'max:255', Rule::exists(FormFieldType::class, 'name')],
             'options' => ['nullable', 'array', function ($attribute, $value, $fail) {
                 $type = FormFieldType::where('name', $this->type)->first();
