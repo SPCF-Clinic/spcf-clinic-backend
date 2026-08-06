@@ -3,86 +3,38 @@
 namespace App\Repositories\MedicalHistoryField;
 
 use App\Http\Resources\MedicalHistoryFieldResource;
-use App\Models\{
-    MedicalHistoryField,
-    MedicalHistoryFieldVersion,
-};
-use App\Repositories\BaseRepository;
-use Illuminate\Support\Facades\DB;
+use App\Models\MedicalHistoryField;
+use App\Repositories\Support\AbstractReorderFormRepository;
 
-class ReorderFormRepository extends BaseRepository
+class ReorderFormRepository extends AbstractReorderFormRepository
 {
-    public function execute($request)
+    protected function modelClass(): string
     {
-        $validated = $request->validated();
-        $fieldId = (int) $validated['field_id'];
-        $targetFormOrder = (int) $validated['target_form_order'];
+        return MedicalHistoryField::class;
+    }
 
-        return DB::transaction(function () use ($fieldId, $targetFormOrder) {
-            $selectedField = MedicalHistoryField::with('latestVersion')
-                ->find($fieldId);
+    protected function resourceClass(): string
+    {
+        return MedicalHistoryFieldResource::class;
+    }
 
-            if (! $selectedField) {
-                return $this->error('The selected medical history field could not be found.', 404);
-            }
+    protected function requiredWithColumn(): string
+    {
+        return 'required_with_field_id';
+    }
 
-            if ($selectedField->is_default) {
-                return $this->error('Default medical history fields cannot be reordered.', 400);
-            }
+    protected function notFoundMessage(): string
+    {
+        return 'The selected medical history field could not be found.';
+    }
 
-            $orderedFields = MedicalHistoryField::with('latestVersion')
-                ->whereHas('latestVersion', function ($query) {
-                    $query->whereNull('required_with_field_id');
-                })
-                ->where('is_default', false)
-                ->get()
-                ->sortBy(function ($field) {
-                    $order = $field->latestVersion?->form_order ?? PHP_INT_MAX;
+    protected function defaultLockedMessage(): string
+    {
+        return 'Default medical history fields cannot be reordered.';
+    }
 
-                    return str_pad((string) $order, 10, '0', STR_PAD_LEFT)
-                        . '-' . str_pad((string) $field->id, 10, '0', STR_PAD_LEFT);
-                })
-                ->values();
-
-            $currentIndex = $orderedFields->search(fn ($field) => $field->id === $selectedField->id);
-
-            if ($currentIndex === false) {
-                return $this->error('Medical history fields are not available for reordering.', 422);
-            }
-
-            $targetFormOrder = max(1, min($targetFormOrder, $orderedFields->count()));
-            $reorderedFields = $orderedFields
-                ->reject(fn ($field) => $field->id === $selectedField->id)
-                ->values()
-                ->all();
-
-            array_splice($reorderedFields, $targetFormOrder - 1, 0, [$selectedField]);
-
-            foreach (array_values($reorderedFields) as $index => $field) {
-                $field->latestVersion?->update([
-                    'form_order' => $index + 1,
-                ]);
-            }
-
-            $updatedFields = MedicalHistoryField::with('latestVersion.formFieldType', 'latestVersion.options')
-                ->whereHas('latestVersion', function ($query) {
-                    $query->whereNull('required_with_field_id');
-                })
-                ->where('is_default', false)
-                ->get()
-                ->sortBy(function ($field) {
-                    $order = $field->latestVersion?->form_order ?? PHP_INT_MAX;
-
-                    return str_pad((string) $order, 10, '0', STR_PAD_LEFT)
-                        . '-' . str_pad((string) $field->id, 10, '0', STR_PAD_LEFT);
-                })
-                ->values();
-
-            return $this->success(
-                'Form order updated successfully.',
-                MedicalHistoryFieldResource::collection($updatedFields),
-                200
-            );
-        });
+    protected function notReorderableMessage(): string
+    {
+        return 'Medical history fields are not available for reordering.';
     }
 }
