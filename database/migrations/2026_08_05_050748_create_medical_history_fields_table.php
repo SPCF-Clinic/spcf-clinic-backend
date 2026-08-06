@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('medical_history_fields', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

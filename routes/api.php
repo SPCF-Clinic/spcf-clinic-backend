@@ -15,10 +15,6 @@ Route::group(['prefix' => 'auth'], function ($route) {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/logout', [UserController::class, 'logout']);
 
-    // Route::prefix('personal-info-fields')->group(function () {
-    //     Route::post('/', [PersonalInfoFieldController::class, 'store']);
-    //     Route::put('/{field}', [PersonalInfoFieldController::class, 'update']);
-    // });
     Route::delete('personal-info-fields/{field}', [PersonalInfoFieldController::class, 'destroy']);
     Route::apiResource('personal-info-fields', PersonalInfoFieldController::class)->except(['destroy']);
 });
