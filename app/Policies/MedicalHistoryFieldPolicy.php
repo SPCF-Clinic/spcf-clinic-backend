@@ -64,7 +64,7 @@ class MedicalHistoryFieldPolicy
         return false;
     }
 
-    public function switchFormOrder(User $user): bool
+    public function reorderForm(User $user): bool
     {
         return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
     }

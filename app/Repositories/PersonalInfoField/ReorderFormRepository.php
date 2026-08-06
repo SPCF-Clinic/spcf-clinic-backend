@@ -7,7 +7,7 @@ use App\Models\PersonalInfoField;
 use App\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
 
-class SwitchFormOrderRepository extends BaseRepository
+class ReorderFormRepository extends BaseRepository
 {
     public function execute($request)
     {

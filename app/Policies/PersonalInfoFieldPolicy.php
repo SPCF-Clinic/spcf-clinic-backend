@@ -64,7 +64,7 @@ class PersonalInfoFieldPolicy
         return $user->hasRole(['SUPER_ADMIN']);
     }
 
-    public function switchFormOrder(User $user): bool
+    public function reorderForm(User $user): bool
     {
         return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
     }

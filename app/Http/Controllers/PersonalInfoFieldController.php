@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PersonalInfoField\{
     StorePersonalInfoFieldRequest,
     UpdatePersonalInfoFieldRequest,
-    SwitchFormOrderRequest,
+    ReorderFormRequest,
 };
 
 use App\Repositories\PersonalInfoField\{
@@ -15,21 +15,21 @@ use App\Repositories\PersonalInfoField\{
     UpdatePersonalInfoFieldRepository,
     IndexPersonalInfoFieldRepository,
     DeletePersonalInfoFieldRepository,
-    SwitchFormOrderRepository,
+    ReorderFormRepository,
 };
 
 use App\Models\PersonalInfoField;
 
 class PersonalInfoFieldController extends Controller
 {
-    protected $index, $store, $update, $delete, $switch;
+    protected $index, $store, $update, $delete, $reorder;
 
     public function __construct(
         IndexPersonalInfoFieldRepository $index,
         StorePersonalInfoFieldRepository $store,
         UpdatePersonalInfoFieldRepository $update,
         DeletePersonalInfoFieldRepository $delete,
-        SwitchFormOrderRepository $switch
+        ReorderFormRepository $reorder
     ) {
         // $this->authorizeResource(PersonalInfoField::class, 'field');
 
@@ -37,7 +37,7 @@ class PersonalInfoFieldController extends Controller
         $this->store = $store;
         $this->update = $update;
         $this->delete = $delete;
-        $this->switch = $switch;
+        $this->reorder = $reorder;
     }
 
     public function index()
@@ -64,9 +64,9 @@ class PersonalInfoFieldController extends Controller
         return $this->delete->execute($field);
     }
 
-    public function switchFormOrder(SwitchFormOrderRequest $request)
+    public function reorderForm(ReorderFormRequest $request)
     {
-        $this->authorize('switchFormOrder', PersonalInfoField::class);
-        return $this->switch->execute($request);
+        $this->authorize('reorderForm', PersonalInfoField::class);
+        return $this->reorder->execute($request);
     }
 }
