@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Student\IndexStudentRequest;
 use App\Repositories\Student\{
     IndexStudentRepository,
     ShowStudentRepository,
@@ -20,10 +21,10 @@ class StudentController extends Controller
         $this->show = $show;
     }
 
-    public function index()
+    public function index(IndexStudentRequest $request)
     {
         $this->authorize('viewAny', User::class);
-        return $this->index->execute();
+        return $this->index->execute($request);
     }
 
     public function show(User $student)

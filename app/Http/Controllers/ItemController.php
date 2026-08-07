@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Item\{
     StoreItemRequest,
-    UpdateItemRequest
+    UpdateItemRequest,
+    IndexItemRequest
 };
 
 use App\Repositories\Item\{
@@ -34,10 +35,10 @@ class ItemController extends Controller
         $this->delete = $delete;
     }
 
-    public function index()
+    public function index(IndexItemRequest $request)
     {
         $this->authorize('viewAny', Item::class);
-        return $this->index->execute();
+        return $this->index->execute($request);
     }
 
     public function store(StoreItemRequest $request)

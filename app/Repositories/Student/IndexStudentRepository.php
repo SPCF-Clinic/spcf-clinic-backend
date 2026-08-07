@@ -8,9 +8,12 @@ use App\Http\Resources\StudentResource;
 
 class IndexStudentRepository extends BaseRepository
 {
-    public function execute()
+    public function execute($request)
     {
         $students = User::role('Student')
+            ->when($request->student_id, function ($query, $student_id) {
+                return $query->where('username', $student_id);
+            })
             ->orderBy('username')
             ->get();
 

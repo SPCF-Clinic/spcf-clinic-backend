@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\User\{
+use App\Http\Requests\Auth\{
     RegisterRequest,
     LoginRequest,
 };
