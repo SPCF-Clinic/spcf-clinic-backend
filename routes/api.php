@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     PersonalInfoFieldController,
     MedicalHistoryFieldController,
     StudentController,
+    EnumController,
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -28,4 +29,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('medical-history-fields', MedicalHistoryFieldController::class)->except(['update', 'destroy']);
 
     Route::apiResource('students', StudentController::class)->only(['index', 'show']);
+
+    Route::get('enums/form-field-types', [EnumController::class, 'formFieldTypes']);
 });
