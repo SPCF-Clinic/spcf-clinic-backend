@@ -44,4 +44,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserMedicalHistory::class, 'user_id');
     }
+
+    public function dispensedItems()
+    {
+        return $this->hasMany(DispensedItem::class, 'dispensed_by');
+    }
+
+    public function dispensedItemsTo()
+    {
+        return $this->hasMany(DispensedItem::class, 'dispensed_to');
+    }
 }

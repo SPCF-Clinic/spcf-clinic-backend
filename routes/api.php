@@ -9,7 +9,8 @@ use App\Http\Controllers\{
     MedicalHistoryFieldController,
     StudentController,
     EnumController,
-    ItemController
+    ItemController,
+    DispensedItemController
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -37,4 +38,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('enums/form-field-types', [EnumController::class, 'formFieldTypes']);
 
     Route::apiResource('items', ItemController::class);
+    Route::post('dispense-item', [DispensedItemController::class, 'dispenseItem']);
 });

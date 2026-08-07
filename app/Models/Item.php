@@ -37,4 +37,9 @@ class Item extends Model
     {
         return $this->hasOne(ItemContent::class, 'item_id');
     }
+
+    public function dispensedItems()
+    {
+        return $this->hasMany(DispensedItem::class, 'item_id');
+    }
 }
