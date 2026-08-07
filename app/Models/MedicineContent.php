@@ -12,6 +12,11 @@ class MedicineContent extends Model
         'quantity_per_item_unit'
     ];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function item()
     {
         return $this->belongsTo(Item::class, 'item_id');

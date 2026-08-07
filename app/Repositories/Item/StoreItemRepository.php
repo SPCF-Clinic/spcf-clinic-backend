@@ -23,20 +23,17 @@ class StoreItemRepository extends BaseRepository
             ]);
 
             if (in_array($request->unit, ['Boxes', 'Bottles'])) {
-                foreach ($request->medicine_contents as $content) {
-                    MedicineContent::create([
-                        'item_id' => $item->id,
-                        'content_unit' => $content['content_unit'],
-                        'quantity_per_item_unit' => $content['quantity_per_item_unit'],
-                    ]);
-                }
+                $item->medicineContent()->create([
+                    'content_unit' => $request->medicine_content['content_unit'],
+                    'quantity_per_item_unit' => $request->medicine_content['quantity_per_item_unit'],
+                ]);
             }
 
             DB::commit();
-            return $this->success('Item created successfully', $item->load('medicineContents'), 200);
+            return $this->success('Item created successfully', $item->load('medicineContent'), 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->error('Failed to create item', $e->getMessage(), 500);
+            return $this->error('Failed to create item', 500, $e->getMessage());
         }
     }
 }

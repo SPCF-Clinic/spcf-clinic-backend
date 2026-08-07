@@ -19,7 +19,6 @@ use Illuminate\Validation\Rule;
  * {
  *   "student_id": "0123000123",
  *   "password": "...",
- *   "agreement": true,
  *   "personal_info": { "<personal_info_field_id>": "<value>", ... },
  *   "medical_history": { "<medical_history_field_id>": "<value>", ... }
  * }

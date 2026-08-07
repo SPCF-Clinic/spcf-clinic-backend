@@ -29,8 +29,8 @@ class Item extends Model
         'updated_at',
     ];
     
-    public function medicineContents()
+    public function medicineContent()
     {
-        return $this->hasMany(MedicineContent::class, 'item_id');
+        return $this->hasOne(MedicineContent::class, 'item_id');
     }
 }
