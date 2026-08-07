@@ -35,13 +35,13 @@ class User extends Authenticatable
         ];
     }
 
-    public function studentInfo()
+    public function personalInfos()
     {
-        return $this->hasOne(StudentInfo::class, 'user_id');
+        return $this->hasMany(UserPersonalInfo::class, 'user_id');
     }
 
-    public function userMedicalHistory()
+    public function medicalHistories()
     {
-        return $this->hasOne(UserMedicalHistory::class, 'user_id');
+        return $this->hasMany(UserMedicalHistory::class, 'user_id');
     }
 }

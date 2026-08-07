@@ -22,10 +22,6 @@ class UserController extends Controller
     {
         $validated = $request->validated();
 
-        if (User::where('username', $validated['student_id'])->exists()) {
-            return $this->error('Username already exists.', 400);
-        }
-
         DB::beginTransaction();
         try {
             $user = User::create([
@@ -34,8 +30,8 @@ class UserController extends Controller
             ]);
             $user->assignRole('USER');
 
-            $validated['student_info']['student_id'] = $validated['student_id'];
-            $user->studentInfo()->create($validated['student_info']);
+            $this->storeFieldAnswers($user, $validated['personal_info'] ?? [], 'personalInfos', 'personal_info_field_id');
+            $this->storeFieldAnswers($user, $validated['medical_history'] ?? [], 'medicalHistories', 'medical_history_field_id');
 
             DB::commit();
 
@@ -43,6 +39,26 @@ class UserController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error('Registration failed.', 500, $e->getMessage());
+        }
+    }
+
+    /**
+     * Persist one EAV row per answered field. Unanswered optional fields
+     * (null) are skipped rather than stored, since the `value` column isn't
+     * nullable. Multi-select (Checkbox) answers arrive as arrays and are
+     * JSON-encoded for storage.
+     */
+    private function storeFieldAnswers(User $user, array $answers, string $relation, string $foreignKey): void
+    {
+        foreach ($answers as $fieldId => $value) {
+            if ($value === null) {
+                continue;
+            }
+
+            $user->{$relation}()->create([
+                $foreignKey => $fieldId,
+                'value' => is_array($value) ? json_encode($value) : (string) $value,
+            ]);
         }
     }
 
