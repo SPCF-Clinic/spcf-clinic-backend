@@ -28,6 +28,10 @@ class Item extends Model
         'created_at',
         'updated_at',
     ];
+
+    protected $casts = [
+        'quantity' => 'integer',
+    ];
     
     public function medicineContent()
     {

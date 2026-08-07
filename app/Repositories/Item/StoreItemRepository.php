@@ -8,6 +8,7 @@ use App\Models\{
     MedicineContent
 };
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\ItemResource;
 
 class StoreItemRepository extends BaseRepository
 {
@@ -30,7 +31,7 @@ class StoreItemRepository extends BaseRepository
             }
 
             DB::commit();
-            return $this->success('Item created successfully', $item->load('medicineContent'), 200);
+            return $this->success('Item created successfully', new ItemResource($item), 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error('Failed to create item', 500, $e->getMessage());

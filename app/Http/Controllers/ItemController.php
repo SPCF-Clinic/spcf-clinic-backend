@@ -6,27 +6,55 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Item\{
     StoreItemRequest,
+    UpdateItemRequest
 };
 
 use App\Repositories\Item\{
+    IndexItemRepository,
     StoreItemRepository,
+    UpdateItemRepository,
+    DeleteItemRepository
 };
 
 use App\Models\Item;
 
 class ItemController extends Controller
 {
-    protected $store;
+    protected $index, $store, $update, $delete;
 
     public function __construct(
-        StoreItemRepository $store
+        StoreItemRepository $store,
+        IndexItemRepository $index,
+        UpdateItemRepository $update,
+        DeleteItemRepository $delete
     ) {
         $this->store = $store;
+        $this->index = $index;
+        $this->update = $update;
+        $this->delete = $delete;
+    }
+
+    public function index()
+    {
+        $this->authorize('viewAny', Item::class);
+        return $this->index->execute();
     }
 
     public function store(StoreItemRequest $request)
     {
         $this->authorize('create', Item::class);
         return $this->store->execute($request);
+    }
+
+    public function update(UpdateItemRequest $request, Item $item)
+    {
+        $this->authorize('update', $item);
+        return $this->update->execute($request, $item);
+    }
+
+    public function destroy(Item $item)
+    {
+        $this->authorize('delete', $item);
+        return $this->delete->execute($item);
     }
 }
