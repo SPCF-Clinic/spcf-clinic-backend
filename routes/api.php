@@ -6,6 +6,7 @@ use App\Http\Controllers\{
     UserController,
     PersonalInfoFieldController,
     MedicalHistoryFieldController,
+    StudentController,
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -25,4 +26,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('medical-history-fields/{field}', [MedicalHistoryFieldController::class, 'update']);
     Route::delete('medical-history-fields/{field}', [MedicalHistoryFieldController::class, 'destroy']);
     Route::apiResource('medical-history-fields', MedicalHistoryFieldController::class)->except(['update', 'destroy']);
+
+    Route::apiResource('students', StudentController::class)->only(['index', 'show']);
 });
