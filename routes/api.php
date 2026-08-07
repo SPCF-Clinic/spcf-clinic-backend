@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
+    AuthController,
     UserController,
     PersonalInfoFieldController,
     MedicalHistoryFieldController,
@@ -11,12 +12,14 @@ use App\Http\Controllers\{
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
-    $route->post('register', [UserController::class, 'register']);
-    $route->post('login', [UserController::class, 'login']);
+    $route->post('register', [AuthController::class, 'register']);
+    $route->post('login', [AuthController::class, 'login']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('auth/logout', [UserController::class, 'logout']);
+    Route::post('auth/logout', [AuthController::class, 'logout']);
+
+    Route::get('users', [UserController::class, 'index']);
 
     Route::post('personal-info-fields/reorder', [PersonalInfoFieldController::class, 'reorderForm']);
     Route::put('personal-info-fields/{field}', [PersonalInfoFieldController::class, 'update']);

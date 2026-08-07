@@ -29,7 +29,7 @@ class PersonalInfoFieldPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -37,7 +37,7 @@ class PersonalInfoFieldPolicy
      */
     public function update(User $user, PersonalInfoField $personalInfoField): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -45,7 +45,7 @@ class PersonalInfoFieldPolicy
      */
     public function delete(User $user, PersonalInfoField $personalInfoField): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -61,11 +61,11 @@ class PersonalInfoFieldPolicy
      */
     public function forceDelete(User $user, PersonalInfoField $personalInfoField): bool
     {
-        return $user->hasRole(['SUPER_ADMIN']);
+        return false;
     }
 
     public function reorderForm(User $user): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 }

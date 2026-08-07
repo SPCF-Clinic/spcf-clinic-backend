@@ -10,7 +10,7 @@ class IndexStudentRepository extends BaseRepository
 {
     public function execute()
     {
-        $students = User::role('USER')
+        $students = User::role('Student')
             ->orderBy('username')
             ->get();
 

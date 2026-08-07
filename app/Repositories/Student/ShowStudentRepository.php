@@ -17,7 +17,7 @@ class ShowStudentRepository extends BaseRepository
 {
     public function execute(User $student)
     {
-        if (! $student->hasRole('USER')) {
+        if (! $student->hasRole('Student')) {
             return $this->error('Student not found.', 404);
         }
 

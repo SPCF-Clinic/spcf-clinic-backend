@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             'username' => 'superadmin',
             'password' => Hash::make('superadmin'),
         ]);
-        $superAdmin->assignRole('SUPER_ADMIN');
+        $superAdmin->assignRole('Super Admin');
 
         $admins = ['admin1', 'admin2', 'admin3'];
         foreach ($admins as $admin) {
@@ -33,7 +33,7 @@ class UserSeeder extends Seeder
                 'username' => $admin,
                 'password' => Hash::make('admin'),
             ]);
-            $user->assignRole('ADMIN');
+            $user->assignRole('Admin');
         }
 
         $personalInfoFields = $this->fieldsByName(PersonalInfoField::class);
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
                 'username' => $studentId,
                 'password' => Hash::make('student'),
             ]);
-            $user->assignRole('USER');
+            $user->assignRole('Student');
 
             [$personalInfoAnswers, $medicalHistoryAnswers] = $this->generateStudentAnswers();
 

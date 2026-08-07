@@ -29,7 +29,7 @@ class MedicalHistoryFieldPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -37,7 +37,7 @@ class MedicalHistoryFieldPolicy
      */
     public function update(User $user, MedicalHistoryField $medicalHistoryField): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -45,7 +45,7 @@ class MedicalHistoryFieldPolicy
      */
     public function delete(User $user, MedicalHistoryField $medicalHistoryField): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -66,6 +66,6 @@ class MedicalHistoryFieldPolicy
 
     public function reorderForm(User $user): bool
     {
-        return $user->hasRole(['ADMIN', 'SUPER_ADMIN']);
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 }
