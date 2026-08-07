@@ -21,10 +21,10 @@ class ItemResource extends JsonResource
             'category' => $this->category,
             'unit' => $this->unit,
             'quantity' => $this->quantity,
-            'medicine_content' => $this->when($this->medicineContent, function () {
+            'item_content' => $this->when($this->itemContent, function () {
                 return [
-                    'content_unit' => $this->medicineContent->content_unit,
-                    'quantity_per_item_unit' => $this->medicineContent->quantity_per_item_unit,
+                    'content_unit' => $this->itemContent->content_unit,
+                    'quantity_per_item_unit' => $this->itemContent->quantity_per_item_unit,
                 ];
             }),
         ];

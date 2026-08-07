@@ -13,7 +13,7 @@ class Item extends Model
 
     public const UNIT = [
         'Medicine' => ['Tablets', 'Boxes', 'Bottles'],
-        'Supply' => ['Packs', 'Boxes', 'Pair', 'Rolls']
+        'Supply' => ['Packs', 'Boxes', 'Pairs', 'Rolls']
     ];
 
     protected $fillable = [
@@ -33,8 +33,8 @@ class Item extends Model
         'quantity' => 'integer',
     ];
     
-    public function medicineContent()
+    public function itemContent()
     {
-        return $this->hasOne(MedicineContent::class, 'item_id');
+        return $this->hasOne(ItemContent::class, 'item_id');
     }
 }

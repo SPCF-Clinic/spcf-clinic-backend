@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->enum('type', ['Medicine', 'Supply']);
             $table->enum('category', ['Pain Reliever', 'Antibiotic', 'Cough & Cold', 'Antihistamine', 'Wound Care', 'PPE']);
-            $table->enum('unit', ['Tablets', 'Boxes', 'Bottles', 'Packs', 'Pair', 'Rolls']);
+            $table->enum('unit', ['Tablets', 'Boxes', 'Bottles', 'Packs', 'Pairs', 'Rolls']);
             $table->unsignedBigInteger('quantity')->default(0);
             $table->timestamps();
         });

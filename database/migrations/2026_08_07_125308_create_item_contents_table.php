@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('medicine_contents', function (Blueprint $table) {
+        Schema::create('item_contents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->enum('content_unit', ['ml', 'Tablets']);
+            $table->enum('content_unit', ['ml', 'Tablets', 'pcs']);
             $table->unsignedBigInteger('quantity_per_item_unit');
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('medicine_contents');
+        Schema::dropIfExists('item_contents');
     }
 };

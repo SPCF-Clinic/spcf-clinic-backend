@@ -5,7 +5,7 @@ namespace App\Repositories\Item;
 use App\Repositories\BaseRepository;
 use App\Models\{
     Item,
-    MedicineContent
+    ItemContent
 };
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ItemResource;
@@ -24,9 +24,9 @@ class StoreItemRepository extends BaseRepository
             ]);
 
             if (in_array($request->unit, ['Boxes', 'Bottles'])) {
-                $item->medicineContent()->create([
-                    'content_unit' => $request->medicine_content['content_unit'],
-                    'quantity_per_item_unit' => $request->medicine_content['quantity_per_item_unit'],
+                $item->itemContent()->create([
+                    'content_unit' => $request->item_content['content_unit'],
+                    'quantity_per_item_unit' => $request->item_content['quantity_per_item_unit'],
                 ]);
             }
 

@@ -30,8 +30,8 @@ class StoreItemRequest extends FormRequest
             'category' => ['required', Rule::in(Item::CATEGORIES[$this->input('type')])],
             'unit' => ['required', Rule::in(Item::UNIT[$this->input('type')])],
             'quantity' => ['required', 'integer', 'min:0'],
-            'medicine_content.content_unit' => ['required_if:unit,Boxes', 'required_if:unit,Bottles', 'in:ml,Tablets'],
-            'medicine_content.quantity_per_item_unit' => ['required_if:unit,Boxes', 'required_if:unit,Bottles', 'integer', 'min:1'],
+            'item_content.content_unit' => ['required_if:unit,Boxes', 'required_if:unit,Bottles', 'in:ml,Tablets'],
+            'item_content.quantity_per_item_unit' => ['required_if:unit,Boxes', 'required_if:unit,Bottles', 'integer', 'min:1'],
         ];
     }
 }
