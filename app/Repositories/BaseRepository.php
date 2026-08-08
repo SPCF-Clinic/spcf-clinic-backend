@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Traits\ResponseAPI;
+use App\Traits\ResponseApi;
 
 class BaseRepository
 {
-    use ResponseAPI;
+    use ResponseApi;
 }
