@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(CheckIn::class, 'user_id');
     }
+
+    public function latestCheckIn()
+    {
+        return $this->hasOne(CheckIn::class, 'user_id')->latestOfMany();
+    }
 }
