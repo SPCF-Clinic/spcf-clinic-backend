@@ -21,6 +21,18 @@ class ShowStudentRepository extends BaseRepository
             return $this->error('Student not found.', 404);
         }
 
+        return $this->success('Student retrieved successfully.', $this->buildPayload($student), 200);
+    }
+
+    /**
+     * The full personal-info + medical-history view for a student: every
+     * currently active field (always included), paired with the student's
+     * answer where one exists. Reused by the personal-info/medical-history
+     * update endpoints so they return the same consolidated shape after
+     * writing changes.
+     */
+    public function buildPayload(User $student): array
+    {
         $personalInfoFields = PersonalInfoField::with(
             'latestVersion.formFieldType',
             'latestVersion.options',
@@ -61,12 +73,12 @@ class ShowStudentRepository extends BaseRepository
             ->get()
             ->keyBy('medical_history_field_id');
 
-        return $this->success('Student retrieved successfully.', [
+        return [
             'id' => $student->id,
             'username' => $student->username,
             'personal_info' => StudentPersonalInfoFieldResource::collection($personalInfoFields, $personalInfoAnswers),
             'medical_history' => StudentMedicalHistoryFieldResource::collection($medicalHistoryFields, $medicalHistoryAnswers),
-        ], 200);
+        ];
     }
 
     /**
