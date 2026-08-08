@@ -18,6 +18,12 @@ class FormFieldType extends Model
         'updated_at',
     ];
 
+    protected $casts = [
+        'is_answerable' => 'boolean',
+        'has_options' => 'boolean',
+        'can_select_multiple' => 'boolean',
+    ];
+
     public function personalInfoFieldVersions()
     {
         return $this->hasMany(PersonalInfoFieldVersion::class, 'form_field_type_id');
