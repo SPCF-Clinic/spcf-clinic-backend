@@ -15,6 +15,16 @@ class StoreCheckInRepository extends BaseRepository
     public function execute($request){
         $validated = $request->validated();
 
+        if (isset($validated['bed_id'])) {
+            $bed = Bed::find($validated['bed_id']);
+            if (!$bed) {
+                return $this->error('Bed not found.', 404);
+            }
+            if ($bed->status === 'Occupied') {
+                return $this->error('Bed is already occupied.', 400);
+            }
+        }
+
         $checkIn = CheckIn::create([
             'user_id' => $validated['user_id'],
             'bed_id' => $validated['bed_id'] ?? null,

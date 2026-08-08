@@ -20,6 +20,9 @@ class DispenseItemRepository extends BaseRepository
         if (!$item) {
             return $this->error('Item not found', 404);
         }
+        if ($item->quantity < $validated['quantity_dispensed']) {
+            return $this->error('Insufficient quantity available', 400);
+        }
 
         try {
             // Only automatically deduct the quantity for items with units "Tablets" or "Pairs"
