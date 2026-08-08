@@ -30,16 +30,19 @@ class CheckInController extends Controller
 
     public function index()
     {
+        $this->authorize('viewAny', CheckIn::class);
         return $this->index->execute();
     }
 
     public function store(StoreCheckInRequest $request)
     {
+        $this->authorize('create', CheckIn::class);
         return $this->store->execute($request);
     }
 
     public function update(UpdateCheckInRequest $request, CheckIn $checkIn)
     {
+        $this->authorize('update', $checkIn);
         return $this->update->execute($request, $checkIn);
     }
 }
