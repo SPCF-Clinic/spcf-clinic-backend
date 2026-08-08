@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('medical-history-fields/{field}', [MedicalHistoryFieldController::class, 'destroy']);
     Route::apiResource('medical-history-fields', MedicalHistoryFieldController::class)->except(['update', 'destroy']);
 
+    Route::get('students/{student}/check-ins', [StudentController::class, 'indexCheckIns']);
     Route::apiResource('students', StudentController::class)->only(['index', 'show']);
 
     Route::get('enums/form-field-types', [EnumController::class, 'formFieldTypes']);

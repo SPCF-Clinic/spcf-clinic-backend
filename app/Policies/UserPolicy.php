@@ -62,4 +62,9 @@ class UserPolicy
     {
         return false;
     }
+
+    public function viewCheckIns(User $user, User $model): bool
+    {
+        return $user->hasRole(['Admin', 'Super Admin']) || $user->id === $model->id;
+    }
 }
