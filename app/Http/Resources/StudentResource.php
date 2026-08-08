@@ -14,12 +14,7 @@ class StudentResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
-    {
-        $firstName = $this->personalInfos->where('personal_info_field_id', 1)
-            ->first()?->value;
-        $lastName = $this->personalInfos->where('personal_info_field_id', 2)
-            ->first()?->value;
-        
+    {        
         $gradeLevel = $this->personalInfos->where('personal_info_field_id', 12)
             ->first()?->value;
         $yearLevel = $this->personalInfos->where('personal_info_field_id', 13)
@@ -37,7 +32,7 @@ class StudentResource extends JsonResource
         return [
             'id' => $this->id,
             'username' => $this->username,
-            'name' => $firstName . ' ' . $lastName,
+            'name' => $this->getFullNameAttribute(),
             'grade_level' => $gradeLevel,
             'year_level' => $yearLevel,
             'course' => $course,

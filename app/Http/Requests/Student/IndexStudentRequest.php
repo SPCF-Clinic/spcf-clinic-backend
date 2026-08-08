@@ -24,7 +24,6 @@ class IndexStudentRequest extends FormRequest
     {
         return [
             'student_id' => 'sometimes|nullable|string|max:255',
-            'check_in_status' => 'sometimes|nullable|in:Checked In,Checked Out',
         ];
     }
 }

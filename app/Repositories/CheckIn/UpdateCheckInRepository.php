@@ -11,6 +11,7 @@ use App\Models\{
 use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
 use Illuminate\Support\Facades\DB;
+use App\Models\ActivityLog;
 
 class UpdateCheckInRepository extends BaseRepository
 {
@@ -18,6 +19,9 @@ class UpdateCheckInRepository extends BaseRepository
         DB::beginTransaction();
 
         $validated = $request->validated();
+
+        $fullName = $checkIn->user->getFullNameAttribute();
+        $user = auth()->user();
 
         try {
             if (isset($validated['check_out'])) {
@@ -36,6 +40,12 @@ class UpdateCheckInRepository extends BaseRepository
                         ]);
                     }
                 }
+
+                ActivityLog::create([
+                    'group' => 'CHECK-IN',
+                    'action' => "{$fullName} checked out of the clinic.",
+                    'performed_by' => auth()->id(),
+                ]);
             }
 
             if (isset($validated['unassign_bed'])) {
@@ -44,15 +54,37 @@ class UpdateCheckInRepository extends BaseRepository
                         'status' => 'Empty',
                         'check_in_id' => null,
                     ]);
-                    $checkIn->update([
-                        'bed_check_out_time' => Carbon::now(),
+
+                    if (Carbon::now()->lt($checkIn->bed_check_out_time)) {
+                        $checkIn->update([
+                            'bed_check_out_time' => Carbon::now(),
+                        ]);
+
+                        ActivityLog::create([
+                            'group' => 'TIMER',
+                            'action' => "Timer for {$fullName} cancelled.",
+                            'performed_by' => auth()->id(),
+                        ]);
+                    }
+
+                    ActivityLog::create([
+                        'group' => 'BED',
+                        'action' => "{$fullName} removed from {$checkIn->bed->bed_number}.",
+                        'performed_by' => auth()->id(),
                     ]);
                 }
             }
 
             if (isset($validated['bed_check_out_time'])) {
                 $checkIn->update([
-                    'bed_check_out_time' => Carbon::createFromFormat('H:i', $validated['bed_check_out_time']),
+                    'bed_check_out_time' => Carbon::createFromFormat('H:i:s', $validated['bed_check_out_time']),
+                ]);
+
+                $timeAdjustedInMinutes = Carbon::parse($checkIn->bed_check_out_time)->diffInMinutes(Carbon::parse($validated['bed_check_out_time']));
+                ActivityLog::create([
+                    'group' => 'TIMER',
+                    'action' => "Timer for {$fullName} adjusted by {$timeAdjustedInMinutes} minutes.",
+                    'performed_by' => auth()->id(),
                 ]);
             }
 
@@ -65,7 +97,7 @@ class UpdateCheckInRepository extends BaseRepository
                             return $this->error('Insufficient quantity available', 400);
                         }
 
-                        DispensedItem::create([
+                        $dispensedItem = DispensedItem::create([
                             'check_in_id' => $checkIn->id,
                             'item_id' => $item->id,
                             'quantity_dispensed' => $validated['dispensed_item_quantity'] ?? 1,
@@ -75,6 +107,18 @@ class UpdateCheckInRepository extends BaseRepository
                         if (in_array($item->unit, ['Tablets', 'Pairs'])) {
                             $item->update([
                                 'quantity' => $item->quantity - ($validated['dispensed_item_quantity'] ?? 1),
+                            ]);
+
+                            ActivityLog::create([
+                                'group' => 'INVENTORY',
+                                'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed to {$fullName}.",
+                                'performed_by' => auth()->id(),
+                            ]);
+                        } else {
+                            ActivityLog::create([
+                                'group' => 'INVENTORY',
+                                'action' => "{$dispensedItem->quantity} {$item->itemContent->unit} of {$item->name} dispensed to {$fullName}.",
+                                'performed_by' => auth()->id(),
                             ]);
                         }
                     }

@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\{
 };
 use App\Models\{
     User,
+    ActivityLog,
 };
 use Illuminate\Support\Facades\{
     DB,
@@ -32,6 +33,13 @@ class AuthController extends Controller
 
             $this->storeFieldAnswers($user, $validated['personal_info'] ?? [], 'personalInfos', 'personal_info_field_id');
             $this->storeFieldAnswers($user, $validated['medical_history'] ?? [], 'medicalHistories', 'medical_history_field_id');
+
+            $fullName = $user->getFullNameAttribute();
+            ActivityLog::create([
+                'group' => 'AUTH',
+                'action' => "New student registered: {$fullName}",
+                'performed_by' => $user->id,
+            ]);
 
             DB::commit();
 
@@ -77,6 +85,13 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $fullName = $user->hasRole('Student') ? $user->getFullNameAttribute() : $user->username;
+        ActivityLog::create([
+            'group' => 'AUTH',
+            'action' => "{$fullName} logged in.",
+            'performed_by' => $user->id,
+        ]);
+
         return $this->success('User logged in successfully.', [
             'user' => $user,
             'token' => $token,
@@ -87,6 +102,13 @@ class AuthController extends Controller
     {
         $user = auth()->user();
         if ($user) {
+            $fullName = $user->hasRole('Student') ? $user->getFullNameAttribute() : $user->username;
+            ActivityLog::create([
+                'group' => 'AUTH',
+                'action' => "{$fullName} logged out.",
+                'performed_by' => $user->id,
+            ]);
+
             $user->tokens()->delete();
             return $this->success('User logged out successfully.', null, 200);
         }

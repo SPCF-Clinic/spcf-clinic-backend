@@ -26,12 +26,12 @@ class StoreCheckInRequest extends FormRequest
             'user_id' => ['required', 'exists:users,id'],
             'bed_id' => ['sometimes', 'nullable', 'exists:beds,id'],
             'reason_for_visit' => ['required', 'string'],
-            'bed_check_in_time' => ['required_with:bed_id', 'date_format:H:i', function ($attribute, $value, $fail) {
-                if ($value < now()->format('H:i')) {
+            'bed_check_in_time' => ['required_with:bed_id', 'date_format:H:i:s', function ($attribute, $value, $fail) {
+                if ($value < now()->format('H:i:s')) {
                     $fail('The check-in time must be now or later.');
                 }
             }],
-            'bed_check_out_time' => ['required_with:bed_id', 'date_format:H:i', 'after:bed_check_in_time'],
+            'bed_check_out_time' => ['required_with:bed_id', 'date_format:H:i:s', 'after:bed_check_in_time'],
             'remarks' => ['sometimes', 'nullable', 'string'],
         ];
     }

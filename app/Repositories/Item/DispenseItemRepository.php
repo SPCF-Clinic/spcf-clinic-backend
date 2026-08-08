@@ -25,20 +25,26 @@ class DispenseItemRepository extends BaseRepository
         }
 
         try {
-            // Only automatically deduct the quantity for items with units "Tablets" or "Pairs"
-            // Other units like "Boxes" or "Bottles" have to be updated manually when the whole pack is used up
-            if (in_array($item->unit, ['Tablets', 'Pairs'])) {
-                $item->update([
-                    'quantity' => $item->quantity - $validated['quantity_dispensed']
-                ]);
-            }
-
             $dispensedItem = DispensedItem::create([
                 'item_id' => $validated['item_id'],
                 'quantity_dispensed' => $validated['quantity_dispensed'],
                 'dispensed_to' => $validated['dispensed_to'],
                 'dispensed_by' => auth()->id(),
             ]);
+
+            // Only automatically deduct the quantity for items with units "Tablets" or "Pairs"
+            // Other units like "Boxes" or "Bottles" have to be updated manually when the whole pack is used up
+            if (in_array($item->unit, ['Tablets', 'Pairs'])) {
+                $item->update([
+                    'quantity' => $item->quantity - $validated['quantity_dispensed']
+                ]);
+
+                ActivityLog::create([
+                    'group' => 'INVENTORY',
+                    'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed.",
+                    'performed_by' => auth()->id(),
+                ]);
+            }
 
             DB::commit();
 

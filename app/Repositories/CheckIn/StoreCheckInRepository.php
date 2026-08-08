@@ -5,7 +5,8 @@ namespace App\Repositories\CheckIn;
 use App\Repositories\BaseRepository;
 use App\Models\{
     CheckIn,
-    Bed
+    Bed,
+    ActivityLog,
 };
 use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
@@ -35,11 +36,15 @@ class StoreCheckInRepository extends BaseRepository
             'reason_for_visit' => $validated['reason_for_visit'],
             'check_in_time' => Carbon::now(),
             'check_out_time' => null,
-            'bed_check_in_time' => Carbon::createFromFormat('H:i', $validated['bed_check_in_time']) ?? null,
-            'bed_check_out_time' => Carbon::createFromFormat('H:i', $validated['bed_check_out_time']) ?? null,
+            'bed_check_in_time' => Carbon::createFromFormat('H:i:s', $validated['bed_check_in_time']) ?? null,
+            'bed_check_out_time' => Carbon::createFromFormat('H:i:s', $validated['bed_check_out_time']) ?? null,
             'status' => 'Checked In',
             'remarks' => $validated['remarks'] ?? null,
         ]);
+
+        $student = $checkIn->user;
+        $user = auth()->user();
+        $fullName = $student->getFullNameAttribute();
 
         $bed = Bed::find($validated['bed_id'] ?? null);
         if ($bed) {
@@ -47,7 +52,27 @@ class StoreCheckInRepository extends BaseRepository
                 'check_in_id' => $checkIn->id,
                 'status' => 'Occupied',
             ]);
+
+            ActivityLog::create([
+                'group' => 'BED',
+                'action' => "{$fullName} assigned to {$bed->bed_number}.",
+                'performed_by' => $user->id,
+            ]);
+
+            $timeInMinutes = Carbon::parse($validated['bed_check_in_time'])->diffInMinutes(Carbon::parse($validated['bed_check_out_time']));
+
+            ActivityLog::create([
+                'group' => 'TIMER',
+                'action' => "Set {$timeInMinutes}-minute timer for {$fullName}.",
+                'performed_by' => $user->id,
+            ]);
         }
+        
+        ActivityLog::create([
+            'group' => 'CHECK-IN',
+            'action' => "{$fullName} checked into the clinic.",
+            'performed_by' => $user->id,
+        ]);
 
         $checkIn = new CheckInResource($checkIn);
 

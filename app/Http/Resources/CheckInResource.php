@@ -22,11 +22,6 @@ class CheckInResource extends JsonResource
         $course = $this->user->personalInfos->where('personal_info_field_id', 15)
             ->first()?->value;
 
-        $firstName = $this->user->personalInfos->where('personal_info_field_id', 1)
-            ->first()?->value;
-        $lastName = $this->user->personalInfos->where('personal_info_field_id', 2)
-            ->first()?->value;
-
         $birthDate = $this->user->personalInfos->where('personal_info_field_id', 4)
             ->first()?->value;
         $age = $birthDate ? Carbon::parse($birthDate)->age : null;
@@ -35,7 +30,7 @@ class CheckInResource extends JsonResource
             'id' => $this->id,
             'user' => $this->user ? [
                 'id' => $this->user->id,
-                'name' => $firstName . ' ' . $lastName,
+                'name' => $this->user->getStandardNameAttribute(),
                 'age' => $age,
                 'grade_level' => $gradeLevel,
                 'year_level' => $yearLevel,

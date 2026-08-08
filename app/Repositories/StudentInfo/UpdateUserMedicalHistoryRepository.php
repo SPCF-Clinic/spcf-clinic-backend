@@ -5,6 +5,7 @@ namespace App\Repositories\StudentInfo;
 use App\Repositories\BaseRepository;
 use App\Repositories\Student\ShowStudentRepository;
 use App\Models\User;
+use App\Models\ActivityLog;
 
 class UpdateUserMedicalHistoryRepository extends BaseRepository
 {
@@ -34,6 +35,13 @@ class UpdateUserMedicalHistoryRepository extends BaseRepository
                 ['value' => is_array($value) ? json_encode($value) : (string) $value],
             );
         }
+
+        $fullName = $student->getFullNameAttribute();
+        ActivityLog::create([
+            'group' => 'STUDENT_RECORD',
+            'action' => "{$fullName}'s information updated.",
+            'performed_by' => auth()->id(),
+        ]);
 
         return $this->success(
             'Medical history updated successfully.',

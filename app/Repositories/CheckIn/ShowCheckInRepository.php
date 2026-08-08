@@ -10,11 +10,6 @@ use App\Models\{
 class ShowCheckInRepository extends BaseRepository
 {
     public function execute($checkIn){
-        $firstName = $checkIn->user->personalInfos->where('personal_info_field_id', 1)
-            ->first()?->value;
-        $lastName = $checkIn->user->personalInfos->where('personal_info_field_id', 2)
-            ->first()?->value;
-
         $gradeLevel = $checkIn->user->personalInfos->where('personal_info_field_id', 12)
             ->first()?->value;
         $yearLevel = $checkIn->user->personalInfos->where('personal_info_field_id', 13)
@@ -24,7 +19,7 @@ class ShowCheckInRepository extends BaseRepository
         
         $checkInData = [
             'id' => $checkIn->id,
-            'name' => $firstName . ' ' . $lastName,
+            'name' => $checkIn->user->getStandardNameAttribute(),
             'grade_level' => $gradeLevel,
             'year_level' => $yearLevel,
             'course' => $course,
