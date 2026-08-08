@@ -58,6 +58,11 @@ class UpdateCheckInRepository extends BaseRepository
 
             if (isset($validated['dispensed_item_id'])) {
                 $item = Item::find($validated['dispensed_item_id']);
+                if ($item->quantity < ($validated['dispensed_item_quantity'] ?? 1)) {
+                    DB::rollBack();
+                    return $this->error('Insufficient quantity available', 400);
+                }
+
                 try {
                     if ($item) {
                         DispensedItem::create([
@@ -68,9 +73,6 @@ class UpdateCheckInRepository extends BaseRepository
                             'dispensed_by' => auth()->id(),
                         ]);
                         if (in_array($item->unit, ['Tablets', 'Pairs'])) {
-                            if ($item->quantity < ($validated['dispensed_item_quantity'] ?? 1)) {
-                                return $this->error('Insufficient quantity available', 400);
-                            }
                             $item->update([
                                 'quantity' => $item->quantity - ($validated['dispensed_item_quantity'] ?? 1),
                             ]);
