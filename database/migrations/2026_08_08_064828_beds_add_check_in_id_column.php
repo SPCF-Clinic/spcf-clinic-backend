@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('beds', function (Blueprint $table) {
-            $table->id();
-            $table->string('bed_number')->unique();
+        Schema::table('beds', function (Blueprint $table) {
             $table->foreignId('check_in_id')->nullable()->constrained('check_ins')->onDelete('set null');
-            $table->enum('status', ['Empty', 'Occupied'])->default('Empty');
-            $table->timestamps();
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('beds');
+        Schema::table('beds', function (Blueprint $table) {
+            //
+        });
     }
 };
