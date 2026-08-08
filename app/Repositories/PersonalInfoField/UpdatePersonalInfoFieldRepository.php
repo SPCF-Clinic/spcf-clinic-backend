@@ -8,6 +8,7 @@ use App\Models\{
     PersonalInfoFieldOption,
     PersonalInfoField,
     FormFieldType,
+    ActivityLog,
 };
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PersonalInfoFieldResource;
@@ -74,6 +75,12 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
             DB::commit();
 
             $baseField->load('latestVersion.options');
+
+            ActivityLog::create([
+                'group' => 'FORM_FIELD',
+                'action' => "Personal info field '{$newVersion->field_name}' updated.",
+                'performed_by' => auth()->id(),
+            ]);
 
             return $this->success('Personal info field updated successfully.', new PersonalInfoFieldResource($baseField), 200);
         } catch (\Exception $e) {

@@ -7,6 +7,7 @@ use App\Models\{
     MedicalHistoryField,
     MedicalHistoryFieldOption,
     FormFieldType,
+    ActivityLog,
 };
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MedicalHistoryFieldResource;
@@ -70,6 +71,12 @@ class UpdateMedicalHistoryFieldRepository extends BaseRepository
             DB::commit();
 
             $baseField->load('latestVersion.options');
+
+            ActivityLog::create([
+                'group' => 'FORM_FIELD',
+                'action' => "Medical history field '{$newVersion->field_name}' updated.",
+                'performed_by' => auth()->id(),
+            ]);
 
             return $this->success('Medical history field updated successfully.', new MedicalHistoryFieldResource($baseField), 200);
         } catch (\Exception $e) {

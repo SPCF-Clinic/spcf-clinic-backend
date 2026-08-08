@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('activity_logs', function (Blueprint $table) {
             $table->id();
-            $table->enum('group', ['AUTH', 'CHECK-IN', 'BED', 'TIMER', 'STUDENT_RECORD', 'INVENTORY']);
+            $table->enum('group', ['AUTH', 'CHECK-IN', 'BED', 'TIMER', 'STUDENT_RECORD', 'INVENTORY', 'FORM_FIELD']);
             $table->string('action');
             $table->foreignId('performed_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
