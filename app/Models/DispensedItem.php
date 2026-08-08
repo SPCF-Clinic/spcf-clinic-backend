@@ -8,6 +8,7 @@ class DispensedItem extends Model
 {
     protected $fillable = [
         'item_id',
+        'check_in_id',
         'quantity_dispensed',
         'dispensed_to',
         'dispensed_by',
@@ -31,5 +32,10 @@ class DispensedItem extends Model
     public function dispensedTo()
     {
         return $this->belongsTo(User::class, 'dispensed_to');
+    }
+
+    public function checkIn()
+    {
+        return $this->belongsTo(CheckIn::class, 'check_in_id');
     }
 }

@@ -10,7 +10,9 @@ use App\Http\Controllers\{
     StudentController,
     EnumController,
     ItemController,
-    DispensedItemController
+    DispensedItemController,
+    BedController,
+    CheckInController,
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -39,4 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('items', ItemController::class);
     Route::post('dispense-item', [DispensedItemController::class, 'dispenseItem']);
+
+    Route::apiResource('beds', BedController::class)->only(['index', 'store', 'destroy']);
+    Route::apiResource('check-ins', CheckInController::class)->only(['index', 'store', 'update']);
 });

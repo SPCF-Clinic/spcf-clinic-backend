@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             FormFieldsSeeder::class,
             UserSeeder::class,
             ItemSeeder::class,
+            BedSeeder::class,
         ]);
     }
 }

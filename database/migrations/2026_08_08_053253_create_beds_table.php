@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dispensed_items', function (Blueprint $table) {
+        Schema::create('beds', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
+            $table->string('bed_number')->unique();
             $table->foreignId('check_in_id')->nullable()->constrained('check_ins')->onDelete('set null');
-            $table->unsignedBigInteger('quantity_dispensed');
-            $table->foreignId('dispensed_to')->constrained('users')->onDelete('cascade');
-            $table->foreignId('dispensed_by')->constrained('users')->onDelete('cascade');
+            $table->enum('status', ['Empty', 'Occupied'])->default('Empty');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dispensed_items');
+        Schema::dropIfExists('beds');
     }
 };

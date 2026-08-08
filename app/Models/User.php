@@ -54,4 +54,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(DispensedItem::class, 'dispensed_to');
     }
+
+    public function checkIns()
+    {
+        return $this->hasMany(CheckIn::class, 'user_id');
+    }
 }
