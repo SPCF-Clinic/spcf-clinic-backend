@@ -11,21 +11,24 @@ use App\Http\Requests\CheckIn\{
 use App\Repositories\CheckIn\{
     StoreCheckInRepository,
     IndexCheckInRepository,
-    UpdateCheckInRepository
+    UpdateCheckInRepository,
+    ShowCheckInRepository
 };
 
 class CheckInController extends Controller
 {
-    protected $store, $index, $update;
+    protected $store, $index, $update, $show;
 
     public function __construct(
         StoreCheckInRepository $store,
         IndexCheckInRepository $index,
-        UpdateCheckInRepository $update
+        UpdateCheckInRepository $update,
+        ShowCheckInRepository $show
     ) {
         $this->store = $store;
         $this->index = $index;
         $this->update = $update;
+        $this->show = $show;
     }
 
     public function index()
@@ -44,5 +47,11 @@ class CheckInController extends Controller
     {
         $this->authorize('update', $checkIn);
         return $this->update->execute($request, $checkIn);
+    }
+
+    public function show(CheckIn $checkIn)
+    {
+        $this->authorize('view', $checkIn);
+        return $this->show->execute($checkIn);
     }
 }

@@ -50,5 +50,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('dispense-item', [DispensedItemController::class, 'dispenseItem']);
 
     Route::apiResource('beds', BedController::class)->only(['index', 'store', 'destroy']);
-    Route::apiResource('check-ins', CheckInController::class)->only(['index', 'store', 'update']);
+    Route::apiResource('check-ins', CheckInController::class)->except(['destroy']);
 });
