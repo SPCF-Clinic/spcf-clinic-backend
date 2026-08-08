@@ -14,7 +14,6 @@ class IndexStudentRepository extends BaseRepository
             ->when($request->student_id, function ($query, $student_id) {
                 return $query->where('username', $student_id);
             })
-            ->orderBy('username')
             ->get();
 
         return $this->success(

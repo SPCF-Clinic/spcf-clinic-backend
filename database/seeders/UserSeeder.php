@@ -113,19 +113,42 @@ class UserSeeder extends Seeder
     {
         $lastName = fake()->lastName();
 
-        $yearLevel = fake()->numberBetween(0, 16);
-        if ($yearLevel <= 12) {
+        $year = fake()->numberBetween(0, 16);
+        if ($year <= 12) {
             $educationLevel = 'BASIC_ED';
             $department = null;
             $course = null;
             $section = 'Section-' . fake()->numberBetween(1, 10);
+            if ($year === 0) {
+                $yearLevel = 'Kindergarten';
+            } else {
+                $yearLevel = 'Grade ' . $year;
+            }
         } else {
+            switch ($year) {
+                case 13:
+                    $yearLevel = '1st Year';
+                    $sectionCode = 1;
+                    break;
+                case 14:
+                    $yearLevel = '2nd Year';
+                    $sectionCode = 3;
+                    break;
+                case 15:
+                    $yearLevel = '3rd Year';
+                    $sectionCode = 5;
+                    break;
+                case 16:
+                    $yearLevel = '4th Year';
+                    $sectionCode = 7;
+                    break;
+            }
             $educationLevel = 'COLLEGE';
             $department = Department::inRandomOrder()->first();
             $course = $department
                 ? Course::where('department_id', $department->id)->inRandomOrder()->first()
                 : null;
-            $section = ($department?->code ?? 'GEN') . (string) ($yearLevel * 2) . fake()->randomElement(['A', 'B', 'C', 'D']);
+            $section = ($department?->code ?? 'GEN') . (string) $sectionCode . fake()->randomElement(['A', 'B', 'C', 'D']);
         }
 
         $covidVaccinated = fake()->boolean();
