@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     BedController,
     CheckInController,
     StudentInfoController,
+    DashboardController,
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -23,6 +24,8 @@ Route::group(['prefix' => 'auth'], function ($route) {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
+
+    Route::get('dashboard', [DashboardController::class, 'index']);
 
     Route::get('users', [UserController::class, 'index']);
 

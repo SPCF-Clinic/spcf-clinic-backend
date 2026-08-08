@@ -10,7 +10,6 @@ class IndexCheckInRepository extends BaseRepository
 {
     public function execute(){
         $checkIns = CheckIn::with(['user', 'bed'])
-            ->where('status', 'Checked In')
             ->get();
 
         $checkIns = CheckInResource::collection($checkIns);
