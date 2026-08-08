@@ -23,7 +23,7 @@ class UpdateCheckInRepository extends BaseRepository
             if (isset($validated['check_out'])) {
                 $checkIn->update([
                     'check_out_time' => Carbon::now(),
-                    'status' => 'checked_out',
+                    'status' => 'Checked Out',
                 ]);
                 if ($checkIn->bed) {
                     $checkIn->bed->update([
@@ -52,7 +52,7 @@ class UpdateCheckInRepository extends BaseRepository
 
             if (isset($validated['bed_check_out_time'])) {
                 $checkIn->update([
-                    'bed_check_out_time' => $validated['bed_check_out_time'],
+                    'bed_check_out_time' => Carbon::createFromFormat('H:i', $validated['bed_check_out_time']),
                 ]);
             }
 

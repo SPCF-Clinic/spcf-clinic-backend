@@ -15,6 +15,10 @@ class StoreCheckInRepository extends BaseRepository
     public function execute($request){
         $validated = $request->validated();
 
+        if (CheckIn::where('user_id', $validated['user_id'])->where('status', 'Checked In')->exists()) {
+            return $this->error('Student is already checked in.', 400);
+        }
+
         if (isset($validated['bed_id'])) {
             $bed = Bed::find($validated['bed_id']);
             if (!$bed) {
@@ -31,8 +35,8 @@ class StoreCheckInRepository extends BaseRepository
             'reason_for_visit' => $validated['reason_for_visit'],
             'check_in_time' => Carbon::now(),
             'check_out_time' => null,
-            'bed_check_in_time' => $validated['bed_check_in_time'] ?? null,
-            'bed_check_out_time' => $validated['bed_check_out_time'] ?? null,
+            'bed_check_in_time' => Carbon::createFromFormat('H:i', $validated['bed_check_in_time']) ?? null,
+            'bed_check_out_time' => Carbon::createFromFormat('H:i', $validated['bed_check_out_time']) ?? null,
             'status' => 'Checked In',
             'remarks' => $validated['remarks'] ?? null,
         ]);

@@ -25,7 +25,7 @@ class UpdateCheckInRequest extends FormRequest
         return [
             'check_out' => ['sometimes', 'nullable', 'boolean'],
             'unassign_bed' => ['sometimes', 'nullable', 'boolean'],
-            'bed_check_out_time' => ['sometimes', 'nullable', 'datetime'],
+            'bed_check_out_time' => ['sometimes', 'nullable', 'date_format:H:i'],
             'dispensed_item_id' => ['sometimes', 'nullable', 'exists:items,id'],
             'dispensed_item_quantity' => ['sometimes', 'nullable', 'integer', 'min:1'],
         ];
