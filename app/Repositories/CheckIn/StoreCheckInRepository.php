@@ -36,8 +36,6 @@ class StoreCheckInRepository extends BaseRepository
             'reason_for_visit' => $validated['reason_for_visit'],
             'check_in_time' => Carbon::now(),
             'check_out_time' => null,
-            'bed_check_in_time' => Carbon::createFromFormat('H:i:s', $validated['bed_check_in_time']) ?? null,
-            'bed_check_out_time' => Carbon::createFromFormat('H:i:s', $validated['bed_check_out_time']) ?? null,
             'status' => 'Checked In',
             'remarks' => $validated['remarks'] ?? null,
         ]);
@@ -56,14 +54,6 @@ class StoreCheckInRepository extends BaseRepository
             ActivityLog::create([
                 'group' => 'BED',
                 'action' => "{$fullName} assigned to {$bed->bed_number}.",
-                'performed_by' => $user->id,
-            ]);
-
-            $timeInMinutes = Carbon::parse($validated['bed_check_in_time'])->diffInMinutes(Carbon::parse($validated['bed_check_out_time']));
-
-            ActivityLog::create([
-                'group' => 'TIMER',
-                'action' => "Set {$timeInMinutes}-minute timer for {$fullName}.",
                 'performed_by' => $user->id,
             ]);
         }

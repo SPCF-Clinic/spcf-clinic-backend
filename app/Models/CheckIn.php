@@ -10,8 +10,6 @@ class CheckIn extends Model
         'user_id',
         'bed_id',
         'reason_for_visit',
-        'bed_check_in_time',
-        'bed_check_out_time',
         'check_in_time',
         'check_out_time',
         'status',

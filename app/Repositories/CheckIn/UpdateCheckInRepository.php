@@ -34,11 +34,6 @@ class UpdateCheckInRepository extends BaseRepository
                         'status' => 'Empty',
                         'check_in_id' => null,
                     ]);
-                    if (Carbon::now()->lt($checkIn->bed_check_out_time)) {
-                        $checkIn->update([
-                            'bed_check_out_time' => Carbon::now(),
-                        ]);
-                    }
                 }
 
                 ActivityLog::create([
@@ -55,37 +50,12 @@ class UpdateCheckInRepository extends BaseRepository
                         'check_in_id' => null,
                     ]);
 
-                    if (Carbon::now()->lt($checkIn->bed_check_out_time)) {
-                        $checkIn->update([
-                            'bed_check_out_time' => Carbon::now(),
-                        ]);
-
-                        ActivityLog::create([
-                            'group' => 'TIMER',
-                            'action' => "Timer for {$fullName} cancelled.",
-                            'performed_by' => auth()->id(),
-                        ]);
-                    }
-
                     ActivityLog::create([
                         'group' => 'BED',
                         'action' => "{$fullName} removed from {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
                     ]);
                 }
-            }
-
-            if (isset($validated['bed_check_out_time'])) {
-                $checkIn->update([
-                    'bed_check_out_time' => Carbon::createFromFormat('H:i:s', $validated['bed_check_out_time']),
-                ]);
-
-                $timeAdjustedInMinutes = Carbon::parse($checkIn->bed_check_out_time)->diffInMinutes(Carbon::parse($validated['bed_check_out_time']));
-                ActivityLog::create([
-                    'group' => 'TIMER',
-                    'action' => "Timer for {$fullName} adjusted by {$timeAdjustedInMinutes} minutes.",
-                    'performed_by' => auth()->id(),
-                ]);
             }
 
             if (isset($validated['dispensed_item_id'])) {

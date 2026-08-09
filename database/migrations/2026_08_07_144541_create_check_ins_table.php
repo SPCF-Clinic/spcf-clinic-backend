@@ -16,8 +16,6 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('bed_id')->nullable()->constrained('beds')->onDelete('set null');
             $table->string('reason_for_visit');
-            $table->timestamp('bed_check_in_time')->nullable();
-            $table->timestamp('bed_check_out_time')->nullable();
             $table->timestamp('check_in_time')->nullable();
             $table->timestamp('check_out_time')->nullable();
             $table->enum('status', ['Checked In', 'Checked Out'])->default('Checked In');
