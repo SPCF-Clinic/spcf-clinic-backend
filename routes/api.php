@@ -15,6 +15,7 @@ use App\Http\Controllers\{
     CheckInController,
     StudentInfoController,
     DashboardController,
+    ActivityLogController,
 };
 
 Route::group(['prefix' => 'auth'], function ($route) {
@@ -51,4 +52,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('beds', BedController::class)->only(['index', 'store', 'destroy']);
     Route::apiResource('check-ins', CheckInController::class)->except(['destroy']);
+
+    Route::apiResource('activity-logs', ActivityLogController::class)->only(['index', 'store']);
 });
