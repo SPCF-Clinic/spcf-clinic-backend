@@ -29,8 +29,15 @@ class LoginRepository extends BaseRepository
             'performed_by' => $user->id,
         ]);
 
+        $userData = [
+            'id' => $user->id,
+            'username' => $user->username,
+            'full_name' => $fullName,
+            'role' => $user->roles->pluck('name')->first(),
+        ];
+
         return $this->success('User logged in successfully.', [
-            'user' => $user,
+            'user' => $userData,
             'token' => $token,
         ], 200);
     }
