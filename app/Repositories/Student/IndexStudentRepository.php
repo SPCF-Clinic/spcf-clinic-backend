@@ -10,11 +10,17 @@ class IndexStudentRepository extends BaseRepository
 {
     public function execute($request)
     {
+        $perPage = $request->input('per_page', 20);
         $students = User::role('Student')
             ->when($request->student_id, function ($query, $student_id) {
                 return $query->where('username', $student_id);
-            })->get();
+            })->paginate($perPage);
 
-        return $this->success('Students retrieved successfully.', StudentResource::collection($students), 200   );
+        $paginationData = $this->pagePaginationData($students);
+
+        return $this->success('Students retrieved successfully.', [
+            'students' => StudentResource::collection($students),
+            'pagination' => $paginationData
+        ], 200);
     }
 }

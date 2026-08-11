@@ -12,6 +12,14 @@ class ActivityLog extends Model
         'performed_by',
     ];
 
+    protected $hidden = [
+        'updated_at'
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+    ];
+
     public function performedBy()
     {
         return $this->belongsTo(User::class, 'performed_by');

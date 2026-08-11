@@ -12,6 +12,8 @@ use App\Http\Resources\ItemResource;
 class IndexItemRepository extends BaseRepository
 {
     public function execute($request){
+        $perPage = $request->input('per_page', 20);
+
         $items = Item::query()
             ->when($request->type, function ($query, $type) {
                 return $query->where('type', $type);
@@ -19,8 +21,13 @@ class IndexItemRepository extends BaseRepository
             ->when($request->search, function ($query, $search) {
                 return $query->where('name', 'like', "%{$search}%");
             })
-            ->get();
+            ->paginate($perPage);
 
-        return $this->success('Items retrieved successfully', ItemResource::collection($items), 200);
+        $paginationData = $this->pagePaginationData($items);
+
+        return $this->success('Items retrieved successfully', [
+            'items' => ItemResource::collection($items),
+            'pagination' => $paginationData
+        ], 200);
     }
 }

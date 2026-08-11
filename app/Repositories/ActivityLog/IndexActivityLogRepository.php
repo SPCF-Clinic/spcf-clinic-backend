@@ -8,6 +8,7 @@ use App\Models\ActivityLog;
 class IndexActivityLogRepository extends BaseRepository
 {
     public function execute($request){
+        $perPage = $request->input('per_page', 20);
         $query = ActivityLog::query();
 
         if ($request->has('group')) {
@@ -18,7 +19,7 @@ class IndexActivityLogRepository extends BaseRepository
             $query->where('performed_by', $request->input('performed_by'));
         }
 
-        $logs = $query->orderBy('created_at', 'desc')->get();
+        $logs = $query->orderBy('created_at', 'desc')->cursorPaginate($perPage);
 
         return $this->success('Activity logs retrieved successfully.', $logs, 200);
     }

@@ -8,6 +8,7 @@ use App\Http\Resources\CheckInResource;
 class IndexStudentCheckInsRepository extends BaseRepository
 {
     public function execute($request, $student){
+        $perPage = $request->input('per_page', 20);
         $checkIns = $student->checkIns()->with(['bed', 'dispensedItems']);
 
         if ($request->has('search') && $request->search) {
@@ -19,6 +20,12 @@ class IndexStudentCheckInsRepository extends BaseRepository
             });
         }
 
-        return $this->success('Student check-ins retrieved successfully.', CheckInResource::collection($checkIns->get()), 200);
+        $checkIns = $checkIns->paginate($perPage);
+        $paginationData = $this->pagePaginationData($checkIns);
+
+        return $this->success('Student check-ins retrieved successfully.', [
+            'check_ins' => CheckInResource::collection($checkIns),
+            'pagination' => $paginationData
+        ], 200);
     }
 }

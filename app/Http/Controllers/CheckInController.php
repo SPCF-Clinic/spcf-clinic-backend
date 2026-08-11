@@ -31,10 +31,10 @@ class CheckInController extends Controller
         $this->show = $show;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', CheckIn::class);
-        return $this->index->execute();
+        return $this->index->execute($request);
     }
 
     public function store(StoreCheckInRequest $request)

@@ -25,6 +25,7 @@ class IndexActivityLogRequest extends FormRequest
         return [
             'group' => ['sometimes', 'nullable', 'in:AUTH,INVENTORY,STUDENT_RECORD,CHECK-IN,BED,FORM_FIELD,TIMER'],
             'performed_by' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
+            'per_page' => ['sometimes', 'nullable', 'integer', 'min:1'],
         ];
     }
 }
