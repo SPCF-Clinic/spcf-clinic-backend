@@ -3,6 +3,7 @@
 namespace App\Repositories\Support;
 
 use App\Repositories\BaseRepository;
+use App\Support\FormVersion;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -56,6 +57,16 @@ abstract class AbstractReorderFormRepository extends BaseRepository
     abstract protected function notReorderableMessage(): string;
 
     /**
+     * Shown when the request's form_version doesn't match the form's
+     * current fingerprint — i.e. the form changed (a field was added,
+     * edited, deleted, or reordered) since the client last loaded it.
+     */
+    protected function staleFormVersionMessage(): string
+    {
+        return 'This form has changed since you last loaded it. Please refresh the page and try again.';
+    }
+
+    /**
      * Shown when the requested target_form_order is a value currently held
      * by a default (locked) field. Override for model-specific wording.
      */
@@ -80,14 +91,19 @@ abstract class AbstractReorderFormRepository extends BaseRepository
         $validated = $request->validated();
         $fieldId = (int) $validated['field_id'];
         $targetFormOrder = (int) $validated['target_form_order'];
+        $submittedFormVersion = $validated['form_version'];
         $modelClass = $this->modelClass();
         $requiredWithColumn = $this->requiredWithColumn();
 
-        return DB::transaction(function () use ($modelClass, $requiredWithColumn, $fieldId, $targetFormOrder) {
+        return DB::transaction(function () use ($modelClass, $requiredWithColumn, $fieldId, $targetFormOrder, $submittedFormVersion) {
             // Lock every field of this type for the duration of the
             // transaction so a concurrent reorder can't read a stale
             // ordering.
             $modelClass::lockForUpdate()->get();
+
+            if (FormVersion::compute($modelClass) !== $submittedFormVersion) {
+                return $this->error($this->staleFormVersionMessage(), 409);
+            }
 
             $selectedField = $modelClass::with('latestVersion')->find($fieldId);
 

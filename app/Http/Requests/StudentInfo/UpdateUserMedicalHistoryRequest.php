@@ -10,11 +10,19 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Partial update payload shape:
  *
- * { "medical_history": { "<medical_history_field_id>": "<value>", ... } }
+ * {
+ *   "form_version": "<from GET /medical-history-fields>",
+ *   "medical_history": { "<medical_history_field_id>": "<value>", ... }
+ * }
  *
  * Every field is optional ('sometimes', 'nullable') — omit a field entirely
  * to leave its stored answer untouched, or submit it as null to clear it.
  * Type/option rules still apply to whatever is actually submitted.
+ *
+ * form_version must match the current medical-history form fingerprint —
+ * if an admin has since changed the field definitions, the request is
+ * rejected so the client can prompt for a refresh instead of applying
+ * answers against a form that's no longer accurate.
  */
 class UpdateUserMedicalHistoryRequest extends FormRequest
 {
@@ -38,6 +46,7 @@ class UpdateUserMedicalHistoryRequest extends FormRequest
         $fields = $this->answerableFields(MedicalHistoryField::class);
 
         $rules = [
+            'form_version' => 'required|string',
             'medical_history' => ['required', 'array', $this->knownFieldsRule($fields)],
         ];
 

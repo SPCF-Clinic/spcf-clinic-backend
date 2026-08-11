@@ -5,6 +5,7 @@ namespace App\Repositories\MedicalHistoryField;
 use App\Repositories\BaseRepository;
 use App\Models\MedicalHistoryField;
 use App\Http\Resources\MedicalHistoryFieldResource;
+use App\Support\FormVersion;
 
 class IndexMedicalHistoryFieldRepository extends BaseRepository
 {
@@ -25,7 +26,8 @@ class IndexMedicalHistoryFieldRepository extends BaseRepository
         return $this->success(
             'Medical history fields retrieved successfully.',
             MedicalHistoryFieldResource::collection($fields),
-            200
+            200,
+            ['form_version' => FormVersion::compute(MedicalHistoryField::class)]
         );
     }
 }

@@ -26,18 +26,26 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
         try {
             $validated = $request->validated();
 
+            $baseField = PersonalInfoField::with('latestVersion')->lockForUpdate()->findOrFail($field->id);
+            $latestVersion = $baseField->latestVersion;
+
+            if ((int) $validated['version_number'] !== (int) $latestVersion->version_number) {
+                DB::rollBack();
+                return $this->error(
+                    'This field has changed since you last loaded it. Please refresh the page and try again.',
+                    409
+                );
+            }
+
             if (isset($validated['type'])) {
                 $formFieldType = FormFieldType::where('name', $validated['type'])->first();
             } else {
-                $formFieldType = $field->latestVersion->formFieldType;
+                $formFieldType = $latestVersion->formFieldType;
             }
 
             if (!$formFieldType) {
                 throw new \InvalidArgumentException('Invalid form field type.');
             }
-
-            $baseField = PersonalInfoField::findOrFail($field->id);
-            $latestVersion = $baseField->latestVersion;
 
             $newVersionNumber = $latestVersion->version_number + 1;
 

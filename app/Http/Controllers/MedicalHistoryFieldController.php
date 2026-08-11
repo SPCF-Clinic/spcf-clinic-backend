@@ -15,6 +15,7 @@ use App\Repositories\MedicalHistoryField\{
 use App\Http\Requests\MedicalHistoryField\{
     StoreMedicalHistoryFieldRequest,
     UpdateMedicalHistoryFieldRequest,
+    DeleteMedicalHistoryFieldRequest,
     ReorderFormRequest,
 };
 
@@ -56,10 +57,10 @@ class MedicalHistoryFieldController extends Controller
         return $this->update->execute($request, $field);
     }
 
-    public function destroy(MedicalHistoryField $field)
+    public function destroy(DeleteMedicalHistoryFieldRequest $request, MedicalHistoryField $field)
     {
         $this->authorize('delete', $field);
-        return $this->delete->execute($field);
+        return $this->delete->execute($request, $field);
     }
 
     public function reorderForm(ReorderFormRequest $request)

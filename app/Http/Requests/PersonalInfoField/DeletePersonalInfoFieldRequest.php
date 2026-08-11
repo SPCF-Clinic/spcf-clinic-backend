@@ -5,7 +5,7 @@ namespace App\Http\Requests\PersonalInfoField;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReorderFormRequest extends FormRequest
+class DeletePersonalInfoFieldRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,9 +23,7 @@ class ReorderFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'field_id' => 'required|integer|exists:personal_info_fields,id',
-            'target_form_order' => 'required|integer|min:1',
-            'form_version' => 'required|string',
+            'version_number' => 'required|integer',
         ];
     }
 }

@@ -16,6 +16,8 @@ use Illuminate\Foundation\Http\FormRequest;
  * {
  *   "student_id": "0123000123",
  *   "password": "...",
+ *   "personal_info_form_version": "<from GET /personal-info-fields>",
+ *   "medical_history_form_version": "<from GET /medical-history-fields>",
  *   "personal_info": { "<personal_info_field_id>": "<value>", ... },
  *   "medical_history": { "<medical_history_field_id>": "<value>", ... }
  * }
@@ -24,6 +26,13 @@ use Illuminate\Foundation\Http\FormRequest;
  * Dropdown, Radio) and an array of strings for Checkbox (multi-select)
  * fields. Divider fields are section headers, not answerable, and must not
  * appear as keys in either payload.
+ *
+ * The two form_version fields must match the `form_version` returned
+ * alongside the field list at the time the registration form was loaded —
+ * if an admin has since added, edited, deleted, or reordered a field, the
+ * fingerprint no longer matches and the request is rejected so the client
+ * can prompt the student to refresh rather than submit against a form that
+ * no longer reflects what they answered.
  */
 class RegisterRequest extends FormRequest
 {
@@ -50,6 +59,8 @@ class RegisterRequest extends FormRequest
         $rules = [
             'student_id' => 'required|string|max:255|unique:users,username',
             'password' => 'required|string|min:8',
+            'personal_info_form_version' => 'required|string',
+            'medical_history_form_version' => 'required|string',
             'personal_info' => ['required', 'array', $this->knownFieldsRule($personalInfoFields)],
             'medical_history' => ['required', 'array', $this->knownFieldsRule($medicalHistoryFields)],
         ];

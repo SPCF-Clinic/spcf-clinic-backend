@@ -5,7 +5,9 @@ namespace App\Repositories\StudentInfo;
 use App\Repositories\BaseRepository;
 use App\Repositories\Student\ShowStudentRepository;
 use App\Models\User;
+use App\Models\PersonalInfoField;
 use App\Models\ActivityLog;
+use App\Support\FormVersion;
 
 class UpdateUserPersonalInfoRepository extends BaseRepository
 {
@@ -22,7 +24,16 @@ class UpdateUserPersonalInfoRepository extends BaseRepository
      */
     public function execute($request, User $student)
     {
-        $answers = $request->validated()['personal_info'] ?? [];
+        $validated = $request->validated();
+
+        if ($validated['form_version'] !== FormVersion::compute(PersonalInfoField::class)) {
+            return $this->error(
+                'This form has changed since you loaded it. Please refresh the page and try again.',
+                409
+            );
+        }
+
+        $answers = $validated['personal_info'] ?? [];
 
         foreach ($answers as $fieldId => $value) {
             if ($value === null) {

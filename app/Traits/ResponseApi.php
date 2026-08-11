@@ -4,14 +4,14 @@ namespace App\Traits;
 
 trait ResponseApi
 {
-    protected function success($message, $data = [], $statusCode = 200){
+    protected function success($message, $data = [], $statusCode = 200, $meta = []){
 
-        return response()->json([
+        return response()->json(array_merge([
             "message" => $message,
             "data" => $data,
             "code"    => $statusCode,
             "error"   => false
-        ], $statusCode);
+        ], $meta), $statusCode);
     }
 
 

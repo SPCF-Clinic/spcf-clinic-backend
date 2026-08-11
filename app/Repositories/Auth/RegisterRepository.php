@@ -5,8 +5,11 @@ namespace App\Repositories\Auth;
 use App\Repositories\BaseRepository;
 use App\Models\{
     User,
+    PersonalInfoField,
+    MedicalHistoryField,
     ActivityLog,
 };
+use App\Support\FormVersion;
 use Illuminate\Support\Facades\{
     DB,
     Hash,
@@ -16,6 +19,14 @@ class RegisterRepository extends BaseRepository
 {
     public function execute($request){
         $validated = $request->validated();
+
+        if ($validated['personal_info_form_version'] !== FormVersion::compute(PersonalInfoField::class)
+            || $validated['medical_history_form_version'] !== FormVersion::compute(MedicalHistoryField::class)) {
+            return $this->error(
+                'This form has changed since you loaded it. Please refresh the page and try again.',
+                409
+            );
+        }
 
         DB::beginTransaction();
         try {

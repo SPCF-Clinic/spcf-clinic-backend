@@ -5,6 +5,7 @@ namespace App\Repositories\PersonalInfoField;
 use App\Repositories\BaseRepository;
 use App\Models\PersonalInfoField;
 use App\Http\Resources\PersonalInfoFieldResource;
+use App\Support\FormVersion;
 
 class IndexPersonalInfoFieldRepository extends BaseRepository
 {
@@ -25,7 +26,8 @@ class IndexPersonalInfoFieldRepository extends BaseRepository
         return $this->success(
             'Personal info fields retrieved successfully.',
             PersonalInfoFieldResource::collection($fields),
-            200
+            200,
+            ['form_version' => FormVersion::compute(PersonalInfoField::class)]
         );
     }
 }

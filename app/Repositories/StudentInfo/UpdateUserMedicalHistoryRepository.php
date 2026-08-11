@@ -5,7 +5,9 @@ namespace App\Repositories\StudentInfo;
 use App\Repositories\BaseRepository;
 use App\Repositories\Student\ShowStudentRepository;
 use App\Models\User;
+use App\Models\MedicalHistoryField;
 use App\Models\ActivityLog;
+use App\Support\FormVersion;
 
 class UpdateUserMedicalHistoryRepository extends BaseRepository
 {
@@ -21,7 +23,16 @@ class UpdateUserMedicalHistoryRepository extends BaseRepository
      */
     public function execute($request, User $student)
     {
-        $answers = $request->validated()['medical_history'] ?? [];
+        $validated = $request->validated();
+
+        if ($validated['form_version'] !== FormVersion::compute(MedicalHistoryField::class)) {
+            return $this->error(
+                'This form has changed since you loaded it. Please refresh the page and try again.',
+                409
+            );
+        }
+
+        $answers = $validated['medical_history'] ?? [];
 
         foreach ($answers as $fieldId => $value) {
             if ($value === null) {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\PersonalInfoField\{
     StorePersonalInfoFieldRequest,
     UpdatePersonalInfoFieldRequest,
+    DeletePersonalInfoFieldRequest,
     ReorderFormRequest,
 };
 
@@ -58,10 +59,10 @@ class PersonalInfoFieldController extends Controller
         return $this->update->execute($request, $field);
     }
 
-    public function destroy(PersonalInfoField $field)
+    public function destroy(DeletePersonalInfoFieldRequest $request, PersonalInfoField $field)
     {
         $this->authorize('delete', $field);
-        return $this->delete->execute($field);
+        return $this->delete->execute($request, $field);
     }
 
     public function reorderForm(ReorderFormRequest $request)

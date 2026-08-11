@@ -27,6 +27,7 @@ class UpdateMedicalHistoryFieldRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'version_number' => 'required|integer',
             'name' => ['sometimes', 'string', 'max:255'],
             'type' => ['sometimes', 'string', 'max:255', Rule::exists(FormFieldType::class, 'name')],
             'options' => ['sometimes', 'nullable', 'array', function ($attribute, $value, $fail) {

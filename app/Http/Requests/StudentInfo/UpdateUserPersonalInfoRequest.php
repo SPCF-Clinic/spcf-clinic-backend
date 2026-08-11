@@ -10,11 +10,19 @@ use Illuminate\Foundation\Http\FormRequest;
 /**
  * Partial update payload shape:
  *
- * { "personal_info": { "<personal_info_field_id>": "<value>", ... } }
+ * {
+ *   "form_version": "<from GET /personal-info-fields>",
+ *   "personal_info": { "<personal_info_field_id>": "<value>", ... }
+ * }
  *
  * Every field is optional ('sometimes', 'nullable') — omit a field entirely
  * to leave its stored answer untouched, or submit it as null to clear it.
  * Type/option rules still apply to whatever is actually submitted.
+ *
+ * form_version must match the current personal-info form fingerprint — if
+ * an admin has since changed the field definitions, the request is
+ * rejected so the client can prompt for a refresh instead of applying
+ * answers against a form that's no longer accurate.
  */
 class UpdateUserPersonalInfoRequest extends FormRequest
 {
@@ -38,6 +46,7 @@ class UpdateUserPersonalInfoRequest extends FormRequest
         $fields = $this->answerableFields(PersonalInfoField::class);
 
         $rules = [
+            'form_version' => 'required|string',
             'personal_info' => ['required', 'array', $this->knownFieldsRule($fields)],
         ];
 

@@ -25,6 +25,7 @@ class ReorderFormRequest extends FormRequest
         return [
             'field_id' => 'required|integer|exists:medical_history_fields,id',
             'target_form_order' => 'required|integer|min:1',
+            'form_version' => 'required|string',
         ];
     }
 }
