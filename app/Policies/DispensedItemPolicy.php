@@ -13,7 +13,7 @@ class DispensedItemPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
@@ -21,7 +21,7 @@ class DispensedItemPolicy
      */
     public function view(User $user, DispensedItem $dispensedItem): bool
     {
-        return false;
+        return $user->hasRole(['Admin', 'Super Admin']);
     }
 
     /**
