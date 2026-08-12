@@ -24,7 +24,7 @@ class LoginRepository extends BaseRepository
 
         $fullName = $user->hasRole('Student') ? $user->getFullNameAttribute() : $user->username;
         ActivityLog::create([
-            'group' => 'AUTH',
+            // 'group' => 'AUTH',
             'action' => "{$fullName} logged in.",
             'performed_by' => $user->id,
         ]);

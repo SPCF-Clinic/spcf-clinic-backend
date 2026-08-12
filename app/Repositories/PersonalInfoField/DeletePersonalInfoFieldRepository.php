@@ -32,7 +32,7 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
             }
 
             ActivityLog::create([
-                'group' => 'FORM_FIELD',
+                // 'group' => 'FORM_FIELD',
                 'action' => "Personal info field '{$latestVersion?->field_name}' deleted.",
                 'performed_by' => auth()->id(),
             ]);

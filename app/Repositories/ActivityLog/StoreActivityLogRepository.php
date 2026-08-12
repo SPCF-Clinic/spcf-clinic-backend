@@ -9,7 +9,7 @@ class StoreActivityLogRepository extends BaseRepository
 {
     public function execute($request){
         $log = ActivityLog::create([
-            'group' => $request->input('group'),
+            // 'group' => $request->input('group'),
             'action' => $request->input('action'),
             'performed_by' => auth()->id(),
         ]);

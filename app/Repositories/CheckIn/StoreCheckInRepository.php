@@ -52,14 +52,14 @@ class StoreCheckInRepository extends BaseRepository
             ]);
 
             ActivityLog::create([
-                'group' => 'BED',
+                // 'group' => 'BED',
                 'action' => "{$fullName} assigned to {$bed->bed_number}.",
                 'performed_by' => $user->id,
             ]);
         }
         
         ActivityLog::create([
-            'group' => 'CHECK-IN',
+            // 'group' => 'CHECK-IN',
             'action' => "{$fullName} checked into the clinic.",
             'performed_by' => $user->id,
         ]);

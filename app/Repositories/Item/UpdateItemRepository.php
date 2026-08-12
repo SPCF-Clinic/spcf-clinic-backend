@@ -15,7 +15,7 @@ class UpdateItemRepository extends BaseRepository
             $item->update($validated);
 
             ActivityLog::create([
-                'group' => 'INVENTORY',
+                // 'group' => 'INVENTORY',
                 'action' => "Item {$item->name} stock manually updated.",
                 'performed_by' => auth()->id(),
             ]);

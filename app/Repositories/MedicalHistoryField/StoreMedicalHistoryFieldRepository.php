@@ -59,7 +59,7 @@ class StoreMedicalHistoryFieldRepository extends BaseRepository
             $baseField->load('latestVersion.options');
 
             ActivityLog::create([
-                'group' => 'FORM_FIELD',
+                // 'group' => 'FORM_FIELD',
                 'action' => "New medical history field '{$fieldVersion->field_name}' created.",
                 'performed_by' => auth()->id(),
             ]);

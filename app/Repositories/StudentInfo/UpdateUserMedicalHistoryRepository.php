@@ -49,7 +49,7 @@ class UpdateUserMedicalHistoryRepository extends BaseRepository
 
         $fullName = $student->getFullNameAttribute();
         ActivityLog::create([
-            'group' => 'STUDENT_RECORD',
+            // 'group' => 'STUDENT_RECORD',
             'action' => "{$fullName}'s information updated.",
             'performed_by' => auth()->id(),
         ]);
