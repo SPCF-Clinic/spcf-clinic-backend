@@ -4,6 +4,7 @@ namespace App\Repositories\PersonalInfoField;
 
 use App\Repositories\BaseRepository;
 use App\Models\{PersonalInfoField, ActivityLog};
+use App\Support\FormOrderCompactor;
 use Illuminate\Support\Facades\DB;
 
 class DeletePersonalInfoFieldRepository extends BaseRepository
@@ -37,6 +38,8 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
             ]);
 
             $baseField->delete();
+
+            FormOrderCompactor::compact(PersonalInfoField::class);
 
             DB::commit();
 

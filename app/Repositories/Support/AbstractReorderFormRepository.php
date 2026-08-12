@@ -4,6 +4,7 @@ namespace App\Repositories\Support;
 
 use App\Repositories\BaseRepository;
 use App\Support\FormVersion;
+use App\Support\FormOrderCompactor;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -37,6 +38,13 @@ use Illuminate\Support\Facades\DB;
  *
  * form_order values are not required to stay contiguous — gaps left behind
  * by a move are harmless since only relative order is ever read from them.
+ *
+ * ── Gap compaction ───────────────────────────────────────────────────────
+ * A deletion elsewhere can leave a form_order gap (the deleted field's old
+ * value is never reused). After every reorder, if the highest form_order
+ * exceeds the total number of fields, that gap is closed via
+ * App\Support\FormOrderCompactor — the same compactor deletion itself runs
+ * right after removing a field, so this call here is mainly a safety net.
  */
 abstract class AbstractReorderFormRepository extends BaseRepository
 {
@@ -182,7 +190,7 @@ abstract class AbstractReorderFormRepository extends BaseRepository
             $next++;
         }
 
-        return $this->respondWithUpdatedFields();
+        return $this->respondWithUpdatedFields($movedIds->all(), $targetFormOrder);
     }
 
     /**
@@ -231,7 +239,7 @@ abstract class AbstractReorderFormRepository extends BaseRepository
 
         $selectedField->latestVersion?->update(['form_order' => $targetFormOrder]);
 
-        return $this->respondWithUpdatedFields();
+        return $this->respondWithUpdatedFields([$selectedField->id], $targetFormOrder);
     }
 
     /**
@@ -239,9 +247,16 @@ abstract class AbstractReorderFormRepository extends BaseRepository
      * response: top-level (parent) fields only — conditional fields are
      * nested inside each one via the resource's `additional_fields` — sorted
      * by form_order.
+     *
+     * $ignoreFieldIds is the id (or id + children) of the field that was
+     * just deliberately moved by this reorder, and $targetFormOrder is
+     * where it was moved to — see FormOrderCompactor for why compaction
+     * needs both to close a gap correctly.
      */
-    protected function respondWithUpdatedFields()
+    protected function respondWithUpdatedFields(array $ignoreFieldIds = [], ?int $targetFormOrder = null)
     {
+        FormOrderCompactor::compact($this->modelClass(), $ignoreFieldIds, $targetFormOrder);
+
         $modelClass = $this->modelClass();
         $resourceClass = $this->resourceClass();
         $requiredWithColumn = $this->requiredWithColumn();
