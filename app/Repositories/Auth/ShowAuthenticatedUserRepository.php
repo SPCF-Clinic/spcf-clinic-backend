@@ -12,7 +12,7 @@ class ShowAuthenticatedUserRepository extends BaseRepository
         $userDetails = [
             'id' => $user->id,
             'username' => $user->username,
-            'name' => $user->personalInfos ? $user->getFullNameAttribute() : null,
+            'name' => !$user->personalInfos->isEmpty() ? $user->getFullNameAttribute() : null,
             'role' => $user->getRoleNames()->first(),
         ];
 
