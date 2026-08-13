@@ -43,7 +43,6 @@ class PersonalInfoFieldController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', PersonalInfoField::class);
         return $this->index->execute();
     }
 

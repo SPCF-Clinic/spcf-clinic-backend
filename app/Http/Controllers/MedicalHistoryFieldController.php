@@ -41,7 +41,6 @@ class MedicalHistoryFieldController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', MedicalHistoryField::class);
         return $this->index->execute();
     }
 
