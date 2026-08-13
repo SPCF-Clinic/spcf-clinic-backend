@@ -24,6 +24,7 @@ Route::group(['prefix' => 'auth'], function ($route) {
 });
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('auth/me', [AuthController::class, 'authenticatedUser']);
     Route::post('auth/logout', [AuthController::class, 'logout']);
 
     Route::get('dashboard', [DashboardController::class, 'index']);

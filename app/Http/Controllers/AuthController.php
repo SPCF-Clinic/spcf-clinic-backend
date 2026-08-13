@@ -12,20 +12,23 @@ use App\Repositories\Auth\{
     RegisterRepository,
     LoginRepository,
     LogoutRepository,
+    ShowAuthenticatedUserRepository,
 };
 
 class AuthController extends Controller
 {
-    protected $register, $login, $logout;
+    protected $register, $login, $logout, $showAuthenticatedUser;
 
     public function __construct(
         RegisterRepository $register,
         LoginRepository $login,
-        LogoutRepository $logout
+        LogoutRepository $logout,
+        ShowAuthenticatedUserRepository $showAuthenticatedUser
     ) {
         $this->register = $register;
         $this->login = $login;
         $this->logout = $logout;
+        $this->showAuthenticatedUser = $showAuthenticatedUser;
     }
 
     public function register(RegisterRequest $request)
@@ -41,5 +44,10 @@ class AuthController extends Controller
     public function logout()
     {
         return $this->logout->execute();
+    }
+
+    public function authenticatedUser()
+    {
+        return $this->showAuthenticatedUser->execute();
     }
 }
