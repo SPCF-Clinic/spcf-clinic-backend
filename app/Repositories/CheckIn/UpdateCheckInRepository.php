@@ -38,7 +38,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'timer_ended_broadcast_at' => null,
                     ]);
 
-                    broadcast(new BedTimerRemoved($bedId));
+                    broadcast(new BedTimerRemoved($checkIn->bed->id));
                 }
 
                 ActivityLog::create([
@@ -57,7 +57,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'timer_ended_broadcast_at' => null,
                     ]);
 
-                    broadcast(new BedTimerRemoved($bedId));
+                    broadcast(new BedTimerRemoved($checkIn->bed->id));
 
                     ActivityLog::create([
                         // 'group' => 'BED',

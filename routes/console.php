@@ -14,4 +14,4 @@ Artisan::command('inspire', function () {
 // a standard once-a-minute crontab entry cannot invoke this more than
 // once a minute, so schedule:work needs to be kept alive on whichever
 // machine runs this (e.g. via a system service / process supervisor).
-Schedule::command('beds:check-timers')->everySecond()->withoutOverlapping();
+Schedule::command('beds:check-timers')->everySecond();
