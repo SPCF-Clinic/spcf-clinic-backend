@@ -11,6 +11,7 @@ use App\Models\{
 use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
 use App\Events\BedTimerStarted;
+use App\Events\CheckInEvent;
 
 class StoreCheckInRepository extends BaseRepository
 {
@@ -68,6 +69,8 @@ class StoreCheckInRepository extends BaseRepository
             'action' => "{$fullName} checked into the clinic.",
             'performed_by' => $user->id,
         ]);
+
+        broadcast(new CheckInEvent($checkIn->id, $checkIn->user_id));
 
         $checkIn = new CheckInResource($checkIn);
 

@@ -13,6 +13,7 @@ use App\Http\Resources\CheckInResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
 use App\Events\BedTimerRemoved;
+use App\Events\CheckOutEvent;
 
 class UpdateCheckInRepository extends BaseRepository
 {
@@ -46,6 +47,8 @@ class UpdateCheckInRepository extends BaseRepository
                     'action' => "{$fullName} checked out of the clinic.",
                     'performed_by' => auth()->id(),
                 ]);
+
+                broadcast(new CheckOutEvent($checkIn->id, $checkIn->user_id));
             }
 
             if (isset($validated['unassign_bed'])) {
