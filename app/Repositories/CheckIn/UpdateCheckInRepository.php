@@ -16,6 +16,7 @@ use App\Events\{
     BedTimerRemoved,
     BedTimerPaused,
     BedTimerResumed,
+    BedTimerAdjusted,
     CheckOutEvent,
 };
 
@@ -78,7 +79,7 @@ class UpdateCheckInRepository extends BaseRepository
 
             if (isset($validated['timer_expires_at'])) {
                 if ($checkIn->bed) {
-                    $adjustedMinutes = Carbon::parse($validated['timer_expires_at'])->diffInMinutes($checkIn->bed->timer_expires_at);
+                    $adjustedMinutes = Carbon::parse($checkIn->bed->timer_expires_at)->diffInMinutes($validated['timer_expires_at']);
 
                     $checkIn->bed->update([
                         'timer_expires_at' => $validated['timer_expires_at'],
@@ -86,9 +87,11 @@ class UpdateCheckInRepository extends BaseRepository
                     ]);
 
                     ActivityLog::create([
-                        'action' => "{$fullName}'s timer adjusted on {$checkIn->bed->bed_number} by {$adjustedMinutes} minutes.",
+                        'action' => "{$fullName}'s timer adjusted on {$checkIn->bed->bed_number} by {$adjustedMinutes} minute/s.",
                         'performed_by' => auth()->id(),
                     ]);
+
+                    broadcast(new BedTimerAdjusted($checkIn->bed->id, $checkIn->bed->timer_expires_at));
                 }
             }
 
@@ -97,7 +100,10 @@ class UpdateCheckInRepository extends BaseRepository
                     if ($checkIn->bed->timer_paused_at) {
                         return $this->error('Timer is already paused.', 400);
                     }
-                    
+                    if (Carbon::now()->greaterThanOrEqualTo($checkIn->bed->timer_expires_at)) {
+                        return $this->error('Cannot pause an expired timer.', 400);
+                    }
+
                     $checkIn->bed->update([
                         'timer_paused_at' => Carbon::now(),
                     ]);
@@ -106,6 +112,8 @@ class UpdateCheckInRepository extends BaseRepository
                         'action' => "{$fullName}'s timer paused on {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
                     ]);
+
+                    broadcast(new BedTimerPaused($checkIn->bed->id));
                 }
             }
 
@@ -115,10 +123,15 @@ class UpdateCheckInRepository extends BaseRepository
                         return $this->error('Timer is not paused.', 400);
                     }
 
-                    $offsetTime = Carbon::now()->diffInSeconds($checkIn->bed->timer_paused_at);
+                    $offsetTime = Carbon::parse($checkIn->bed->timer_paused_at)->diffInSeconds(Carbon::now(), true);
 
                     $checkIn->bed->update([
                         'timer_expires_at' => Carbon::parse($checkIn->bed->timer_expires_at)->addSeconds($offsetTime),
+                    ]);
+
+                    // Adjust timer_expires_at first so that the timer doesn't immediately expire after resuming
+
+                    $checkIn->bed->update([
                         'timer_paused_at' => null,
                     ]);
 
@@ -126,6 +139,8 @@ class UpdateCheckInRepository extends BaseRepository
                         'action' => "{$fullName}'s timer resumed on {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
                     ]);
+
+                    broadcast(new BedTimerResumed($checkIn->bed->id, $checkIn->bed->timer_expires_at));
                 }
             }
 
@@ -158,7 +173,7 @@ class UpdateCheckInRepository extends BaseRepository
                         } else {
                             ActivityLog::create([
                                 // 'group' => 'INVENTORY',
-                                'action' => "{$dispensedItem->quantity} {$item->itemContent->unit} of {$item->name} dispensed to {$fullName}.",
+                                'action' => "{$dispensedItem->quantity} {$item->itemContent->content_unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
                             ]);
                         }

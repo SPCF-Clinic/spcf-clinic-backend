@@ -28,8 +28,16 @@ class UpdateCheckInRequest extends FormRequest
             'dispensed_item_id' => ['sometimes', 'nullable', 'exists:items,id'],
             'dispensed_item_quantity' => ['sometimes', 'nullable', 'integer', 'min:1'],
             'timer_expires_at' => ['sometimes', 'nullable', 'date', 'after:now'],
-            'pause_timer' => ['sometimes', 'nullable', 'boolean'],
-            'resume_timer' => ['sometimes', 'nullable', 'boolean'],
+            'pause_timer' => ['sometimes', 'nullable', 'boolean', function ($attribute, $value, $fail) {
+                if ($value && $this->input('resume_timer')) {
+                    $fail('You cannot pause and resume the timer at the same time.');
+                }
+            }],
+            'resume_timer' => ['sometimes', 'nullable', 'boolean', function ($attribute, $value, $fail) {
+                if ($value && $this->input('pause_timer')) {
+                    $fail('You cannot pause and resume the timer at the same time.');
+                }
+            }],
         ];
     }
 }

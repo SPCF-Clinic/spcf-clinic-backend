@@ -31,10 +31,7 @@ class BroadcastExpiredBedTimers extends Command
         Bed::whereNotNull('timer_expires_at')
             ->whereNull('timer_paused_at') // ignore paused timers, since they don't count down while paused
             ->where('timer_expires_at', '<=', now())
-            ->where(function ($query) {
-                $query->whereNull('timer_ended_broadcast_at')
-                    ->orWhereColumn('timer_ended_broadcast_at', '<', 'timer_expires_at');
-            })
+            ->whereNull('timer_ended_broadcast_at')
             ->each(function (Bed $bed) {
                 $bed->update(['timer_ended_broadcast_at' => now()]);
 
