@@ -55,7 +55,7 @@ class StoreCheckInRepository extends BaseRepository
                 'timer_ended_broadcast_at' => null,
             ]);
 
-            broadcast(new BedTimerStarted($bed->id, $bed->timer_expires_at->toIso8601String()));
+            broadcast(new BedTimerStarted($bed->id, $bed->timer_expires_at));
 
             ActivityLog::create([
                 // 'group' => 'BED',
