@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
+use App\Events\BedTimerRemoved;
 
 class UpdateCheckInRepository extends BaseRepository
 {
@@ -33,7 +34,11 @@ class UpdateCheckInRepository extends BaseRepository
                     $checkIn->bed->update([
                         'status' => 'Empty',
                         'check_in_id' => null,
+                        'timer_expires_at' => null,
+                        'timer_ended_broadcast_at' => null,
                     ]);
+
+                    broadcast(new BedTimerRemoved($bedId));
                 }
 
                 ActivityLog::create([
@@ -48,7 +53,11 @@ class UpdateCheckInRepository extends BaseRepository
                     $checkIn->bed->update([
                         'status' => 'Empty',
                         'check_in_id' => null,
+                        'timer_expires_at' => null,
+                        'timer_ended_broadcast_at' => null,
                     ]);
+
+                    broadcast(new BedTimerRemoved($bedId));
 
                     ActivityLog::create([
                         // 'group' => 'BED',

@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('beds', function (Blueprint $table) {
             $table->id();
             $table->string('bed_number')->unique();
-            // $table->foreignId('check_in_id')->nullable()->constrained('check_ins')->onDelete('set null');
             $table->enum('status', ['Empty', 'Occupied'])->default('Empty');
+            $table->timestamp('timer_expires_at')->nullable();
+            $table->timestamp('timer_ended_broadcast_at')->nullable();
             $table->timestamps();
         });
     }

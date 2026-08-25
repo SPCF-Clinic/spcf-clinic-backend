@@ -25,6 +25,7 @@ class StoreCheckInRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'bed_id' => ['sometimes', 'nullable', 'exists:beds,id'],
+            'timer_expires_at' => ['required_with:bed_id', 'date', 'after:now'],
             'reason_for_visit' => ['required', 'string'],
             'remarks' => ['sometimes', 'nullable', 'string'],
         ];

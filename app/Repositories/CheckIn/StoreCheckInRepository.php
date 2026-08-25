@@ -10,6 +10,7 @@ use App\Models\{
 };
 use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
+use App\Events\BedTimerStarted;
 
 class StoreCheckInRepository extends BaseRepository
 {
@@ -49,7 +50,11 @@ class StoreCheckInRepository extends BaseRepository
             $bed->update([
                 'check_in_id' => $checkIn->id,
                 'status' => 'Occupied',
+                'timer_expires_at' => $validated['timer_expires_at'] ?? null,
+                'timer_ended_broadcast_at' => null,
             ]);
+
+            broadcast(new BedTimerStarted($bed->id, $bed->timer_expires_at->toIso8601String()));
 
             ActivityLog::create([
                 // 'group' => 'BED',
