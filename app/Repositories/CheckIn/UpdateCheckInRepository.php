@@ -12,8 +12,12 @@ use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
-use App\Events\BedTimerRemoved;
-use App\Events\CheckOutEvent;
+use App\Events\{
+    BedTimerRemoved,
+    BedTimerPaused,
+    BedTimerResumed,
+    CheckOutEvent,
+};
 
 class UpdateCheckInRepository extends BaseRepository
 {
@@ -37,6 +41,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'check_in_id' => null,
                         'timer_expires_at' => null,
                         'timer_ended_broadcast_at' => null,
+                        'timer_paused_at' => null,
                     ]);
 
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
@@ -58,6 +63,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'check_in_id' => null,
                         'timer_expires_at' => null,
                         'timer_ended_broadcast_at' => null,
+                        'timer_paused_at' => null,
                     ]);
 
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
@@ -65,6 +71,59 @@ class UpdateCheckInRepository extends BaseRepository
                     ActivityLog::create([
                         // 'group' => 'BED',
                         'action' => "{$fullName} removed from {$checkIn->bed->bed_number}.",
+                        'performed_by' => auth()->id(),
+                    ]);
+                }
+            }
+
+            if (isset($validated['timer_expires_at'])) {
+                if ($checkIn->bed) {
+                    $adjustedMinutes = Carbon::parse($validated['timer_expires_at'])->diffInMinutes($checkIn->bed->timer_expires_at);
+
+                    $checkIn->bed->update([
+                        'timer_expires_at' => $validated['timer_expires_at'],
+                        'timer_ended_broadcast_at' => null,
+                    ]);
+
+                    ActivityLog::create([
+                        'action' => "{$fullName}'s timer adjusted on {$checkIn->bed->bed_number} by {$adjustedMinutes} minutes.",
+                        'performed_by' => auth()->id(),
+                    ]);
+                }
+            }
+
+            if (isset($validated['pause_timer'])) {
+                if ($checkIn->bed) {
+                    if ($checkIn->bed->timer_paused_at) {
+                        return $this->error('Timer is already paused.', 400);
+                    }
+                    
+                    $checkIn->bed->update([
+                        'timer_paused_at' => Carbon::now(),
+                    ]);
+
+                    ActivityLog::create([
+                        'action' => "{$fullName}'s timer paused on {$checkIn->bed->bed_number}.",
+                        'performed_by' => auth()->id(),
+                    ]);
+                }
+            }
+
+            if (isset($validated['resume_timer'])) {
+                if ($checkIn->bed) {
+                    if (!$checkIn->bed->timer_paused_at) {
+                        return $this->error('Timer is not paused.', 400);
+                    }
+
+                    $offsetTime = Carbon::now()->diffInSeconds($checkIn->bed->timer_paused_at);
+
+                    $checkIn->bed->update([
+                        'timer_expires_at' => Carbon::parse($checkIn->bed->timer_expires_at)->addSeconds($offsetTime),
+                        'timer_paused_at' => null,
+                    ]);
+
+                    ActivityLog::create([
+                        'action' => "{$fullName}'s timer resumed on {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
                     ]);
                 }

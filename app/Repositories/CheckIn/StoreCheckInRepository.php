@@ -51,6 +51,7 @@ class StoreCheckInRepository extends BaseRepository
             $bed->update([
                 'check_in_id' => $checkIn->id,
                 'status' => 'Occupied',
+                'timer_paused_at' => null,
                 'timer_expires_at' => $validated['timer_expires_at'] ?? null,
                 'timer_ended_broadcast_at' => null,
             ]);
