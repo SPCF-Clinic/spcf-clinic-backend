@@ -28,4 +28,29 @@ trait HasAttribute
         }
         return false;
     }
+
+    public function getMedicalHistoryValueByName($fieldName): ?string
+    {
+        return $this->medicalHistories
+            ->where(mb_strtolower('medical_history_field.latestVersion.field_name'), mb_strtolower($fieldName))
+            ->first()?->value;
+    }
+
+    public function getMedicalHistoryValue($fieldId): ?string
+    {
+        return $this->medicalHistories
+            ->where('medical_history_field_id', $fieldId)
+            ->first()?->value;
+    }
+
+    public function hasMedicalHistoryValue($fieldId = null, $fieldName = null): bool
+    {
+        if ($fieldName) {
+            return $this->getMedicalHistoryValueByName($fieldName) !== null;
+        }
+        if ($fieldId) {
+            return $this->getMedicalHistoryValue($fieldId) !== null;
+        }
+        return false;
+    }
 }
