@@ -22,7 +22,7 @@ class LoginRepository extends BaseRepository
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        $fullName = $user->hasRole('Student') ? $user->getFullNameAttribute() : $user->username;
+        $fullName = $user->hasName() ? $user->getFullNameAttribute() : $user->username;
         ActivityLog::create([
             // 'group' => 'AUTH',
             'action' => "{$fullName} logged in.",

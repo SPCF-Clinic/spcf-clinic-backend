@@ -41,4 +41,9 @@ trait HasName
             $this->last_name,
         ])->filter()->join(' ');
     }
+
+    public function hasName(): bool
+    {
+        return $this->first_name || $this->last_name;
+    }
 }

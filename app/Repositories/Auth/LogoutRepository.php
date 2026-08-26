@@ -10,7 +10,7 @@ class LogoutRepository extends BaseRepository
     public function execute(){
         $user = auth()->user();
         if ($user) {
-            $fullName = $user->hasRole('Student') ? $user->getFullNameAttribute() : $user->username;
+            $fullName = $user->hasName() ? $user->getFullNameAttribute() : $user->username;
             ActivityLog::create([
                 // 'group' => 'AUTH',
                 'action' => "{$fullName} logged out.",
