@@ -13,12 +13,14 @@ class IndexUserRepository extends BaseRepository
     public function execute(){
         $users = User::all()->map(function ($user) {
             $personalInfo = $user->personalInfos()->get();
+            $email = $user->hasPersonalInfoValue(null, 'email') ? $user->getPersonalInfoValueByName('email') : null;
 
             return [
                 'id' => $user->id,
                 'username' => $user->username,
                 'name' => $user->hasName() ? $user->getFullNameAttribute() : null,
                 'contact_number' => $user->hasPersonalInfoValue(9) ? $user->getPersonalInfoValue(9) : null,
+                'email' => $email,
                 'access' => $user->getRoleNames()->first(),
             ];
         });
