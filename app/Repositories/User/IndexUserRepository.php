@@ -18,7 +18,7 @@ class IndexUserRepository extends BaseRepository
                 'id' => $user->id,
                 'username' => $user->username,
                 'name' => $user->hasName() ? $user->getFullNameAttribute() : null,
-                'contact_number' => $personalInfo->where('personal_info_field_id', 9)->first()?->value,
+                'contact_number' => $user->hasPersonalInfoValue(9) ? $user->getPersonalInfoValue(9) : null,
                 'access' => $user->getRoleNames()->first(),
             ];
         });

@@ -23,15 +23,10 @@ class DashboardController extends Controller
             ->where('status', 'Checked In')
             ->get()
             ->map(function ($checkIn) {
-                $firstName = $checkIn->user->personalInfos->where('personal_info_field_id', 1)
-                    ->first()?->value;
-                $lastName = $checkIn->user->personalInfos->where('personal_info_field_id', 2)
-                    ->first()?->value;
-
                 return [
                     'id' => $checkIn->id,
                     'student_id' => $checkIn->user->username,
-                    'name' => $firstName . ' ' . $lastName,
+                    'name' => $checkIn->user->hasName() ? $checkIn->user->getStandardNameAttribute() : null,
                     'bed_id' => $checkIn->bed->bed_number ?? null,
                     'check_in_time' => $checkIn->check_in_time,
                 ];

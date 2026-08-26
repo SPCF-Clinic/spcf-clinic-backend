@@ -15,15 +15,11 @@ class CheckInResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $gradeLevel = $this->user->personalInfos->where('personal_info_field_id', 12)
-            ->first()?->value;
-        $yearLevel = $this->user->personalInfos->where('personal_info_field_id', 13)
-            ->first()?->value;
-        $course = $this->user->personalInfos->where('personal_info_field_id', 15)
-            ->first()?->value;
+        $gradeLevel = $this->user->hasPersonalInfoValue(12) ? $this->user->getPersonalInfoValue(12) : null;
+        $yearLevel = $this->user->hasPersonalInfoValue(13) ? $this->user->getPersonalInfoValue(13) : null;
+        $course = $this->user->hasPersonalInfoValue(15) ? $this->user->getPersonalInfoValue(15) : null;
 
-        $birthDate = $this->user->personalInfos->where('personal_info_field_id', 4)
-            ->first()?->value;
+        $birthDate = $this->user->hasPersonalInfoValue(4) ? $this->user->getPersonalInfoValue(4) : null;
         $age = $birthDate ? Carbon::parse($birthDate)->age : null;
 
         return [

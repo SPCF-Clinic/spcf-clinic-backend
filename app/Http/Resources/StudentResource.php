@@ -15,19 +15,14 @@ class StudentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {        
-        $gradeLevel = $this->personalInfos->where('personal_info_field_id', 12)
-            ->first()?->value;
-        $yearLevel = $this->personalInfos->where('personal_info_field_id', 13)
-            ->first()?->value;
-        $course = $this->personalInfos->where('personal_info_field_id', 15)
-            ->first()?->value;
+        $gradeLevel = $this->hasPersonalInfoValue(12) ? $this->getPersonalInfoValue(12) : null;
+        $yearLevel = $this->hasPersonalInfoValue(13) ? $this->getPersonalInfoValue(13) : null;
+        $course = $this->hasPersonalInfoValue(15) ? $this->getPersonalInfoValue(15) : null;
 
-        $birthdate = $this->personalInfos->where('personal_info_field_id', 4)
-            ->first()?->value;
+        $birthdate = $this->hasPersonalInfoValue(4) ? $this->getPersonalInfoValue(4) : null;
         $age = $birthdate ? Carbon::parse($birthdate)->age : null;
 
-        $sex = $this->personalInfos->where('personal_info_field_id', 5)
-            ->first()?->value;
+        $sex = $this->hasPersonalInfoValue(5) ? $this->getPersonalInfoValue(5) : null;
 
         return [
             'id' => $this->id,
