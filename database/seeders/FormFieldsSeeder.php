@@ -295,7 +295,7 @@ class FormFieldsSeeder extends Seeder
                 'description_text' => null
             ],
             [
-                'field_name' => 'Contact Name',
+                'field_name' => 'Emergency Contact Name',
                 'form_field_type_id' => 2,
                 'is_required' => true,
                 'required_with_field_id' => null,
@@ -305,7 +305,7 @@ class FormFieldsSeeder extends Seeder
                 'description_text' => null
             ],
             [
-                'field_name' => 'Contact No.',
+                'field_name' => 'Emergency Contact No.',
                 'form_field_type_id' => 2,
                 'is_required' => true,
                 'required_with_field_id' => null,
