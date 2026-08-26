@@ -42,6 +42,7 @@ class ShowStudentRepository extends BaseRepository
         )
             ->whereHas('latestVersion', fn ($query) => $query->whereNull('required_with_field_id'))
             ->whereHas('latestVersion.formFieldType', fn ($query) => $query->where('name', '!=', 'Divider'))
+            ->whereNotIn('id', [24, 25]) // Exclude contact person fields from the main personal info list
             ->get()
             ->sortBy($this->sortKey())
             ->values();
@@ -55,6 +56,7 @@ class ShowStudentRepository extends BaseRepository
         )
             ->whereHas('latestVersion', fn ($query) => $query->whereNull('required_with_field_id'))
             ->whereHas('latestVersion.formFieldType', fn ($query) => $query->where('name', '!=', 'Divider'))
+            ->whereNotIn('id', [17]) // Exclude illnesses field from the main medical history list
             ->get()
             ->sortBy($this->sortKey())
             ->values();
@@ -65,11 +67,13 @@ class ShowStudentRepository extends BaseRepository
         // and that stale answer is intentionally excluded here.
         $personalInfoAnswers = $student->personalInfos()
             ->whereNotNull('personal_info_field_id')
+            ->whereNotIn('personal_info_field_id', [24, 25]) // Exclude contact person fields from the main personal info list
             ->get()
             ->keyBy('personal_info_field_id');
 
         $medicalHistoryAnswers = $student->medicalHistories()
             ->whereNotNull('medical_history_field_id')
+            ->whereNotIn('medical_history_field_id', [17]) // Exclude illnesses field from the main medical history list
             ->get()
             ->keyBy('medical_history_field_id');
 
@@ -78,6 +82,11 @@ class ShowStudentRepository extends BaseRepository
             'username' => $student->username,
             'personal_info' => StudentPersonalInfoFieldResource::collection($personalInfoFields, $personalInfoAnswers),
             'medical_history' => StudentMedicalHistoryFieldResource::collection($medicalHistoryFields, $medicalHistoryAnswers),
+            'contact_person' => [
+                'name' => $student->hasPersonalInfoValue(24) ? $student->getPersonalInfoValue(24) : null,
+                'number' => $student->hasPersonalInfoValue(25) ? $student->getPersonalInfoValue(25) : null,
+            ],
+            'illnesses' => $student->hasMedicalHistoryValue(17) ? $student->getMedicalHistoryValue(17) : null,
         ];
     }
 
