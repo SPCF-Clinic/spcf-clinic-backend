@@ -173,8 +173,8 @@ class UserSeeder extends Seeder
             "Father's Name" => fake()->firstName('male') . ' ' . $lastName,
             "Guardian's Name" => fake()->firstName() . ' ' . $lastName,
             'Contact No. of Guardian' => fake()->phoneNumber(),
-            'Contact Name' => fake()->name(),
-            'Contact No.' => fake()->phoneNumber(),
+            'Emergency Contact Name' => fake()->name(),
+            'Emergency Contact No.' => fake()->phoneNumber(),
         ];
 
         $medicalHistory = [

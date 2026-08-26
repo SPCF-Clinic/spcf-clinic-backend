@@ -86,7 +86,9 @@ class ShowStudentRepository extends BaseRepository
                 'name' => $student->hasPersonalInfoValue(24) ? $student->getPersonalInfoValue(24) : null,
                 'number' => $student->hasPersonalInfoValue(25) ? $student->getPersonalInfoValue(25) : null,
             ],
-            'illnesses' => $student->hasMedicalHistoryValue(17) ? $student->getMedicalHistoryValue(17) : null,
+            'illnesses' => $student->hasMedicalHistoryValue(17)
+                ? json_decode($student->getMedicalHistoryValue(17), true)
+                : null,
         ];
     }
 
