@@ -5,7 +5,8 @@ namespace App\Repositories\Item;
 use App\Repositories\BaseRepository;
 use App\Models\{
     Item,
-    DispensedItem
+    DispensedItem,
+    ActivityLog,
 };
 use Illuminate\Support\Facades\DB;
 
