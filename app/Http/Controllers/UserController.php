@@ -15,9 +15,9 @@ class UserController extends Controller
         $this->index = $index;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', User::class);
-        return $this->index->execute();
+        return $this->index->execute($request);
     }
 }
