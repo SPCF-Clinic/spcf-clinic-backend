@@ -12,10 +12,20 @@ class IndexCheckInRepository extends BaseRepository
         $request->validate([
             'per_page' => 'sometimes|nullable|integer|min:1|max:100',
             'page' => 'sometimes|nullable|integer|min:1',
+            'search' => 'sometimes|nullable|string|max:255',
         ]);
 
-        $checkIns = CheckIn::with(['user', 'bed'])
-            ->paginate($request->input('per_page', 20));
+        $checkIns = CheckIn::with(['user', 'bed']);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $checkIns->whereHas('user', function ($q) use ($search) {
+                    $q->fullNameLike($search);
+                })->orWhere('reason_for_visit', 'like', "%{$search}%");
+        }
+
+        $checkIns = $checkIns->paginate($request->input('per_page', 20));
 
         $paginationData = $this->pagePaginationData($checkIns);
         $checkIns = CheckInResource::collection($checkIns);
