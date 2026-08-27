@@ -27,7 +27,7 @@ class DispensedItemResource extends JsonResource
                 'id' => $this->dispensedTo->id,
                 'name' => $this->dispensedTo->getFullNameAttribute(),
             ],
-            'created_at' => Carbon::parse($this->created_at)->format('m-d-Y, H:i:s'),
+            'created_at' => Carbon::parse($this->created_at)->format('m-d-Y H:i:s'),
         ];
     }
 }
