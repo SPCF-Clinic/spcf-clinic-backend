@@ -23,24 +23,7 @@ class IndexDispensedItemRepository extends BaseRepository
 
             $query->where(function ($q) use ($search) {
                 $q->whereHas('item', fn ($q2) => $q2->where('name', 'like', "%{$search}%"))
-                ->orWhereIn('dispensed_to', function ($sub) use ($search) {
-                    $sub->select('pi_first.user_id')
-                        ->from('user_personal_infos as pi_first')
-                        ->join('user_personal_infos as pi_last', function ($join) {
-                            $join->on('pi_last.user_id', '=', 'pi_first.user_id')
-                                ->where('pi_last.personal_info_field_id', 2); // last_name
-                        })
-                        ->leftJoin('user_personal_infos as pi_middle', function ($join) {
-                            $join->on('pi_middle.user_id', '=', 'pi_first.user_id')
-                                ->where('pi_middle.personal_info_field_id', 3); // middle_name
-                        })
-                        ->where('pi_first.personal_info_field_id', 1) // first_name
-                        ->where(function ($q2) use ($search) {
-                            $q2->whereRaw("CONCAT_WS(' ', pi_first.value, pi_last.value) LIKE ?", ["%{$search}%"])
-                                ->orWhereRaw("CONCAT_WS(' ', pi_last.value, pi_first.value) LIKE ?", ["%{$search}%"])
-                                ->orWhereRaw("CONCAT_WS(' ', pi_first.value, pi_middle.value, pi_last.value) LIKE ?", ["%{$search}%"]);
-                        });
-                });
+                    ->orWhereHas('dispensedTo', fn ($q2) => $q2->fullNameLike($search));
             });
         }
 

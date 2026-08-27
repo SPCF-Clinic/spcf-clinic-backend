@@ -13,6 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use App\Traits\HasName;
 use App\Traits\HasAttribute;
+use App\Traits\SearchableByFullName;
 
 #[Fillable([
     'username',
@@ -22,7 +23,7 @@ use App\Traits\HasAttribute;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, HasName, HasAttribute;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, HasName, HasAttribute, SearchableByFullName;
 
     /**
      * Get the attributes that should be cast.
