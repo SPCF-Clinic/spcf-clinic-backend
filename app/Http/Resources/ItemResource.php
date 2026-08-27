@@ -14,12 +14,14 @@ class ItemResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $dispensedItemsCount = $this->dispensedItems->where('created_at', '>=', now()->subDays(30))->sum('quantity_dispensed');
         return [
             'id' => $this->id,
             'name' => $this->name,
             'type' => $this->type,
             'category' => $this->category,
             'unit' => $this->unit,
+            'dispensed' => $dispensedItemsCount,
             'quantity' => $this->quantity,
             'item_content' => $this->when($this->itemContent, function () {
                 return [
