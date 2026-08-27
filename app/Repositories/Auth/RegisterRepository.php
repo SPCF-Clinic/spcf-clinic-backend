@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\{
     DB,
     Hash,
 };
+use App\Events\RegisterEvent;
 
 class RegisterRepository extends BaseRepository
 {
@@ -47,6 +48,8 @@ class RegisterRepository extends BaseRepository
             ]);
 
             DB::commit();
+
+            broadcast(new RegisterEvent($user->id));
 
             return $this->success('User registered successfully.', $user, 200);
         } catch (\Exception $e) {
