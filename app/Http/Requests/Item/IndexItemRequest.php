@@ -26,6 +26,7 @@ class IndexItemRequest extends FormRequest
             'type' => 'required|string|in:Medicine,Supply',
             'search' => 'sometimes|nullable|string|max:255',
             'per_page' => 'sometimes|nullable|integer|min:1|max:100',
+            'page' => 'sometimes|nullable|integer|min:1',
         ];
     }
 }

@@ -11,6 +11,7 @@ class IndexCheckInRepository extends BaseRepository
     public function execute($request){
         $request->validate([
             'per_page' => 'sometimes|nullable|integer|min:1|max:100',
+            'page' => 'sometimes|nullable|integer|min:1',
         ]);
 
         $checkIns = CheckIn::with(['user', 'bed'])

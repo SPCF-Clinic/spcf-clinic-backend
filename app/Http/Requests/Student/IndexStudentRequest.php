@@ -25,6 +25,7 @@ class IndexStudentRequest extends FormRequest
         return [
             'student_id' => 'sometimes|nullable|string|max:255',
             'per_page' => 'sometimes|nullable|integer|min:1|max:100',
+            'page' => 'sometimes|nullable|integer|min:1',
         ];
     }
 }
