@@ -52,7 +52,7 @@ class DispenseItemRepository extends BaseRepository
             $mappedDetails = [
                 'item_name' => $dispensedItem->item->name,
                 'quantity_dispensed' => $dispensedItem->quantity_dispensed,
-                'dispensed_to' => $dispensedItem->dispensedTo->username,
+                'dispensed_to' => $dispensedItem->dispensedTo->username ?? null,
                 'dispensed_by' => $dispensedItem->dispensedBy->username,
             ];
 
