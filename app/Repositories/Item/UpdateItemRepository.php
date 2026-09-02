@@ -14,6 +14,22 @@ class UpdateItemRepository extends BaseRepository
         try {
             $item->update($validated);
 
+            if (isset($validated['item_content'])) {
+                if ($item->itemContent) {
+                    $item->itemContent->update($validated['item_content']);
+                } else {
+                    $item->itemContent()->create($validated['item_content']);
+                }
+
+                if (isset($validated['item_content']['item_content'])) {
+                    if ($item->itemContent->content) {
+                        $item->itemContent->content->update($validated['item_content']['item_content']);
+                    } else {
+                        $item->itemContent->content()->create($validated['item_content']['item_content']);
+                    }
+                }
+            }
+
             ActivityLog::create([
                 // 'group' => 'INVENTORY',
                 'action' => "Item {$item->name} stock manually updated.",

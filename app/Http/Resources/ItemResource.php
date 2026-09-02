@@ -27,6 +27,12 @@ class ItemResource extends JsonResource
                 return [
                     'content_unit' => $this->itemContent->content_unit,
                     'quantity_per_item_unit' => $this->itemContent->quantity_per_item_unit,
+                    'item_content' => $this->when($this->itemContent->content, function () {
+                        return [
+                            'content_unit' => $this->itemContent->content->content_unit,
+                            'quantity_per_item_unit' => $this->itemContent->content->quantity_per_item_unit,
+                        ];
+                    }),
                 ];
             }),
         ];

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('item_contents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-            $table->enum('content_unit', ['ml', 'Tablets', 'pcs']);
+            $table->morphs('parent');
+            $table->enum('content_unit', ['ml', 'Tablets', 'pcs', 'Bottles', 'Packs', 'Pairs', 'Rolls']);
             $table->unsignedBigInteger('quantity_per_item_unit');
             $table->timestamps();
         });

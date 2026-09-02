@@ -102,6 +102,8 @@ class ItemSeeder extends Seeder
 
             if (isset($itemData['item_content'])) {
                 $item->itemContent()->create([
+                    'parent_type' => Item::class,
+                    'parent_id' => $item->id,
                     'content_unit' => $itemData['item_content']['content_unit'],
                     'quantity_per_item_unit' => $itemData['item_content']['quantity_per_item_unit'],
                 ]);
@@ -119,6 +121,8 @@ class ItemSeeder extends Seeder
 
             if (isset($itemData['item_content'])) {
                 $item->itemContent()->create([
+                    'parent_type' => Item::class,
+                    'parent_id' => $item->id,
                     'content_unit' => $itemData['item_content']['content_unit'],
                     'quantity_per_item_unit' => $itemData['item_content']['quantity_per_item_unit'],
                 ]);

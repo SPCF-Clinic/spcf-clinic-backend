@@ -35,7 +35,7 @@ class Item extends Model
     
     public function itemContent()
     {
-        return $this->hasOne(ItemContent::class, 'item_id');
+        return $this->morphOne(ItemContent::class, 'parent');
     }
 
     public function dispensedItems()

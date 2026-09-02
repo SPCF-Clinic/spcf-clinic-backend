@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class ItemContent extends Model
 {
     protected $fillable = [
-        'item_id',
+        'parent_type',
+        'parent_id',
         'content_unit',
         'quantity_per_item_unit'
     ];
@@ -17,8 +18,13 @@ class ItemContent extends Model
         'updated_at',
     ];
 
-    public function item()
+    public function parent()
     {
-        return $this->belongsTo(Item::class, 'item_id');
+        return $this->morphTo();
+    }
+
+    public function content()
+    {
+        return $this->morphOne(ItemContent::class, 'parent');
     }
 }
