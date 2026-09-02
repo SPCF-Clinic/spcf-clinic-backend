@@ -27,11 +27,16 @@ class UpdateItemRequest extends FormRequest
         return [
             'name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'type' => ['sometimes', 'in:Medicine,Supply'],
-            'category' => ['sometimes', 'nullable', 'string', Rule::in(Item::CATEGORIES[$this->input('type')])],
-            'unit' => ['sometimes', 'nullable', 'string', Rule::in(Item::UNIT[$this->input('type')])],
+            'category' => ['sometimes', 'nullable', 'string', Rule::in(Item::CATEGORIES[$this->input('type')] ?? [])],
+            'unit' => ['sometimes', 'nullable', 'string', Rule::in(Item::UNIT[$this->input('type')] ?? [])],
             'quantity' => ['sometimes', 'nullable', 'integer', 'min:0'],
-            'item_content.content_unit' => ['required_if:unit,Boxes', 'required_if:unit,Bottles', 'not_in:Boxes'],
-            'item_content.quantity_per_item_unit' => ['required_if:unit,Boxes', 'required_if:unit,Bottles', 'integer', 'min:1'],
+            'item_content' => ['sometimes', 'array', function ($attribute, $value, $fail) {
+                if (!in_array($this->input('unit'), ['Boxes', 'Bottles']) && $value) {
+                    $fail('Items of unit ' . $this->input('unit') . ' cannot have content.');
+                }
+            }],
+            'item_content.content_unit' => ['sometimes', 'nullable', 'required_if:unit,Boxes', 'required_if:unit,Bottles', 'not_in:Boxes'],
+            'item_content.quantity_per_item_unit' => ['sometimes', 'nullable', 'required_if:unit,Boxes', 'required_if:unit,Bottles', 'integer', 'min:1'],
             'item_content.item_content.content_unit' => ['sometimes', 'nullable', 'not_in:Boxes'],
             'item_content.item_content.quantity_per_item_unit' => ['sometimes', 'nullable', 'integer', 'min:1'],
         ];

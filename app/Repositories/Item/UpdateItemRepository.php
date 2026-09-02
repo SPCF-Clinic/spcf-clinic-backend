@@ -24,16 +24,23 @@ class UpdateItemRepository extends BaseRepository
                 if ($item->itemContent) {
                     $item->itemContent->update($validated['item_content']);
                 } else {
-                    $item->itemContent()->create($validated['item_content']);
+                    $itemContent = $item->itemContent()->create($validated['item_content']);
+                    $item->setRelation('itemContent', $itemContent);
                 }
 
-                if (isset($validated['item_content']['item_content'])) {
+                if (isset($validated['item_content']['item_content']) && $item->itemContent) {
                     if ($item->itemContent->content) {
                         $item->itemContent->content->update($validated['item_content']['item_content']);
                     } else {
                         $item->itemContent->content()->create($validated['item_content']['item_content']);
                     }
+                } elseif (!isset($validated['item_content']['item_content']) && $item->itemContent && $item->itemContent->content) {
+                    $item->itemContent->content()->delete();
                 }
+            } elseif (!isset($validated['item_content']) && $item->itemContent) {
+                optional($item->itemContent->content)->delete(); 
+                $item->itemContent()->delete();
+                $item->unsetRelation('itemContent');
             }
 
             ActivityLog::create([
@@ -51,6 +58,8 @@ class UpdateItemRepository extends BaseRepository
             }
 
             DB::commit();
+
+            $item->refresh()->load('itemContent.content');
 
             return $this->success('Item updated successfully', new ItemResource($item), 200);
         } catch (\Exception $e) {
