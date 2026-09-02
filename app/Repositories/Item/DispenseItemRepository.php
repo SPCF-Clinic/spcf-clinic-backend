@@ -29,7 +29,7 @@ class DispenseItemRepository extends BaseRepository
             $dispensedItem = DispensedItem::create([
                 'item_id' => $validated['item_id'],
                 'quantity_dispensed' => $validated['quantity_dispensed'],
-                'dispensed_to' => $validated['dispensed_to'],
+                'dispensed_to' => $validated['dispensed_to'] ?? null,
                 'dispensed_by' => auth()->id(),
             ]);
 

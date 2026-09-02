@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->foreignId('check_in_id')->nullable()->constrained('check_ins')->onDelete('set null');
             $table->unsignedBigInteger('quantity_dispensed');
-            $table->foreignId('dispensed_to')->constrained('users')->onDelete('cascade');
+            $table->foreignId('dispensed_to')->nullable()->constrained('users')->onDelete('cascade');
             $table->foreignId('dispensed_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

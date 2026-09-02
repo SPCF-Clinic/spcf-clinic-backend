@@ -25,7 +25,7 @@ class DispenseItemRequest extends FormRequest
         return [
             'item_id' => ['required', 'exists:items,id'],
             'quantity_dispensed' => ['required', 'integer', 'min:1'],
-            'dispensed_to' => ['required', 'exists:users,id'],
+            'dispensed_to' => ['sometimes', 'nullable', 'exists:users,id'],
         ];
     }
 }
