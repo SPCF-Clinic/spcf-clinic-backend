@@ -81,7 +81,7 @@ class UpdateMedicalHistoryFieldRepository extends BaseRepository
             $baseField->load('latestVersion.options');
 
             ActivityLog::create([
-                // 'group' => 'FORM_FIELD',
+                'group' => 'FORM_FIELD',
                 'action' => "Medical history field '{$newVersion->field_name}' updated.",
                 'performed_by' => auth()->id(),
             ]);

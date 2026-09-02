@@ -41,7 +41,7 @@ class DispenseItemRepository extends BaseRepository
                 ]);
 
                 ActivityLog::create([
-                    // 'group' => 'INVENTORY',
+                    'group' => 'INVENTORY',
                     'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed.",
                     'performed_by' => auth()->id(),
                 ]);

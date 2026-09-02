@@ -49,7 +49,7 @@ class UpdateCheckInRepository extends BaseRepository
                 }
 
                 ActivityLog::create([
-                    // 'group' => 'CHECK-IN',
+                    'group' => 'CHECK-IN',
                     'action' => "{$fullName} checked out of the clinic.",
                     'performed_by' => auth()->id(),
                 ]);
@@ -70,7 +70,7 @@ class UpdateCheckInRepository extends BaseRepository
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
 
                     ActivityLog::create([
-                        // 'group' => 'BED',
+                        'group' => 'BED',
                         'action' => "{$fullName} removed from {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
                     ]);
@@ -166,13 +166,13 @@ class UpdateCheckInRepository extends BaseRepository
                             ]);
 
                             ActivityLog::create([
-                                // 'group' => 'INVENTORY',
+                                'group' => 'INVENTORY',
                                 'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
                             ]);
                         } else {
                             ActivityLog::create([
-                                // 'group' => 'INVENTORY',
+                                'group' => 'INVENTORY',
                                 'action' => "{$dispensedItem->quantity} {$item->itemContent->content_unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
                             ]);

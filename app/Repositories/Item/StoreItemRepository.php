@@ -5,7 +5,8 @@ namespace App\Repositories\Item;
 use App\Repositories\BaseRepository;
 use App\Models\{
     Item,
-    ItemContent
+    ItemContent,
+    ActivityLog
 };
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ItemResource;
@@ -40,6 +41,12 @@ class StoreItemRepository extends BaseRepository
                     ]);
                 }
             }
+
+            ActivityLog::create([
+                'group' => 'INVENTORY',
+                'action' => "New item '{$item->name}' created.",
+                'performed_by' => auth()->id(),
+            ]);
 
             DB::commit();
             return $this->success('Item created successfully', new ItemResource($item), 200);

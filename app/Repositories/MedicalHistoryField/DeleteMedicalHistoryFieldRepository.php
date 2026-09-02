@@ -32,7 +32,7 @@ class DeleteMedicalHistoryFieldRepository extends BaseRepository
             }
 
             ActivityLog::create([
-                // 'group' => 'FORM_FIELD',
+                'group' => 'FORM_FIELD',
                 'action' => "Medical history field '{$latestVersion?->field_name}' deleted.",
                 'performed_by' => auth()->id(),
             ]);

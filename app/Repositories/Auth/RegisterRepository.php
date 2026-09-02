@@ -42,7 +42,7 @@ class RegisterRepository extends BaseRepository
 
             $fullName = $user->getFullNameAttribute();
             ActivityLog::create([
-                // 'group' => 'AUTH',
+                'group' => 'AUTH',
                 'action' => "New student registered: {$fullName}",
                 'performed_by' => $user->id,
             ]);

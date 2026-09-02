@@ -37,14 +37,14 @@ class UpdateItemRepository extends BaseRepository
             }
 
             ActivityLog::create([
-                // 'group' => 'INVENTORY',
+                'group' => 'INVENTORY',
                 'action' => "Item {$item->name} updated.",
                 'performed_by' => auth()->id(),
             ]);
 
             if ($oldQuantity != $item->quantity) {
                 ActivityLog::create([
-                    // 'group' => 'INVENTORY',
+                    'group' => 'INVENTORY',
                     'action' => "Item {$item->name} stock manually updated.",
                     'performed_by' => auth()->id(),
                 ]);

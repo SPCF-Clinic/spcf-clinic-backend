@@ -11,9 +11,11 @@ class IndexActivityLogRepository extends BaseRepository
         $perPage = $request->input('per_page', 20);
         $query = ActivityLog::query();
 
-        // if ($request->has('group')) {
-        //     $query->where('group', $request->input('group'));
-        // }
+        $user = auth()->user();
+
+        if (!$user->hasRole('Super Admin')) {
+            $query->whereNotIn('group', ['INVENTORY']);
+        }
 
         if ($request->has('performed_by')) {
             $query->where('performed_by', $request->input('performed_by'));

@@ -59,14 +59,14 @@ class StoreCheckInRepository extends BaseRepository
             broadcast(new BedTimerStarted($bed->id, $bed->timer_expires_at));
 
             ActivityLog::create([
-                // 'group' => 'BED',
+                'group' => 'BED',
                 'action' => "{$fullName} assigned to {$bed->bed_number}.",
                 'performed_by' => $user->id,
             ]);
         }
         
         ActivityLog::create([
-            // 'group' => 'CHECK-IN',
+            'group' => 'CHECK-IN',
             'action' => "{$fullName} checked into the clinic.",
             'performed_by' => $user->id,
         ]);
