@@ -12,6 +12,7 @@ use App\Http\Resources\{
     StudentPersonalInfoFieldResource,
     StudentMedicalHistoryFieldResource,
 };
+use App\Support\FormVersion;
 
 class ShowStudentRepository extends BaseRepository
 {
@@ -42,7 +43,6 @@ class ShowStudentRepository extends BaseRepository
         )
             ->whereHas('latestVersion', fn ($query) => $query->whereNull('required_with_field_id'))
             ->whereHas('latestVersion.formFieldType', fn ($query) => $query->where('name', '!=', 'Divider'))
-            ->whereNotIn('id', [24, 25]) // Exclude contact person fields from the main personal info list
             ->get()
             ->sortBy($this->sortKey())
             ->values();
@@ -56,7 +56,6 @@ class ShowStudentRepository extends BaseRepository
         )
             ->whereHas('latestVersion', fn ($query) => $query->whereNull('required_with_field_id'))
             ->whereHas('latestVersion.formFieldType', fn ($query) => $query->where('name', '!=', 'Divider'))
-            ->whereNotIn('id', [17]) // Exclude illnesses field from the main medical history list
             ->get()
             ->sortBy($this->sortKey())
             ->values();
@@ -67,13 +66,11 @@ class ShowStudentRepository extends BaseRepository
         // and that stale answer is intentionally excluded here.
         $personalInfoAnswers = $student->personalInfos()
             ->whereNotNull('personal_info_field_id')
-            ->whereNotIn('personal_info_field_id', [24, 25]) // Exclude contact person fields from the main personal info list
             ->get()
             ->keyBy('personal_info_field_id');
 
         $medicalHistoryAnswers = $student->medicalHistories()
             ->whereNotNull('medical_history_field_id')
-            ->whereNotIn('medical_history_field_id', [17]) // Exclude illnesses field from the main medical history list
             ->get()
             ->keyBy('medical_history_field_id');
 
@@ -89,6 +86,8 @@ class ShowStudentRepository extends BaseRepository
             'illnesses' => $student->hasMedicalHistoryValue(17)
                 ? json_decode($student->getMedicalHistoryValue(17), true)
                 : null,
+            'personal_info_form_version' => FormVersion::compute(PersonalInfoField::class),
+            'medical_history_form_version' => FormVersion::compute(MedicalHistoryField::class),
         ];
     }
 
