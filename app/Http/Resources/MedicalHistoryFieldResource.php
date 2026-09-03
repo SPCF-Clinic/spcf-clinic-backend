@@ -58,6 +58,7 @@ class MedicalHistoryFieldResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'version_number' => $latestVersion?->version_number,
             'name' => $latestVersion?->field_name ?? $this->name,
             'type' => $type,
             'form_order' => $latestVersion?->form_order,
