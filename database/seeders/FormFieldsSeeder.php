@@ -178,7 +178,7 @@ class FormFieldsSeeder extends Seeder
             ],
             [
                 'field_name' => 'Department',
-                'form_field_type_id' => 2,
+                'form_field_type_id' => 5,
                 'is_required' => false,
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
@@ -188,7 +188,7 @@ class FormFieldsSeeder extends Seeder
             ],
             [
                 'field_name' => 'Course',
-                'form_field_type_id' => 2,
+                'form_field_type_id' => 5,
                 'is_required' => false,
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
