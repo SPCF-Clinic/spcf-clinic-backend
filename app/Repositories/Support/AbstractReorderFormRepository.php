@@ -142,6 +142,14 @@ abstract class AbstractReorderFormRepository extends BaseRepository
         $modelClass = $this->modelClass();
         $requiredWithColumn = $this->requiredWithColumn();
 
+        $reorderDirection = null;
+        $originalFormOrder = $selectedField->latestVersion?->form_order;
+        if ($originalFormOrder > $targetFormOrder) {
+            $reorderDirection = 'backward';
+        } elseif ($originalFormOrder < $targetFormOrder) {
+            $reorderDirection = 'forward';
+        }
+
         $targetIsDefaultPosition = $modelClass::where('is_default', true)
             ->whereHas('latestVersion', fn ($query) => $query->where('form_order', $targetFormOrder))
             ->exists();
@@ -174,16 +182,37 @@ abstract class AbstractReorderFormRepository extends BaseRepository
         // was below x are left exactly as they were.
         $movedIds = $children->pluck('id')->push($selectedField->id);
 
-        $others = $modelClass::with('latestVersion')
-            ->where('is_default', false)
-            ->whereNotIn('id', $movedIds)
-            ->get()
-            ->filter(fn ($field) => $field->latestVersion?->form_order !== null
-                && $field->latestVersion->form_order >= $targetFormOrder)
-            ->sortBy(fn ($field) => $field->latestVersion->form_order)
-            ->values();
-
-        $next = $targetFormOrder + $offset + 1;
+        if ($reorderDirection === 'backward') {
+            $others = $modelClass::with('latestVersion')
+                ->where('is_default', false)
+                ->whereNotIn('id', $movedIds)
+                ->get()
+                ->filter(fn ($field) => $field->latestVersion?->form_order !== null
+                    && $field->latestVersion->form_order >= $targetFormOrder)
+                ->sortBy(fn ($field) => $field->latestVersion->form_order)
+                ->values();
+            
+            $next = $targetFormOrder + $offset + 1;
+            foreach ($others as $field) {
+                $field->latestVersion?->update(['form_order' => $next]);
+                $next++;
+            }
+        } else {
+            $others = $modelClass::with('latestVersion')
+                ->where('is_default', false)
+                ->whereNotIn('id', $movedIds)
+                ->get()
+                ->filter(fn ($field) => $field->latestVersion?->form_order !== null
+                    && $field->latestVersion->form_order <= $targetFormOrder)
+                ->sortBy(fn ($field) => $field->latestVersion->form_order)
+                ->values();
+            
+            $next = $targetFormOrder - $offset;
+            foreach ($others as $field) {
+                $field->latestVersion?->update(['form_order' => $next]);
+                $next--;
+            }
+        }
 
         foreach ($others as $field) {
             $field->latestVersion?->update(['form_order' => $next]);
@@ -209,6 +238,14 @@ abstract class AbstractReorderFormRepository extends BaseRepository
         $modelClass = $this->modelClass();
         $requiredWithColumn = $this->requiredWithColumn();
 
+        $originalFormOrder = $selectedField->latestVersion?->form_order;
+        $reorderDirection = null;
+        if ($originalFormOrder > $targetFormOrder) {
+            $reorderDirection = 'backward';
+        } elseif ($originalFormOrder < $targetFormOrder) {
+            $reorderDirection = 'forward';
+        }
+
         $siblings = $modelClass::with('latestVersion')
             ->whereHas('latestVersion', fn ($query) => $query->where($requiredWithColumn, $parentField->id))
             ->get();
@@ -226,15 +263,29 @@ abstract class AbstractReorderFormRepository extends BaseRepository
         // forward by exactly one slot to make room. Update from highest to
         // lowest so no two rows ever briefly hold the same value. The
         // selected field then takes x itself.
-        $others = $siblings
-            ->reject(fn ($field) => $field->id === $selectedField->id)
-            ->filter(fn ($field) => $field->latestVersion?->form_order !== null
-                && $field->latestVersion->form_order >= $targetFormOrder)
-            ->sortByDesc(fn ($field) => $field->latestVersion->form_order)
-            ->values();
 
-        foreach ($others as $field) {
-            $field->latestVersion?->update(['form_order' => $field->latestVersion->form_order + 1]);
+        if ($reorderDirection === 'backward') {
+            $others = $siblings
+                ->reject(fn ($field) => $field->id === $selectedField->id)
+                ->filter(fn ($field) => $field->latestVersion?->form_order !== null
+                    && $field->latestVersion->form_order >= $targetFormOrder)
+                ->sortByDesc(fn ($field) => $field->latestVersion->form_order)
+                ->values();
+
+            foreach ($others as $field) {
+                $field->latestVersion?->update(['form_order' => $field->latestVersion->form_order + 1]);
+            }
+        } else {
+            $others = $siblings
+                ->reject(fn ($field) => $field->id === $selectedField->id)
+                ->filter(fn ($field) => $field->latestVersion?->form_order !== null
+                    && $field->latestVersion->form_order <= $targetFormOrder)
+                ->sortBy(fn ($field) => $field->latestVersion->form_order)
+                ->values();
+
+            foreach ($others as $field) {
+                $field->latestVersion?->update(['form_order' => $field->latestVersion->form_order - 1]);
+            }
         }
 
         $selectedField->latestVersion?->update(['form_order' => $targetFormOrder]);

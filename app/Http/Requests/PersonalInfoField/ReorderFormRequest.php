@@ -4,6 +4,7 @@ namespace App\Http\Requests\PersonalInfoField;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\PersonalInfoFieldVersion;
 
 class ReorderFormRequest extends FormRequest
 {
@@ -24,7 +25,12 @@ class ReorderFormRequest extends FormRequest
     {
         return [
             'field_id' => 'required|integer|exists:personal_info_fields,id',
-            'target_form_order' => 'required|integer|min:1',
+            'target_form_order' => ['required', 'integer', 'min:1', function ($attribute, $value, $fail) {
+                $maxFormOrder = PersonalInfoFieldVersion::max('form_order');
+                if ($value > $maxFormOrder) {
+                    $fail("The {$attribute} must not be greater than {$maxFormOrder}.");
+                }
+            }],
             'form_version' => 'required|string',
         ];
     }
