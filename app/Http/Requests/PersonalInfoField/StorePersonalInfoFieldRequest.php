@@ -62,7 +62,7 @@ class StorePersonalInfoFieldRequest extends FormRequest
                     $fail('The selected required_with_field_id field is an additional field and cannot have a required_with_field_value.');
                 }
             }],
-            'form_order' => ['required', 'integer', 'unique:personal_info_field_versions,form_order', function ($attribute, $value, $fail) {
+            'form_order' => ['required', 'integer', function ($attribute, $value, $fail) {
                 $maxFormOrder = PersonalInfoFieldVersion::max('form_order');
                 if ($value < 1 || $value > $maxFormOrder + 1) {
                     $fail('The form_order must be between 1 and ' . ($maxFormOrder + 1) . '.');
