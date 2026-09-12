@@ -13,6 +13,7 @@ use App\Models\{
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PersonalInfoFieldResource;
 use App\Support\FormOrderInserter;
+use App\Support\FormFieldConflictResolver;
 
 class StorePersonalInfoFieldRepository extends BaseRepository
 {
@@ -81,17 +82,19 @@ class StorePersonalInfoFieldRepository extends BaseRepository
             } catch (\Exception $e) {
                 DB::rollBack();
                 return $this->error('Failed to create personal info field options.', 500, $e->getMessage());
-            }            
-
-            DB::commit();
-
-            $baseField->load('latestVersion.options');
+            }
+            
+            FormFieldConflictResolver::resolve(PersonalInfoField::class);
 
             ActivityLog::create([
                 'group' => 'FORM_FIELD',
                 'action' => "New personal info field '{$fieldVersion->field_name}' created.",
                 'performed_by' => auth()->id(),
             ]);
+
+            DB::commit();
+
+            $baseField->load('latestVersion.options');
 
             return $this->success('Personal info field created successfully.', new PersonalInfoFieldResource($baseField), 200);
         } catch (\Exception $e) {

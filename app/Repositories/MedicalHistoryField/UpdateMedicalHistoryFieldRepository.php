@@ -11,6 +11,7 @@ use App\Models\{
 };
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MedicalHistoryFieldResource;
+use App\Support\FormFieldConflictResolver;
 
 class UpdateMedicalHistoryFieldRepository extends BaseRepository
 {
@@ -76,15 +77,17 @@ class UpdateMedicalHistoryFieldRepository extends BaseRepository
                 return $this->error('Failed to create medical history field options.', 500, $e->getMessage());
             }
 
-            DB::commit();
-
-            $baseField->load('latestVersion.options');
+            FormFieldConflictResolver::resolve(MedicalHistoryField::class);
 
             ActivityLog::create([
                 'group' => 'FORM_FIELD',
                 'action' => "Medical history field '{$newVersion->field_name}' updated.",
                 'performed_by' => auth()->id(),
             ]);
+
+            DB::commit();
+
+            $baseField->load('latestVersion.options');
 
             return $this->success('Medical history field updated successfully.', new MedicalHistoryFieldResource($baseField), 200);
         } catch (\Exception $e) {

@@ -13,6 +13,7 @@ use App\Models\{
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MedicalHistoryFieldResource;
 use App\Support\FormOrderInserter;
+use App\Support\FormFieldConflictResolver;
 
 class StoreMedicalHistoryFieldRepository extends BaseRepository
 {
@@ -82,16 +83,18 @@ class StoreMedicalHistoryFieldRepository extends BaseRepository
                 DB::rollBack();
                 return $this->error('Failed to create medical history field options.', 500, $e->getMessage());
             }
-
-            DB::commit();
-
-            $baseField->load('latestVersion.options');
-
+            
+            FormFieldConflictResolver::resolve(MedicalHistoryField::class);
+            
             ActivityLog::create([
                 'group' => 'FORM_FIELD',
                 'action' => "New medical history field '{$fieldVersion->field_name}' created.",
                 'performed_by' => auth()->id(),
-            ]);
+                ]);
+                
+            DB::commit();
+
+            $baseField->load('latestVersion.options');
 
             return $this->success('Medical history field created successfully.', new MedicalHistoryFieldResource($baseField), 200);
         } catch (\Exception $e) {
