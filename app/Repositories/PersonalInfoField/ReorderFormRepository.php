@@ -4,37 +4,28 @@ namespace App\Repositories\PersonalInfoField;
 
 use App\Http\Resources\PersonalInfoFieldResource;
 use App\Models\PersonalInfoField;
-use App\Repositories\Support\AbstractReorderFormRepository;
+use App\Repositories\BaseRepository;
 
-class ReorderFormRepository extends AbstractReorderFormRepository
+class ReorderFormRepository extends BaseRepository
 {
-    protected function modelClass(): string
+    public function execute($request)
     {
-        return PersonalInfoField::class;
-    }
+        $fields = $request->input('fields');
+        $formVersion = $request->input('form_version');
 
-    protected function resourceClass(): string
-    {
-        return PersonalInfoFieldResource::class;
-    }
+        foreach ($fields as $field) {
+            if (PersonalInfoField::where('id', $field['field_id'])->value('is_default')) {
+                return $this->error('Default personal info fields cannot be reordered.', null, 400);
+            }
 
-    protected function requiredWithColumn(): string
-    {
-        return 'required_with_field_id';
-    }
+            $personalInfoField = PersonalInfoField::find($field['field_id']);
+            $latestVersion = $personalInfoField->latestVersion;
 
-    protected function notFoundMessage(): string
-    {
-        return 'The selected personal info field could not be found.';
-    }
+            if ($latestVersion->form_order !== $field['form_order']) {
+                $latestVersion->update(['form_order' => $field['form_order'], 'form_version' => $formVersion]);
+            }
+        }
 
-    protected function defaultLockedMessage(): string
-    {
-        return 'Default personal info fields cannot be reordered.';
-    }
-
-    protected function notReorderableMessage(): string
-    {
-        return 'Personal info fields are not available for reordering.';
+        return $this->success('Personal info fields reordered successfully.', PersonalInfoFieldResource::collection(PersonalInfoField::all()), 200);
     }
 }

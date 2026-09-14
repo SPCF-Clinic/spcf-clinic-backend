@@ -24,8 +24,9 @@ class ReorderFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'field_id' => 'required|integer|exists:personal_info_fields,id',
-            'target_form_order' => ['required', 'integer', 'min:1', function ($attribute, $value, $fail) {
+            'fields' => 'required|array',
+            'fields.*.field_id' => 'required|exists:personal_info_fields,id',
+            'fields.*.form_order' => ['required', 'integer', 'min:1', function ($attribute, $value, $fail) {
                 $maxFormOrder = PersonalInfoFieldVersion::max('form_order');
                 if ($value > $maxFormOrder) {
                     $fail("The {$attribute} must not be greater than {$maxFormOrder}.");

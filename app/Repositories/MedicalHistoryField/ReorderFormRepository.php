@@ -4,37 +4,28 @@ namespace App\Repositories\MedicalHistoryField;
 
 use App\Http\Resources\MedicalHistoryFieldResource;
 use App\Models\MedicalHistoryField;
-use App\Repositories\Support\AbstractReorderFormRepository;
+use App\Repositories\BaseRepository;
 
-class ReorderFormRepository extends AbstractReorderFormRepository
+class ReorderFormRepository extends BaseRepository
 {
-    protected function modelClass(): string
+    public function execute($request)
     {
-        return MedicalHistoryField::class;
-    }
+        $fields = $request->input('fields');
+        $formVersion = $request->input('form_version');
 
-    protected function resourceClass(): string
-    {
-        return MedicalHistoryFieldResource::class;
-    }
+        foreach ($fields as $field) {
+            if (MedicalHistoryField::where('id', $field['field_id'])->value('is_default')) {
+                return $this->error('Default medical history fields cannot be reordered.', null, 400);
+            }
 
-    protected function requiredWithColumn(): string
-    {
-        return 'required_with_field_id';
-    }
+            $medicalHistoryField = MedicalHistoryField::find($field['field_id']);
+            $latestVersion = $medicalHistoryField->latestVersion;
 
-    protected function notFoundMessage(): string
-    {
-        return 'The selected medical history field could not be found.';
-    }
+            if ($latestVersion->form_order !== $field['form_order']) {
+                $latestVersion->update(['form_order' => $field['form_order'], 'form_version' => $formVersion]);
+            }
+        }
 
-    protected function defaultLockedMessage(): string
-    {
-        return 'Default medical history fields cannot be reordered.';
-    }
-
-    protected function notReorderableMessage(): string
-    {
-        return 'Medical history fields are not available for reordering.';
+        return $this->success('Medical history fields reordered successfully.', MedicalHistoryFieldResource::collection(MedicalHistoryField::all()), 200);
     }
 }
