@@ -47,6 +47,7 @@ class MedicalHistoryFieldResource extends JsonResource
             return [
                 'id' => $field->medical_history_field_id,
                 'version_number' => $field->version_number,
+                'form_order' => $field->form_order,
                 'name' => $field?->field_name,
                 'type' => $type,
                 'options' => $field?->options?->map(function ($option) {
