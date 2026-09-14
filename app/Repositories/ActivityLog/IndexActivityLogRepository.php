@@ -24,6 +24,6 @@ class IndexActivityLogRepository extends BaseRepository
 
         $logs = $query->orderBy('created_at', 'desc')->cursorPaginate($perPage);
 
-        return $this->success('Activity logs retrieved successfully.', ActivityLogResource::collection($logs), 200);
+        return $this->success('Activity logs retrieved successfully.', [ActivityLogResource::collection($logs), $this->cursorPaginationData($logs)], 200);
     }
 }
