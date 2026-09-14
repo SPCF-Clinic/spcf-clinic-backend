@@ -79,6 +79,7 @@ class ShowStudentRepository extends BaseRepository
             'full_name' => $student->hasName() ? $student->getFullNameAttribute() : null,
             'username' => $student->username,
             'check_in' => [
+                'id' => $student->latestCheckIn?->id,
                 'status' => $student->latestCheckIn?->status === 'Checked In' ? 'In Clinic' : 'Not In Clinic',
                 'bed' => $student->latestCheckIn?->bed?->bed_number,
             ],

@@ -22,6 +22,10 @@ class IndexActivityLogRepository extends BaseRepository
             $query->where('performed_by', $request->input('performed_by'));
         }
 
+        if ($request->has('date')) {
+            $query->whereDate('created_at', $request->input('date'));
+        }
+
         $logs = $query->orderBy('created_at', 'desc')->cursorPaginate($perPage);
 
         return $this->success('Activity logs retrieved successfully.', $logs->through(fn ($log) => new ActivityLogResource($log)), 200);

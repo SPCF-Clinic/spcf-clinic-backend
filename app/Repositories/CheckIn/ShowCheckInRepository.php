@@ -21,6 +21,7 @@ class ShowCheckInRepository extends BaseRepository
             'year_level' => $yearLevel,
             'course' => $course,
             'check_in_time' => $checkIn->check_in_time,
+            'check_out_time' => $checkIn->check_out_time ?? null,
             'reason_for_visit' => $checkIn->reason_for_visit,
             'remarks' => $checkIn->remarks,
             'bed_id' => $checkIn->bed->bed_number ?? null,
