@@ -65,9 +65,23 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
             ]);
 
             try {
-                if ($formFieldType->has_options) {
-                    if (!empty($validated['options'])) {
-                        foreach ($validated['options'] as $option) {
+                if ($formFieldType->has_options && !empty($validated['update_options'])) {
+                    foreach ($validated['update_options'] as $option) {
+                        if (!PersonalInfoFieldOption::where('field_version_id', $latestVersion->id)->where('id', $option['id'])->exists()) {
+                            throw new \InvalidArgumentException('The specified option does not exist for the latest version of this field.');
+                        }
+                        $nestedFields = PersonalInfoFieldVersion::where('required_with_option_id', $option['id'])->get();
+                        foreach ($nestedFields as $nestedField) {
+                            $nestedField->update([
+                                'required_with_field_value' => $option['value']
+                            ]);
+                        }
+                        PersonalInfoFieldOption::where('field_version_id', $latestVersion->id)->where('id', $option['id'])->update(['option_value' => $option['value'], 'field_version_id' => $newVersion->id]);
+                    }
+                }
+                if ($formFieldType->has_options && !empty($validated['new_options'])) {
+                    if (!empty($validated['new_options'])) {
+                        foreach ($validated['new_options'] as $option) {
                             PersonalInfoFieldOption::create([
                                 'field_version_id' => $newVersion->id,
                                 'option_value' => $option,
@@ -77,7 +91,7 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
-                return $this->error('Failed to create personal info field options.', 500, $e->getMessage());
+                return $this->error('Failed to update personal info field options.', 500, $e->getMessage());
             }
 
             ActivityLog::create([

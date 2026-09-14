@@ -24,4 +24,9 @@ class MedicalHistoryFieldOption extends Model
     public function medicalHistoryField() {
         return $this->belongsToThrough(MedicalHistoryField::class, MedicalHistoryFieldVersion::class, 'field_version_id', 'id', 'id', 'medical_history_field_id');
     }
+
+    public function requiredByFields()
+    {
+        return $this->hasMany(MedicalHistoryFieldVersion::class, 'required_with_option_id');
+    }
 }

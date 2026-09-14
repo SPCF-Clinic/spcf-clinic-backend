@@ -24,4 +24,9 @@ class PersonalInfoFieldOption extends Model
     public function personalInfoField() {
         return $this->belongsToThrough(PersonalInfoField::class, PersonalInfoFieldVersion::class, 'field_version_id', 'id', 'id', 'personal_info_field_id');
     }
+
+    public function requiredByFields()
+    {
+        return $this->hasMany(PersonalInfoFieldVersion::class, 'required_with_option_id');
+    }
 }

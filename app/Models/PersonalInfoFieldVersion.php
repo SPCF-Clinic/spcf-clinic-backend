@@ -14,6 +14,7 @@ class PersonalInfoFieldVersion extends Model
         'is_required',
         'required_with_field_id',
         'required_with_field_value',
+        'required_with_option_id',
         'form_order',
         'description_text',
     ];
@@ -41,5 +42,10 @@ class PersonalInfoFieldVersion extends Model
     public function requiredWithField()
     {
         return $this->belongsTo(PersonalInfoField::class, 'required_with_field_id');
+    }
+
+    public function requiredWithOption()
+    {
+        return $this->belongsTo(PersonalInfoFieldOption::class, 'required_with_option_id');
     }
 }

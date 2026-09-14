@@ -30,7 +30,9 @@ class UpdatePersonalInfoFieldRequest extends FormRequest
             'version_number' => 'required|integer',
             'name' => ['sometimes', 'string', 'max:255'],
             'type' => ['sometimes', 'string', 'max:255', Rule::exists(FormFieldType::class, 'name')],
-            'options' => ['sometimes', 'nullable', 'array', function ($attribute, $value, $fail) {
+            'update_options.*.id' => ['sometimes', 'integer', 'exists:personal_info_field_options,id'],
+            'update_options.*.value' => ['sometimes', 'string', 'max:255'],
+            'new_options' => ['sometimes', 'nullable', 'array', function ($attribute, $value, $fail) {
                 $type = FormFieldType::where('name', $this->type)->first();
                 if (!$type) {
                     $fail('The selected type is invalid.');
@@ -43,7 +45,7 @@ class UpdatePersonalInfoFieldRequest extends FormRequest
                     $fail('The options field must be empty when the type does not have options.');
                 }
             }],
-            'options.*' => 'required_with:options|string|max:255',
+            'new_options.*' => 'required_with:options|string|max:255',
             'is_required' => 'sometimes|boolean',
             'required_with_field_id' => ['sometimes', 'nullable', 'integer', 'exists:personal_info_fields,id', function ($attribute, $value, $fail) {
                 if ($this->is_required && $value) {

@@ -25,7 +25,10 @@ class MedicalHistoryFieldResource extends JsonResource
         ] : null;
 
         $options = $latestVersion?->options?->map(function ($option) {
-            return $option->option_value;
+            return [
+                'id' => $option->id,
+                'value' => $option->option_value,
+            ];
         })->values()->all();
 
         $requiredWithField = $latestVersion?->requiredWithField ? [
@@ -51,7 +54,10 @@ class MedicalHistoryFieldResource extends JsonResource
                 'name' => $field?->field_name,
                 'type' => $type,
                 'options' => $field?->options?->map(function ($option) {
-                    return $option->option_value;
+                    return [
+                        'id' => $option->id,
+                        'value' => $option->option_value,
+                    ];
                 })->values()->all() ?? [],
                 'required_with_field_value' => $field?->required_with_field_value,
             ];

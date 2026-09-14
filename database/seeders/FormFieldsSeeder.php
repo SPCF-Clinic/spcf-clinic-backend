@@ -158,6 +158,7 @@ class FormFieldsSeeder extends Seeder
                 ],
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'BASIC_ED',
+                'requried_with_option_id' => 3,
                 'form_order' => 12,
                 'description_text' => null,
             ],
@@ -173,6 +174,7 @@ class FormFieldsSeeder extends Seeder
                 ],
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
+                'requried_with_option_id' => 4,
                 'form_order' => 13,
                 'description_text' => null,
             ],
@@ -182,6 +184,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
+                'requried_with_option_id' => 4,
                 'options' => ['CCIS', 'COE', 'CON', 'COC', 'COB', 'CHTM', 'CASSED'],
                 'form_order' => 14,
                 'description_text' => null,
@@ -192,6 +195,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 11,
                 'required_with_field_value' => 'COLLEGE',
+                'requried_with_option_id' => 4,
                 'options' => [
                     'BSIT',
                     'BSCS',
@@ -423,6 +427,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
+                'required_with_option_id' => 11,
                 'options' => [],
                 'form_order' => 11,
                 'description_text' => 'If you are uncertain about the exact date, please just indicate the year it was administered.'
@@ -433,6 +438,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
+                'required_with_option_id' => 11,
                 'options' => [],
                 'form_order' => 12,
                 'description_text' => null
@@ -443,6 +449,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
+                'required_with_option_id' => 11,
                 'options' => [],
                 'form_order' => 13,
                 'description_text' => null
@@ -453,6 +460,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => false,
                 'required_with_field_id' => 9,
                 'required_with_field_value' => 'YES',
+                'required_with_option_id' => 11,
                 'options' => [],
                 'form_order' => 14,
                 'description_text' => null
@@ -565,6 +573,7 @@ class FormFieldsSeeder extends Seeder
                 'is_required' => $fieldData['is_required'],
                 'required_with_field_id' => $fieldData['required_with_field_id'],
                 'required_with_field_value' => $fieldData['required_with_field_value'],
+                'required_with_option_id' => $fieldData['required_with_option_id'] ?? null,
                 'form_order' => $fieldData['form_order'],
                 'description_text' => $fieldData['description_text'],
             ]);

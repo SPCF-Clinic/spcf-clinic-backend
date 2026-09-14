@@ -14,6 +14,7 @@ class MedicalHistoryFieldVersion extends Model
         'is_required',
         'required_with_field_id',
         'required_with_field_value',
+        'required_with_option_id',
         'form_order',
         'description_text',
     ];
@@ -41,5 +42,10 @@ class MedicalHistoryFieldVersion extends Model
     public function requiredWithField()
     {
         return $this->belongsTo(MedicalHistoryField::class, 'required_with_field_id');
+    }
+
+    public function requiredWithOption()
+    {
+        return $this->belongsTo(MedicalHistoryFieldOption::class, 'required_with_option_id');
     }
 }

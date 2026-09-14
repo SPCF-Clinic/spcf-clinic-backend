@@ -63,8 +63,22 @@ class UpdateMedicalHistoryFieldRepository extends BaseRepository
             ]);
 
             try {
-                if ($formFieldType->has_options && !empty($validated['options'])) {
-                    foreach ($validated['options'] as $option) {
+                if ($formFieldType->has_options && !empty($validated['update_options'])) {
+                    foreach ($validated['update_options'] as $option) {
+                        if (!MedicalHistoryFieldOption::where('id', $option['id'])->where('field_version_id', $latestVersion->id)->exists()) {
+                            throw new \InvalidArgumentException('The specified option does not belong to the current field version.');
+                        }
+                        $nestedFields = MedicalHistoryFieldVersion::where('required_with_option_id', $option['id'])->get();
+                        foreach ($nestedFields as $nestedField) {
+                            $nestedField->update([
+                                'required_with_field_value' => $option['value']
+                            ]);
+                        }
+                        MedicalHistoryFieldOption::where('field_version_id', $latestVersion->id)->where('id', $option['id'])->update(['option_value' => $option['value'], 'field_version_id' => $newVersion->id]);
+                    }
+                }
+                if ($formFieldType->has_options && !empty($validated['new_options'])) {
+                    foreach ($validated['new_options'] as $option) {
                         MedicalHistoryFieldOption::create([
                             'field_version_id' => $newVersion->id,
                             'option_value' => $option,
@@ -73,7 +87,7 @@ class UpdateMedicalHistoryFieldRepository extends BaseRepository
                 }
             } catch (\Exception $e) {
                 DB::rollBack();
-                return $this->error('Failed to create medical history field options.', 500, $e->getMessage());
+                return $this->error('Failed to update medical history field options.', 500, $e->getMessage());
             }
 
             ActivityLog::create([

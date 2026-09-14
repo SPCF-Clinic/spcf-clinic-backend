@@ -62,6 +62,15 @@ class StoreMedicalHistoryFieldRequest extends FormRequest
                     $fail('The selected required_with_field_id field is an additional field and cannot have a required_with_field_value.');
                 }
             }],
+            'required_with_option_id' => ['nullable', 'integer', 'exists:medical_history_field_options,id', function ($attribute, $value, $fail) {
+                if ($this->is_required && $value) {
+                    $fail('The required_with_option_id field must be null when is_required is true.');
+                }
+                $requiredWithField = MedicalHistoryField::find($this->required_with_field_id);
+                if ($requiredWithField && $requiredWithField->latestVersion->required_with_field_id) {
+                    $fail('The selected required_with_field_id field is an additional field and cannot have a required_with_option_id.');
+                }
+            }],
             'form_order' => ['required', 'integer', function ($attribute, $value, $fail) {
                 $maxFormOrder = MedicalHistoryFieldVersion::max('form_order');
                 if ($value < 1 || $value > $maxFormOrder + 1) {
