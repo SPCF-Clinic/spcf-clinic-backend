@@ -51,7 +51,7 @@ class ReorderFormRepository extends BaseRepository
 
             DB::commit();
 
-            return $this->success('Medical history fields reordered successfully.', MedicalHistoryFieldResource::collection(MedicalHistoryField::all()), 200);
+            return $this->success('Medical history fields reordered successfully.', MedicalHistoryFieldResource::collection(MedicalHistoryField::all()), 200, ['form_version' => FormVersion::compute(MedicalHistoryField::class)]);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error('An error occurred while reordering medical history fields.', 500, $e->getMessage());

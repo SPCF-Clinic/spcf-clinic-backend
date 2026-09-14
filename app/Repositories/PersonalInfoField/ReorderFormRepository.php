@@ -51,7 +51,7 @@ class ReorderFormRepository extends BaseRepository
 
             DB::commit();
 
-            return $this->success('Personal info fields reordered successfully.', PersonalInfoFieldResource::collection(PersonalInfoField::all()), 200);
+            return $this->success('Personal info fields reordered successfully.', PersonalInfoFieldResource::collection(PersonalInfoField::all()), 200, ['form_version' => FormVersion::compute(PersonalInfoField::class)]);
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->error('An error occurred while reordering personal info fields.', 500, $e->getMessage());
