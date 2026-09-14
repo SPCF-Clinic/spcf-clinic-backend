@@ -8,44 +8,6 @@ use App\Support\FormFieldConflictResolver;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Shared reorder logic for versioned, self-ordering form field models
- * (PersonalInfoField, MedicalHistoryField, ...).
- *
- * Subclasses only need to say which model/resource/column names to use.
- *
- * ── Model ────────────────────────────────────────────────────────────────
- * A field is either a *parent* (its latestVersion->{requiredWithColumn} is
- * null) or a *conditional field* (it belongs to exactly one parent via that
- * column). Default fields are always locked — never moved themselves, and
- * never displaced by another field's move.
- *
- * ── Moving a parent field to position x ─────────────────────────────────
- * Let n = the number of conditional fields attached to that parent.
- *   - The parent itself takes form_order = x.
- *   - Its conditional fields take x+1, x+2, ..., x+n, keeping their
- *     existing relative order.
- *   - Every other movable field whose ORIGINAL form_order was >= x shifts
- *     forward to (x+n)+1, (x+n)+2, ..., in its original relative order.
- *     Fields with an original form_order below x are left untouched.
- *   - If x is currently held by a default field, the move is rejected.
- *
- * ── Moving a conditional field to position x ────────────────────────────
- * x must be a value currently held by one of that field's own siblings
- * (other conditional fields under the same parent) — moving it out of the
- * parent's group isn't allowed. The field takes x; every sibling whose
- * original form_order was >= x shifts forward by exactly one slot.
- *
- * form_order values are not required to stay contiguous — gaps left behind
- * by a move are harmless since only relative order is ever read from them.
- *
- * ── Gap compaction ───────────────────────────────────────────────────────
- * A deletion elsewhere can leave a form_order gap (the deleted field's old
- * value is never reused). After every reorder, if the highest form_order
- * exceeds the total number of fields, that gap is closed via
- * App\Support\FormOrderCompactor — the same compactor deletion itself runs
- * right after removing a field, so this call here is mainly a safety net.
- */
 abstract class AbstractReorderFormRepository extends BaseRepository
 {
     abstract protected function modelClass(): string;
@@ -175,8 +137,7 @@ abstract class AbstractReorderFormRepository extends BaseRepository
             $child->latestVersion?->update(['form_order' => $targetFormOrder + $index + 1]);
         }
 
-        // Every other movable field whose ORIGINAL form_order was >= x
-        // shifts forward to make room, keeping its relative order, packed
+        // Every other movable field shifts to make room, keeping its relative order, packed
         // in starting right after the moved block's new range. Default
         // fields are never touched, and fields whose original form_order
         // was below x are left exactly as they were.
@@ -254,8 +215,7 @@ abstract class AbstractReorderFormRepository extends BaseRepository
             return $this->error($this->conditionalFieldLockedMessage(), 422);
         }
 
-        // Every OTHER sibling whose original form_order was >= x shifts
-        // forward by exactly one slot to make room. Update from highest to
+        // Every OTHER sibling shifts by exactly one slot to make room. Update from highest to
         // lowest so no two rows ever briefly hold the same value. The
         // selected field then takes x itself.
 
@@ -293,11 +253,6 @@ abstract class AbstractReorderFormRepository extends BaseRepository
      * response: top-level (parent) fields only — conditional fields are
      * nested inside each one via the resource's `additional_fields` — sorted
      * by form_order.
-     *
-     * $ignoreFieldIds is the id (or id + children) of the field that was
-     * just deliberately moved by this reorder, and $targetFormOrder is
-     * where it was moved to — see FormOrderCompactor for why compaction
-     * needs both to close a gap correctly.
      */
     protected function respondWithUpdatedFields(array $ignoreFieldIds = [], ?int $targetFormOrder = null)
     {
@@ -324,16 +279,6 @@ abstract class AbstractReorderFormRepository extends BaseRepository
 
     /**
      * Sort by numeric form_order (nulls last), tie-broken by id.
-     *
-     * NOTE: this is deliberately two chained single-key sortBy() calls, not
-     * ->sortBy([$formOrderClosure, $idClosure]). Passing an array of
-     * closures to sortBy() routes into Collection::sortByMany(), which
-     * invokes each entry as a two-argument comparator ($a, $b) — but these
-     * closures are one-argument value extractors, so that path silently
-     * produces garbage ordering. Chaining works instead: PHP's sort
-     * primitives (and therefore Collection::sortBy) have been stable since
-     * PHP 8.0, so sorting by the tiebreaker first and the primary key last
-     * preserves tiebreaker order among equal primary-key values.
      */
     protected function sortFields(Collection $fields): Collection
     {

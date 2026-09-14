@@ -12,6 +12,7 @@ class FormFieldConflictResolver
             $changed = static::fixMultiVersionFormOrders($modelClass);
             $changed = static::fixMissingFormOrders($modelClass) || $changed;
             $changed = static::fixFirstDuplicateFormOrder($modelClass) || $changed;
+            $changed = static::fixNullFormOrders($modelClass) || $changed;
 
             if (! $changed) {
                 return;
@@ -137,5 +138,74 @@ class FormFieldConflictResolver
         }
 
         return false;
+    }
+
+    /**
+     * Check 4 — an active field (its latest version) with a null
+     * form_order. Every field should always have one; this repairs it
+     * based on what kind of field it is:
+     *   - A parent field (its latestVersion has no required_with_field_id)
+     *     is appended to the end: form_order = current max + 1.
+     *   - An additional field (belongs to a parent via
+     *     required_with_field_id) is placed right after its parent:
+     *     form_order = parent's form_order + 1, and every field already at
+     *     or past that position shifts forward by one to make room.
+     *
+     * Null-order parents are fixed before null-order additional fields in
+     * the same pass, so an additional field whose parent was ALSO null can
+     * still resolve correctly in one pass rather than needing another
+     * trip through the outer loop.
+     */
+    private static function fixNullFormOrders(string $modelClass): bool
+    {
+        $changed = false;
+
+        $fields = $modelClass::with('latestVersion.requiredWithField.latestVersion')->get();
+
+        $nullOrderFields = $fields->filter(
+            fn ($field) => $field->latestVersion !== null && $field->latestVersion->form_order === null
+        );
+
+        if ($nullOrderFields->isEmpty()) {
+            return false;
+        }
+
+        $runningMax = $fields
+            ->map(fn ($field) => $field->latestVersion?->form_order)
+            ->filter(fn ($value) => $value !== null)
+            ->max() ?? 0;
+
+        [$nullParents, $nullAdditionalFields] = $nullOrderFields->partition(
+            fn ($field) => $field->latestVersion->required_with_field_id === null
+        );
+
+        foreach ($nullParents as $field) {
+            $runningMax++;
+            $field->latestVersion->update(['form_order' => $runningMax]);
+            $changed = true;
+        }
+
+        foreach ($nullAdditionalFields as $field) {
+            $parentOrder = $field->latestVersion->requiredWithField?->latestVersion?->form_order;
+
+            if ($parentOrder === null) {
+                // The parent's own form_order is still unresolved (e.g. it
+                // wasn't part of this pass's null-parent set) — skip for
+                // now, the outer resolve() loop will retry next pass.
+                continue;
+            }
+
+            $targetOrder = $parentOrder + 1;
+
+            // The field's own form_order is still null at this point, so
+            // it can never match this shift itself — safe to run before
+            // assigning it below.
+            FormOrderInserter::makeRoomAt(get_class($field->latestVersion), $targetOrder);
+
+            $field->latestVersion->update(['form_order' => $targetOrder]);
+            $changed = true;
+        }
+
+        return $changed;
     }
 }
