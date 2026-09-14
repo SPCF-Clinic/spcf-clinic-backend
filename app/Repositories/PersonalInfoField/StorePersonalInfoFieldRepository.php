@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PersonalInfoFieldResource;
 use App\Support\FormOrderInserter;
 use App\Support\FormFieldConflictResolver;
+use App\Support\FormOrderCompactor;
 
 class StorePersonalInfoFieldRepository extends BaseRepository
 {
@@ -84,7 +85,8 @@ class StorePersonalInfoFieldRepository extends BaseRepository
                 return $this->error('Failed to create personal info field options.', 500, $e->getMessage());
             }
             
-            FormFieldConflictResolver::resolve(PersonalInfoField::class);
+            // FormFieldConflictResolver::resolve(PersonalInfoField::class);
+            FormOrderCompactor::compact(PersonalInfoField::class);
 
             ActivityLog::create([
                 'group' => 'FORM_FIELD',

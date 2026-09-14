@@ -4,6 +4,7 @@ namespace App\Repositories\MedicalHistoryField;
 
 use App\Repositories\BaseRepository;
 use App\Models\{MedicalHistoryField, ActivityLog};
+use App\Support\FormOrderCompactor;
 use App\Support\FormFieldConflictResolver;
 use Illuminate\Support\Facades\DB;
 
@@ -39,7 +40,8 @@ class DeleteMedicalHistoryFieldRepository extends BaseRepository
 
             $baseField->delete();
 
-            FormFieldConflictResolver::resolve(MedicalHistoryField::class);
+            // FormFieldConflictResolver::resolve(MedicalHistoryField::class);
+            FormOrderCompactor::compact(MedicalHistoryField::class);
 
             DB::commit();
 

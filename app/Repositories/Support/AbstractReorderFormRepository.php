@@ -4,6 +4,7 @@ namespace App\Repositories\Support;
 
 use App\Repositories\BaseRepository;
 use App\Support\FormVersion;
+use App\Support\FormOrderCompactor;
 use App\Support\FormFieldConflictResolver;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -165,10 +166,10 @@ abstract class AbstractReorderFormRepository extends BaseRepository
                 ->get()
                 ->filter(fn ($field) => $field->latestVersion?->form_order !== null
                     && $field->latestVersion->form_order <= $targetFormOrder)
-                ->sortBy(fn ($field) => $field->latestVersion->form_order)
+                ->sortByDesc(fn ($field) => $field->latestVersion->form_order)
                 ->values();
             
-            $next = $targetFormOrder - $offset;
+            $next = $targetFormOrder - $offset - 1;
             foreach ($others as $field) {
                 $field->latestVersion?->update(['form_order' => $next]);
                 $next--;
@@ -256,7 +257,8 @@ abstract class AbstractReorderFormRepository extends BaseRepository
      */
     protected function respondWithUpdatedFields(array $ignoreFieldIds = [], ?int $targetFormOrder = null)
     {
-        FormFieldConflictResolver::resolve($this->modelClass());
+        // FormFieldConflictResolver::resolve($this->modelClass());
+        FormOrderCompactor::compact($this->modelClass(), $ignoreFieldIds, $targetFormOrder);
 
         $modelClass = $this->modelClass();
         $resourceClass = $this->resourceClass();

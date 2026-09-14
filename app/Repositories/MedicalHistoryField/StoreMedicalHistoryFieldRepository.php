@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\MedicalHistoryFieldResource;
 use App\Support\FormOrderInserter;
 use App\Support\FormFieldConflictResolver;
+use App\Support\FormOrderCompactor;
 
 class StoreMedicalHistoryFieldRepository extends BaseRepository
 {
@@ -84,7 +85,8 @@ class StoreMedicalHistoryFieldRepository extends BaseRepository
                 return $this->error('Failed to create medical history field options.', 500, $e->getMessage());
             }
             
-            FormFieldConflictResolver::resolve(MedicalHistoryField::class);
+            // FormFieldConflictResolver::resolve(MedicalHistoryField::class);
+            FormOrderCompactor::compact(MedicalHistoryField::class);
             
             ActivityLog::create([
                 'group' => 'FORM_FIELD',
