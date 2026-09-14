@@ -2,30 +2,59 @@
 
 namespace App\Repositories\PersonalInfoField;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PersonalInfoFieldResource;
 use App\Models\PersonalInfoField;
+use App\Models\PersonalInfoFieldVersion;
 use App\Repositories\BaseRepository;
+use App\Support\FormFieldConflictChecker;
+use App\Support\FormVersion;
 
 class ReorderFormRepository extends BaseRepository
 {
     public function execute($request)
     {
-        $fields = $request->input('fields');
-        $formVersion = $request->input('form_version');
+        DB::beginTransaction();
 
-        foreach ($fields as $field) {
-            if (PersonalInfoField::where('id', $field['field_id'])->value('is_default')) {
-                return $this->error('Default personal info fields cannot be reordered.', null, 400);
+        try {
+            if (FormVersion::compute(PersonalInfoField::class) !== $request->input('form_version')) {
+                return $this->error('Stale form version provided.', 400);
             }
 
-            $personalInfoField = PersonalInfoField::find($field['field_id']);
-            $latestVersion = $personalInfoField->latestVersion;
+            $fields = $request->input('fields');
+            $formVersion = $request->input('form_version');
 
-            if ($latestVersion->form_order !== $field['form_order']) {
-                $latestVersion->update(['form_order' => $field['form_order'], 'form_version' => $formVersion]);
+            $defaultFields = PersonalInfoField::where('is_default', true)->pluck('id')->toArray();
+            $defaultFieldFormOrders = PersonalInfoFieldVersion::whereIn('personal_info_field_id', $defaultFields)->pluck('form_order')->toArray();
+
+            foreach ($fields as $field) {
+                if (in_array($field['field_id'], $defaultFields)) {
+                    return $this->error('Default personal info fields cannot be reordered.', 400);
+                }
+                if (in_array($field['form_order'], $defaultFieldFormOrders)) {
+                    return $this->error('Target form order is occupied by a default field.', 400);
+                }
+
+                $personalInfoField = PersonalInfoField::find($field['field_id']);
+                $latestVersion = $personalInfoField->latestVersion;
+
+                if ($latestVersion->form_order !== $field['form_order']) {
+                    $latestVersion->update(['form_order' => $field['form_order']]);
+                }
             }
+
+            $conflicts = FormFieldConflictChecker::checkForConflicts(PersonalInfoField::class);
+            if (!empty($conflicts)) {
+                DB::rollBack();
+                return $this->error('Form order conflicts detected:', 400, $conflicts);
+            }
+
+            DB::commit();
+
+            return $this->success('Personal info fields reordered successfully.', PersonalInfoFieldResource::collection(PersonalInfoField::all()), 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('An error occurred while reordering personal info fields.', 500, $e->getMessage());
         }
-
-        return $this->success('Personal info fields reordered successfully.', PersonalInfoFieldResource::collection(PersonalInfoField::all()), 200);
     }
 }
