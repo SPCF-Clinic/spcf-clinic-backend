@@ -5,8 +5,6 @@ namespace App\Repositories\PersonalInfoField;
 use App\Repositories\BaseRepository;
 use App\Models\{PersonalInfoField, ActivityLog};
 use Illuminate\Support\Facades\DB;
-use App\Support\FormFieldConflictResolver;
-use App\Support\FormOrderCompactor;
 
 class DeletePersonalInfoFieldRepository extends BaseRepository
 {
@@ -32,6 +30,14 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
                 );
             }
 
+            $formOrder = $latestVersion->form_order;
+            foreach (PersonalInfoField::where('is_default', false)->get() as $otherField) {
+                $otherLatestVersion = $otherField->latestVersion;
+                if ($otherLatestVersion->form_order > $formOrder) {
+                    $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - 1]);
+                }
+            }
+
             ActivityLog::create([
                 'group' => 'FORM_FIELD',
                 'action' => "Personal info field '{$latestVersion?->field_name}' deleted.",
@@ -39,9 +45,6 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
             ]);
 
             $baseField->delete();
-
-            // FormFieldConflictResolver::resolve(PersonalInfoField::class);
-            FormOrderCompactor::compact(PersonalInfoField::class);
 
             DB::commit();
 

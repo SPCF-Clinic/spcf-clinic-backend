@@ -4,8 +4,6 @@ namespace App\Repositories\MedicalHistoryField;
 
 use App\Repositories\BaseRepository;
 use App\Models\{MedicalHistoryField, ActivityLog};
-use App\Support\FormOrderCompactor;
-use App\Support\FormFieldConflictResolver;
 use Illuminate\Support\Facades\DB;
 
 class DeleteMedicalHistoryFieldRepository extends BaseRepository
@@ -32,6 +30,14 @@ class DeleteMedicalHistoryFieldRepository extends BaseRepository
                 );
             }
 
+            $formOrder = $latestVersion->form_order;
+            foreach (MedicalHistoryField::where('is_default', false)->get() as $otherField) {
+                $otherLatestVersion = $otherField->latestVersion;
+                if ($otherLatestVersion->form_order > $formOrder) {
+                    $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - 1]);
+                }
+            }
+
             ActivityLog::create([
                 'group' => 'FORM_FIELD',
                 'action' => "Medical history field '{$latestVersion?->field_name}' deleted.",
@@ -39,9 +45,6 @@ class DeleteMedicalHistoryFieldRepository extends BaseRepository
             ]);
 
             $baseField->delete();
-
-            // FormFieldConflictResolver::resolve(MedicalHistoryField::class);
-            FormOrderCompactor::compact(MedicalHistoryField::class);
 
             DB::commit();
 
