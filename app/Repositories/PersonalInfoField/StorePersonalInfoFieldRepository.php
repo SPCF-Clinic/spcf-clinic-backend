@@ -45,9 +45,8 @@ class StorePersonalInfoFieldRepository extends BaseRepository
                 }
 
                 $siblingFieldVersions = PersonalInfoFieldVersion::where('required_with_field_id', $parentFieldVersion->id)->get();
-                $maxSiblingFormOrder = $siblingFieldVersions->max('form_order');
 
-                $targetFormOrder = $maxSiblingFormOrder + 1;
+                $targetFormOrder = $parentFieldVersion->form_order + $siblingFieldVersions->count() + 1;
 
                 FormOrderInserter::makeRoomAt(PersonalInfoFieldVersion::class, $targetFormOrder);
             } else {
