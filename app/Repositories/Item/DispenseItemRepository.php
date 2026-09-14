@@ -44,6 +44,7 @@ class DispenseItemRepository extends BaseRepository
                     'group' => 'INVENTORY',
                     'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed.",
                     'performed_by' => auth()->id(),
+                    'performed_for' => $validated['dispensed_to'] ?? null,
                 ]);
             }
 

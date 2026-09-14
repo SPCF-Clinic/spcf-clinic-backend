@@ -16,6 +16,7 @@ return new class extends Migration
             $table->enum('group', ['AUTH', 'CHECK-IN', 'BED', 'STUDENT_RECORD', 'INVENTORY', 'FORM_FIELD', 'TIMER']);
             $table->string('action');
             $table->foreignId('performed_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('performed_for')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
         });
     }

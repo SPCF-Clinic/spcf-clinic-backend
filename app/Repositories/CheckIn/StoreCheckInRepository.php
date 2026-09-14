@@ -62,6 +62,7 @@ class StoreCheckInRepository extends BaseRepository
                 'group' => 'BED',
                 'action' => "{$fullName} assigned to {$bed->bed_number}.",
                 'performed_by' => $user->id,
+                'performed_for' => $student->id,
             ]);
         }
         
@@ -69,6 +70,7 @@ class StoreCheckInRepository extends BaseRepository
             'group' => 'CHECK-IN',
             'action' => "{$fullName} checked into the clinic.",
             'performed_by' => $user->id,
+            'performed_for' => $student->id,
         ]);
 
         broadcast(new CheckInEvent($checkIn->id, $checkIn->user_id));

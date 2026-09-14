@@ -24,7 +24,8 @@ class StoreActivityLogRequest extends FormRequest
     {
         return [
             'group' => ['required', 'in:AUTH,BED,CHECK-IN,INVENTORY,STUDENT_RECORD,FORM_FIELD,TIMER'],
-            'action' => ['required', 'string', 'max:255']
+            'action' => ['required', 'string', 'max:255'],
+            'performed_for' => ['sometimes', 'nullable', 'exists:users,id'],
         ];
     }
 }

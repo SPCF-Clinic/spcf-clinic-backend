@@ -4,6 +4,7 @@ namespace App\Repositories\ActivityLog;
 
 use App\Repositories\BaseRepository;
 use App\Models\ActivityLog;
+use App\Http\Resources\ActivityLogResource;
 
 class IndexActivityLogRepository extends BaseRepository
 {
@@ -23,6 +24,6 @@ class IndexActivityLogRepository extends BaseRepository
 
         $logs = $query->orderBy('created_at', 'desc')->cursorPaginate($perPage);
 
-        return $this->success('Activity logs retrieved successfully.', $logs, 200);
+        return $this->success('Activity logs retrieved successfully.', ActivityLogResource::collection($logs), 200);
     }
 }

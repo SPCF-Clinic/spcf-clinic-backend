@@ -12,6 +12,7 @@ class StoreActivityLogRepository extends BaseRepository
             'group' => $request->input('group'),
             'action' => $request->input('action'),
             'performed_by' => auth()->id(),
+            'performed_for' => $request->input('performed_for'),
         ]);
 
         return $this->success('Activity log created successfully.', $log, 200);

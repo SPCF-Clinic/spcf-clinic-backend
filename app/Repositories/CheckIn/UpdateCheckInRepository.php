@@ -52,6 +52,7 @@ class UpdateCheckInRepository extends BaseRepository
                     'group' => 'CHECK-IN',
                     'action' => "{$fullName} checked out of the clinic.",
                     'performed_by' => auth()->id(),
+                    'performed_for' => $checkIn->user_id,
                 ]);
 
                 broadcast(new CheckOutEvent($checkIn->id, $checkIn->user_id));
@@ -73,6 +74,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'group' => 'BED',
                         'action' => "{$fullName} removed from {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
+                        'performed_for' => $checkIn->user_id,
                     ]);
                 }
             }
@@ -89,6 +91,7 @@ class UpdateCheckInRepository extends BaseRepository
                     ActivityLog::create([
                         'action' => "{$fullName}'s timer adjusted on {$checkIn->bed->bed_number} by {$adjustedMinutes} minute/s.",
                         'performed_by' => auth()->id(),
+                        'performed_for' => $checkIn->user_id,
                     ]);
 
                     broadcast(new BedTimerAdjusted($checkIn->bed->id, $checkIn->bed->timer_expires_at));
@@ -111,6 +114,7 @@ class UpdateCheckInRepository extends BaseRepository
                     ActivityLog::create([
                         'action' => "{$fullName}'s timer paused on {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
+                        'performed_for' => $checkIn->user_id,
                     ]);
 
                     broadcast(new BedTimerPaused($checkIn->bed->id));
@@ -138,6 +142,7 @@ class UpdateCheckInRepository extends BaseRepository
                     ActivityLog::create([
                         'action' => "{$fullName}'s timer resumed on {$checkIn->bed->bed_number}.",
                         'performed_by' => auth()->id(),
+                        'performed_for' => $checkIn->user_id,
                     ]);
 
                     broadcast(new BedTimerResumed($checkIn->bed->id, $checkIn->bed->timer_expires_at));
@@ -169,12 +174,14 @@ class UpdateCheckInRepository extends BaseRepository
                                 'group' => 'INVENTORY',
                                 'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
+                                'performed_for' => $checkIn->user_id,
                             ]);
                         } else {
                             ActivityLog::create([
                                 'group' => 'INVENTORY',
                                 'action' => "{$dispensedItem->quantity} {$item->itemContent->content_unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
+                                'performed_for' => $checkIn->user_id,
                             ]);
                         }
                     }

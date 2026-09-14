@@ -10,6 +10,7 @@ class ActivityLog extends Model
         'group',
         'action',
         'performed_by',
+        'performed_for',
     ];
 
     protected $hidden = [
@@ -23,5 +24,10 @@ class ActivityLog extends Model
     public function performedBy()
     {
         return $this->belongsTo(User::class, 'performed_by');
+    }
+
+    public function performedFor()
+    {
+        return $this->belongsTo(User::class, 'performed_for');
     }
 }
