@@ -18,8 +18,8 @@ class IndexActivityLogRepository extends BaseRepository
             $query->whereNotIn('group', ['INVENTORY']);
         }
 
-        if ($request->has('performed_by')) {
-            $query->where('performed_by', $request->input('performed_by'));
+        if ($request->has('performed_by') || $request->has('performed_for')) {
+            $query->where('performed_by', $request->input('performed_by'))->orWhere('performed_for', $request->input('performed_for'));
         }
 
         if ($request->has('date')) {
