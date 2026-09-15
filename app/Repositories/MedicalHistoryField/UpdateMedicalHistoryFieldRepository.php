@@ -4,6 +4,7 @@ namespace App\Repositories\MedicalHistoryField;
 
 use App\Repositories\BaseRepository;
 use App\Models\{
+    MedicalHistoryFieldVersion,
     MedicalHistoryField,
     MedicalHistoryFieldOption,
     FormFieldType,
