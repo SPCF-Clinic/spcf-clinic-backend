@@ -31,7 +31,7 @@ class UpdateCheckInRepository extends BaseRepository
         $user = auth()->user();
 
         try {
-            if (isset($validated['check_out'])) {
+            if (isset($validated['check_out']) && $validated['check_out']) {
                 $checkIn->update([
                     'check_out_time' => Carbon::now(),
                     'status' => 'Checked Out',
