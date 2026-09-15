@@ -26,6 +26,7 @@ class CheckInResource extends JsonResource
             'id' => $this->id,
             'user' => $this->user ? [
                 'id' => $this->user->id,
+                'student_number' => $this->user->username,
                 'name' => $this->user->getFullNameAttribute(),
                 'age' => $age,
                 'grade_level' => $gradeLevel,
