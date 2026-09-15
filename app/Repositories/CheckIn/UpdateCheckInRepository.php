@@ -6,13 +6,15 @@ use App\Repositories\BaseRepository;
 use App\Models\{
     CheckIn,
     DispensedItem,
-    Item
+    Item,
+    Bed
 };
 use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
 use Illuminate\Support\Facades\DB;
 use App\Models\ActivityLog;
 use App\Events\{
+    BedTimerStarted,
     BedTimerRemoved,
     BedTimerPaused,
     BedTimerResumed,
@@ -79,7 +81,38 @@ class UpdateCheckInRepository extends BaseRepository
                 }
             }
 
-            if (isset($validated['timer_expires_at'])) {
+            if (isset($validated['bed_id'])) {
+                $newBed = Bed::find($validated['bed_id']);
+                if ($newBed) {
+                    if ($checkIn->bed) {
+                        return $this->error('User is already assigned to a bed. Please unassign the current bed first.', 400);
+                    }
+                    if ($newBed->status === 'Occupied') {
+                        return $this->error('The selected bed is already occupied.', 400);
+                    }
+
+                    $newBed->update([
+                        'status' => 'Occupied',
+                        'check_in_id' => $checkIn->id,
+                        'timer_expires_at' => $validated['timer_expires_at'],
+                    ]);
+
+                    $checkIn->update([
+                        'bed_id' => $newBed->id,
+                    ]);
+
+                    broadcast(new BedTimerStarted($newBed->id, $newBed->timer_expires_at));
+
+                    ActivityLog::create([
+                        'group' => 'BED',
+                        'action' => "{$fullName} assigned to {$newBed->bed_number}.",
+                        'performed_by' => auth()->id(),
+                        'performed_for' => $checkIn->user_id,
+                    ]);
+                }
+            }
+
+            if (isset($validated['timer_expires_at']) && !isset($validated['bed_id'])) {
                 if ($checkIn->bed) {
                     $adjustedMinutes = Carbon::parse($checkIn->bed->timer_expires_at)->diffInMinutes($validated['timer_expires_at']);
 
