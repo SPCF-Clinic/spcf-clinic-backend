@@ -21,6 +21,9 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
 
             $baseField = PersonalInfoField::with('latestVersion')->lockForUpdate()->findOrFail($field->id);
             $latestVersion = $baseField->latestVersion;
+            $childrenFields = PersonalInfoField::whereHas('latestVersion', function ($query) use ($baseField) {
+                $query->where('required_with_field_id', $baseField->id);
+            })->get();
 
             if ((int) $validated['version_number'] !== (int) $latestVersion->version_number) {
                 DB::rollBack();
@@ -35,6 +38,11 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
                 $query->where('form_order', '>', $formOrder);
             })->get();
 
+            $offset = 1;
+            if (!empty($childrenFields)) {
+                $offset += $childrenFields->count();
+            }
+
             foreach ($otherFields as $otherField) {
                 // Ignore parent field if the field being deleted is a child of it
                 if ($otherField->id === $baseField->id && $baseField->requiredWithField) {
@@ -43,7 +51,7 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
 
                 $otherLatestVersion = $otherField->latestVersion;
                 if ($otherLatestVersion) {
-                    $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - 1]);
+                    $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - $offset]);
                 }
 
                 // $otherLatestVersion = $otherField->latestVersion;
