@@ -40,7 +40,7 @@ class StorePersonalInfoFieldRepository extends BaseRepository
             $level = isset($validated['required_with_field_id']) && $validated['required_with_field_id'] !== null ? 'additional' : 'parent';
             if ($level === 'additional') {
                 $targetOption = isset($validated['required_with_option_id']) ? PersonalInfoFieldOption::find($validated['required_with_option_id']) : null;
-                if ($targetOption?->option_value != $validated['required_with_field_value']) {
+                if (isset($targetOption) && $targetOption?->option_value != $validated['required_with_field_value']) {
                     return [$targetOption, $validated['required_with_option_id'], $validated['required_with_field_value']];
                     throw new \InvalidArgumentException('The specified option\'s value does not match the required field value.');
                 }

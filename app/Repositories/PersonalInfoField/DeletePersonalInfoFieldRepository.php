@@ -66,6 +66,9 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
                 'performed_by' => auth()->id(),
             ]);
 
+            foreach ($baseField->requiredByFields as $childField) {
+                $childField->personalInfoField()->delete();
+            }
             $baseField->delete();
 
             DB::commit();

@@ -66,6 +66,9 @@ class DeleteMedicalHistoryFieldRepository extends BaseRepository
                 'performed_by' => auth()->id(),
             ]);
 
+            foreach ($baseField->requiredByFields as $childField) {
+                $childField->medicalHistoryField()->delete();
+            }
             $baseField->delete();
 
             DB::commit();
