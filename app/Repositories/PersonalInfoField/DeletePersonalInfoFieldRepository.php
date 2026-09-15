@@ -32,6 +32,11 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
 
             $formOrder = $latestVersion->form_order;
             foreach (PersonalInfoField::where('is_default', false)->get() as $otherField) {
+                // Ignore parent field if the field being deleted is a child of it
+                if ($otherField->id === $baseField->id && $baseField->requiredWithField) {
+                    continue;
+                }
+
                 $otherLatestVersion = $otherField->latestVersion;
                 if ($otherLatestVersion->form_order > $formOrder) {
                     $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - 1]);
