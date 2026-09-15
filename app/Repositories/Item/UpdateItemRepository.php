@@ -47,6 +47,7 @@ class UpdateItemRepository extends BaseRepository
                 'group' => 'INVENTORY',
                 'action' => "Item {$item->name} updated.",
                 'performed_by' => auth()->id(),
+                'item_id' => $item->id,
             ]);
 
             if ($oldQuantity != $item->quantity) {
@@ -54,6 +55,7 @@ class UpdateItemRepository extends BaseRepository
                     'group' => 'INVENTORY',
                     'action' => "Item {$item->name} stock manually updated.",
                     'performed_by' => auth()->id(),
+                    'item_id' => $item->id,
                 ]);
             }
 

@@ -175,6 +175,7 @@ class UpdateCheckInRepository extends BaseRepository
                                 'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
                                 'performed_for' => $checkIn->user_id,
+                                'item_id' => $item->id,
                             ]);
                         } else {
                             ActivityLog::create([
@@ -182,6 +183,7 @@ class UpdateCheckInRepository extends BaseRepository
                                 'action' => "{$dispensedItem->quantity} {$item->itemContent->content_unit} of {$item->name} dispensed to {$fullName}.",
                                 'performed_by' => auth()->id(),
                                 'performed_for' => $checkIn->user_id,
+                                'item_id' => $item->id,
                             ]);
                         }
                     }

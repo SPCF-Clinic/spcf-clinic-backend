@@ -19,6 +19,7 @@ class ActivityLogResource extends JsonResource
             'group' => $this->group,
             'action' => $this->action,
             'user' => $this->performedFor ? ($this->performedFor->hasName() ? $this->performedFor->getFullNameAttribute() : $this->performedFor->username) : ($this->performedBy->hasName() ? $this->performedBy->getFullNameAttribute() : $this->performedBy->username),
+            'item' => $this->item ? $this->item->name : null,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }

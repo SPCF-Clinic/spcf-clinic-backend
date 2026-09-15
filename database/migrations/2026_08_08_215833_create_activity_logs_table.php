@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('action');
             $table->foreignId('performed_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('performed_for')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('item_id')->nullable()->constrained('items')->onDelete('set null');
             $table->timestamps();
         });
     }

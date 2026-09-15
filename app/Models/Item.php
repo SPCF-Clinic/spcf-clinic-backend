@@ -42,4 +42,9 @@ class Item extends Model
     {
         return $this->hasMany(DispensedItem::class, 'item_id');
     }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class, 'item_id');
+    }
 }

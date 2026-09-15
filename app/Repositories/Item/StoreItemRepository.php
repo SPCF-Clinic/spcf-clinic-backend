@@ -46,6 +46,7 @@ class StoreItemRepository extends BaseRepository
                 'group' => 'INVENTORY',
                 'action' => "New item '{$item->name}' created.",
                 'performed_by' => auth()->id(),
+                'item_id' => $item->id,
             ]);
 
             DB::commit();

@@ -45,6 +45,7 @@ class DispenseItemRepository extends BaseRepository
                     'action' => "{$dispensedItem->quantity} {$item->unit} of {$item->name} dispensed.",
                     'performed_by' => auth()->id(),
                     'performed_for' => $validated['dispensed_to'] ?? null,
+                    'item_id' => $item->id,
                 ]);
             }
 
