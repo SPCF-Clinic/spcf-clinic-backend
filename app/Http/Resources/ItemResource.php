@@ -15,6 +15,11 @@ class ItemResource extends JsonResource
     public function toArray(Request $request): array
     {
         $dispensedItemsCount = $this->dispensedItems->where('created_at', '>=', now()->subDays(30))->sum('quantity_dispensed');
+        $mainUnitQuantity = $this->quantity;
+        $secondaryUnitQuantity = $this->itemContent ? $this->itemContent->quantity_per_item_unit : 1;
+        $tertiaryUnitQuantity = $this->itemContent && $this->itemContent->content ? $this->itemContent->content->quantity_per_item_unit : 1;
+        $totalContent = $mainUnitQuantity * $secondaryUnitQuantity * $tertiaryUnitQuantity;
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -23,6 +28,7 @@ class ItemResource extends JsonResource
             'unit' => $this->unit,
             'dispensed' => $dispensedItemsCount,
             'quantity' => $this->quantity,
+            'total_content' => $totalContent,
             'item_content' => $this->when($this->itemContent, function () {
                 return [
                     'content_unit' => $this->itemContent->content_unit,

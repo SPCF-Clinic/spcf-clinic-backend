@@ -154,7 +154,15 @@ class UpdateCheckInRepository extends BaseRepository
 
                 try {
                     if ($item) {
-                        if ($item->quantity < ($validated['dispensed_item_quantity'] ?? 1)) {
+                        if ($item->itemContent && $item->itemContent->content) {
+                            $quantity = $item->itemContent->content->quantity_per_item_unit * $item->itemContent->quantity_per_item_unit * $item->quantity;
+                        } elseif ($item->itemContent && !$item->itemContent->content) {
+                            $quantity = $item->itemContent->quantity_per_item_unit * $item->quantity;
+                        } else {
+                            $quantity = $item->quantity;
+                        }
+
+                        if ($quantity < ($validated['dispensed_item_quantity'] ?? 1)) {
                             return $this->error('Insufficient quantity available', 400);
                         }
 

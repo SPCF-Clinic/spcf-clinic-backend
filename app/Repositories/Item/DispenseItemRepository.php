@@ -21,7 +21,15 @@ class DispenseItemRepository extends BaseRepository
         if (!$item) {
             return $this->error('Item not found', 404);
         }
-        if ($item->quantity < $validated['quantity_dispensed']) {
+        if ($item->itemContent && $item->itemContent->content) {
+            $quantity = $item->itemContent->content->quantity_per_item_unit * $item->itemContent->quantity_per_item_unit * $item->quantity;
+        } elseif ($item->itemContent && !$item->itemContent->content) {
+            $quantity = $item->itemContent->quantity_per_item_unit * $item->quantity;
+        } else {
+            $quantity = $item->quantity;
+        }
+        
+        if ($quantity < ($validated['quantity_dispensed'] ?? 1)) {
             return $this->error('Insufficient quantity available', 400);
         }
 
