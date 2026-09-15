@@ -25,7 +25,12 @@ class StoreCheckInRequest extends FormRequest
         return [
             'user_id' => ['required', 'exists:users,id'],
             'bed_id' => ['sometimes', 'nullable', 'exists:beds,id'],
-            'timer_expires_at' => ['required_with:bed_id', 'date', 'after:now'],
+            'timer_expires_at' => ['required_with:bed_id', 'date', 'after:now', function ($attribute, $value, $fail) {
+                // If the value is an empty string, treat it as null
+                if ($value === '') {
+                    return $value = null;
+                }
+            }],
             'reason_for_visit' => ['required', 'string'],
             'remarks' => ['sometimes', 'nullable', 'string'],
         ];
