@@ -43,13 +43,13 @@ class StoreMedicalHistoryFieldRepository extends BaseRepository
                 if ($targetOption?->option_value != $validated['required_with_field_value']) {
                     throw new \InvalidArgumentException('The specified option\'s value does not match the required field value.');
                 }
-
-                $parentFieldVersion = MedicalHistoryFieldVersion::find($validated['required_with_field_id']);
+                $parentField = MedicalHistoryField::find($validated['required_with_field_id']);
+                $parentFieldVersion = $parentField->latestVersion;
                 if (!$parentFieldVersion) {
-                    throw new \InvalidArgumentException('The specified parent field version does not exist.');
+                    throw new \InvalidArgumentException('The specified parent field does not exist.');
                 }
 
-                $siblingFieldVersions = MedicalHistoryFieldVersion::where('required_with_field_id', $parentFieldVersion->id)->get();
+                $siblingFieldVersions = MedicalHistoryFieldVersion::where('required_with_field_id', $parentField->id)->get();
 
                 $targetFormOrder = $parentFieldVersion->form_order + $siblingFieldVersions->count() + 1;
 

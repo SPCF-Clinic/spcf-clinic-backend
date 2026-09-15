@@ -31,16 +31,25 @@ class DeletePersonalInfoFieldRepository extends BaseRepository
             }
 
             $formOrder = $latestVersion->form_order;
-            foreach (PersonalInfoField::where('is_default', false)->get() as $otherField) {
+            $otherFields = PersonalInfoField::where('is_default', false)->whereHas('latestVersion', function ($query) use ($formOrder) {
+                $query->where('form_order', '>', $formOrder);
+            })->get();
+
+            foreach ($otherFields as $otherField) {
                 // Ignore parent field if the field being deleted is a child of it
                 if ($otherField->id === $baseField->id && $baseField->requiredWithField) {
                     continue;
                 }
 
                 $otherLatestVersion = $otherField->latestVersion;
-                if ($otherLatestVersion->form_order > $formOrder) {
+                if ($otherLatestVersion) {
                     $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - 1]);
                 }
+
+                // $otherLatestVersion = $otherField->latestVersion;
+                // if ($otherLatestVersion->form_order > $formOrder) {
+                //     $otherLatestVersion->update(['form_order' => $otherLatestVersion->form_order - 1]);
+                // }
             }
 
             ActivityLog::create([

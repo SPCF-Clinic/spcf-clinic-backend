@@ -45,12 +45,13 @@ class StorePersonalInfoFieldRepository extends BaseRepository
                     throw new \InvalidArgumentException('The specified option\'s value does not match the required field value.');
                 }
 
-                $parentFieldVersion = PersonalInfoFieldVersion::find($validated['required_with_field_id']);
+                $parentField = PersonalInfoField::find($validated['required_with_field_id']);
+                $parentFieldVersion = $parentField->latestVersion;
                 if (!$parentFieldVersion) {
-                    throw new \InvalidArgumentException('The specified parent field version does not exist.');
+                    throw new \InvalidArgumentException('The specified parent field does not exist.');
                 }
 
-                $siblingFieldVersions = PersonalInfoFieldVersion::where('required_with_field_id', $parentFieldVersion->id)->get();
+                $siblingFieldVersions = PersonalInfoFieldVersion::where('required_with_field_id', $parentField->id)->get();
 
                 $targetFormOrder = $parentFieldVersion->form_order + $siblingFieldVersions->count() + 1;
 
