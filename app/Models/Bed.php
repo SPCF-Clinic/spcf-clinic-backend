@@ -10,12 +10,14 @@ class Bed extends Model
         'bed_number',
         'check_in_id',
         'status',
+        'timer_started_at',
         'timer_paused_at',
         'timer_expires_at',
         'timer_ended_broadcast_at'
     ];
 
     protected $casts = [
+        'timer_started_at' => 'datetime',
         'timer_paused_at' => 'datetime',
         'timer_expires_at' => 'datetime',
         'timer_ended_broadcast_at' => 'datetime',

@@ -51,12 +51,13 @@ class StoreCheckInRepository extends BaseRepository
             $bed->update([
                 'check_in_id' => $checkIn->id,
                 'status' => 'Occupied',
+                'timer_started_at' => Carbon::now(),
                 'timer_paused_at' => null,
                 'timer_expires_at' => $validated['timer_expires_at'] ?? null,
                 'timer_ended_broadcast_at' => null,
             ]);
 
-            broadcast(new BedTimerStarted($bed->id, $bed->timer_expires_at));
+            broadcast(new BedTimerStarted($bed->id, $bed->timer_started_at, $bed->timer_expires_at));
 
             ActivityLog::create([
                 'group' => 'BED',

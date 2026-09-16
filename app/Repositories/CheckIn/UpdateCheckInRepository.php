@@ -94,6 +94,7 @@ class UpdateCheckInRepository extends BaseRepository
                     $newBed->update([
                         'status' => 'Occupied',
                         'check_in_id' => $checkIn->id,
+                        'timer_started_at' => Carbon::now(),
                         'timer_expires_at' => $validated['timer_expires_at'],
                     ]);
 
@@ -101,7 +102,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'bed_id' => $newBed->id,
                     ]);
 
-                    broadcast(new BedTimerStarted($newBed->id, $newBed->timer_expires_at));
+                    broadcast(new BedTimerStarted($newBed->id, $newBed->timer_started_at, $newBed->timer_expires_at));
 
                     ActivityLog::create([
                         'group' => 'BED',
