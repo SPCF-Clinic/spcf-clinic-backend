@@ -42,6 +42,7 @@ class UpdateCheckInRepository extends BaseRepository
                     $checkIn->bed->update([
                         'status' => 'Empty',
                         'check_in_id' => null,
+                        'timer_started_at' => null,
                         'timer_expires_at' => null,
                         'timer_ended_broadcast_at' => null,
                         'timer_paused_at' => null,
@@ -65,6 +66,7 @@ class UpdateCheckInRepository extends BaseRepository
                     $checkIn->bed->update([
                         'status' => 'Empty',
                         'check_in_id' => null,
+                        'timer_started_at' => null,
                         'timer_expires_at' => null,
                         'timer_ended_broadcast_at' => null,
                         'timer_paused_at' => null,
