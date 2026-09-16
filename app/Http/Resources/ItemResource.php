@@ -29,6 +29,7 @@ class ItemResource extends JsonResource
             'dispensed' => $dispensedItemsCount,
             'quantity' => $this->quantity,
             'total_content' => $totalContent,
+            'total_content_unit' => $this->itemContent && $this->itemContent->content ? $this->itemContent->content->content_unit : ($this->itemContent ? $this->itemContent->content_unit : $this->unit),
             'item_content' => $this->when($this->itemContent, function () {
                 return [
                     'content_unit' => $this->itemContent->content_unit,
