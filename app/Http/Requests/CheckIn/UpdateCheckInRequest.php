@@ -28,7 +28,11 @@ class UpdateCheckInRequest extends FormRequest
             'bed_id' => ['sometimes', 'nullable', 'exists:beds,id'],
             'dispensed_item_id' => ['sometimes', 'nullable', 'exists:items,id'],
             'dispensed_item_quantity' => ['sometimes', 'nullable', 'integer', 'min:1'],
-            'timer_expires_at' => ['sometimes', 'nullable', 'date', 'after:now'],
+            'timer_expires_at' => ['sometimes', 'nullable', 'date', 'after:now', function ($attribute, $value, $fail) {
+                if ($this->input('bed_id') && (!$value || $value === null || $value === '')) {
+                    $fail('The timer expires at field is required when assigning a bed.');
+                }
+            }],
             'pause_timer' => ['sometimes', 'nullable', 'boolean', function ($attribute, $value, $fail) {
                 if ($value && $this->input('resume_timer')) {
                     $fail('You cannot pause and resume the timer at the same time.');
