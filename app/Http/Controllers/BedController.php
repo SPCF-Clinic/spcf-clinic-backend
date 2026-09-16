@@ -22,10 +22,10 @@ class BedController extends Controller
         $this->delete = $delete;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Bed::class);
-        return $this->index->execute();
+        return $this->index->execute($request);
     }
 
     public function store(StoreBedRequest $request)
