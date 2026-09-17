@@ -17,6 +17,9 @@ use App\Http\Controllers\{
     DashboardController,
     ActivityLogController,
 };
+use Illuminate\Support\Facades\Broadcast;
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
 
 Route::group(['prefix' => 'auth'], function ($route) {
     $route->post('register', [AuthController::class, 'register']);
