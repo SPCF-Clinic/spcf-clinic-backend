@@ -46,6 +46,7 @@ class UpdateMedicalHistoryFieldRequest extends FormRequest
                 }
             }],
             'new_options.*' => 'required_with:new_options|string|max:255',
+            'remove_options.*' => ['sometimes', 'integer', 'exists:medical_history_field_options,id'],
             'is_required' => 'sometimes|boolean',
             'required_with_field_id' => ['sometimes', 'nullable', 'integer', 'exists:medical_history_fields,id', function ($attribute, $value, $fail) {
                 if ($this->is_required && $value) {

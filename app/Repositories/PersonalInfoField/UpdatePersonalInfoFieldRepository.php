@@ -89,6 +89,21 @@ class UpdatePersonalInfoFieldRepository extends BaseRepository
                         }
                     }
                 }
+                if (!empty($validated['remove_options'])) {
+                    foreach ($validated['remove_options'] as $optionId) {
+                        $option = PersonalInfoFieldOption::where('field_version_id', $latestVersion->id)->where('id', $optionId)->first();
+                        if (!$option) {
+                            throw new \InvalidArgumentException('The specified option does not exist for the latest version of this field.');
+                        }
+                        $nestedFields = PersonalInfoFieldVersion::where('required_with_option_id', $optionId)->get();
+                        foreach ($nestedFields as $nestedField) {
+                            $nestedField->update([
+                                'required_with_field_value' => null
+                            ]);
+                        }
+                        $option->delete();
+                    }
+                }
             } catch (\Exception $e) {
                 DB::rollBack();
                 return $this->error('Failed to update personal info field options.', 500, $e->getMessage());

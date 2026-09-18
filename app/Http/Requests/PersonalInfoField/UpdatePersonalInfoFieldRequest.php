@@ -46,6 +46,7 @@ class UpdatePersonalInfoFieldRequest extends FormRequest
                 }
             }],
             'new_options.*' => 'required_with:options|string|max:255',
+            'remove_options.*' => ['sometimes', 'integer', 'exists:personal_info_field_options,id'],
             'is_required' => 'sometimes|boolean',
             'required_with_field_id' => ['sometimes', 'nullable', 'integer', 'exists:personal_info_fields,id', function ($attribute, $value, $fail) {
                 if ($this->is_required && $value) {
