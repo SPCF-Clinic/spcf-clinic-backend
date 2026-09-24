@@ -24,12 +24,12 @@ class ActivityLog extends Model
 
     public function performedBy()
     {
-        return $this->belongsTo(User::class, 'performed_by');
+        return $this->belongsTo(User::class, 'performed_by')->withTrashed();
     }
 
     public function performedFor()
     {
-        return $this->belongsTo(User::class, 'performed_for');
+        return $this->belongsTo(User::class, 'performed_for')->withTrashed();
     }
 
     public function item()

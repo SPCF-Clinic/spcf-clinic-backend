@@ -26,12 +26,12 @@ class DispensedItem extends Model
 
     public function dispensedBy()
     {
-        return $this->belongsTo(User::class, 'dispensed_by');
+        return $this->belongsTo(User::class, 'dispensed_by')->withTrashed();
     }
 
     public function dispensedTo()
     {
-        return $this->belongsTo(User::class, 'dispensed_to');
+        return $this->belongsTo(User::class, 'dispensed_to')->withTrashed();
     }
 
     public function checkIn()
