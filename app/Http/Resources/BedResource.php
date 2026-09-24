@@ -25,6 +25,7 @@ class BedResource extends JsonResource
             'current_occupant' => $this->currentCheckIn ? [
                 'user_id' => $this->currentCheckIn->user_id,
                 'occupant_name' => $this->currentCheckIn->user->getStandardNameAttribute(),
+                'reason_for_visit' => $this->currentCheckIn->reason_for_visit,
             ] : null,
         ];
     }
