@@ -91,7 +91,7 @@ class UpdateCheckInRepository extends BaseRepository
             if (isset($validated['bed_id'])) {
                 $newBed = Bed::find($validated['bed_id']);
                 if ($newBed) {
-                    if ($checkIn->bed) {
+                    if ($checkIn->currentBed) {
                         return $this->error('User is already assigned to a bed. Please unassign the current bed first.', 400);
                     }
                     if ($newBed->status === 'Occupied') {
