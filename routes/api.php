@@ -47,10 +47,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('medical-history-fields/{field}', [MedicalHistoryFieldController::class, 'destroy']);
     Route::apiResource('medical-history-fields', MedicalHistoryFieldController::class)->except(['update', 'destroy', 'index']);
 
-    Route::get('students/{student}/check-ins', [StudentController::class, 'indexCheckIns']);
-    Route::put('students/{student}/personal-info', [StudentInfoController::class, 'updatePersonalInfo']);
-    Route::put('students/{student}/medical-history', [StudentInfoController::class, 'updateMedicalHistory']);
-    Route::apiResource('students', StudentController::class)->only(['index', 'show']);
+    Route::get('students/{student}/check-ins', [StudentController::class, 'indexCheckIns'])->withTrashed();
+    Route::put('students/{student}/personal-info', [StudentInfoController::class, 'updatePersonalInfo'])->withTrashed();
+    Route::put('students/{student}/medical-history', [StudentInfoController::class, 'updateMedicalHistory'])->withTrashed();
+    Route::apiResource('students', StudentController::class)->only(['index', 'show', 'update'])->withTrashed();
 
     Route::get('enums/form-field-types', [EnumController::class, 'formFieldTypes']);
 

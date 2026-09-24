@@ -14,16 +14,17 @@ use Spatie\Permission\Traits\HasRoles;
 use App\Traits\HasName;
 use App\Traits\HasAttribute;
 use App\Traits\SearchableByFullName;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'username',
-    'password'
+    'password',
 ])]
-#[Hidden(['password', 'remember_token', 'created_at', 'updated_at'])]
+#[Hidden(['password', 'remember_token', 'created_at', 'updated_at', 'deleted_at'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, HasName, HasAttribute, SearchableByFullName;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, HasName, HasAttribute, SearchableByFullName, SoftDeletes;
 
     /**
      * Get the attributes that should be cast.
