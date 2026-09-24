@@ -14,7 +14,9 @@ class IndexStudentRepository extends BaseRepository
         $students = User::role('Student')
             ->when($request->student_id, function ($query, $student_id) {
                 return $query->where('username', $student_id);
-            })->paginate($perPage);
+            })
+            ->withTrashed()
+            ->paginate($perPage);
 
         $paginationData = $this->pagePaginationData($students);
 

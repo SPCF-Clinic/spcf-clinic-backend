@@ -7,6 +7,7 @@ use App\Models\{
     CheckIn,
     Bed,
     ActivityLog,
+    User,
 };
 use Carbon\Carbon;
 use App\Http\Resources\CheckInResource;
@@ -17,6 +18,11 @@ class StoreCheckInRepository extends BaseRepository
 {
     public function execute($request){
         $validated = $request->validated();
+
+        $student = User::withTrashed()->find($validated['user_id'] ?? null);
+        if ($student && $student->trashed()) {
+            return $this->error('Cannot check in an archived student.', 400);
+        }
 
         if (CheckIn::where('user_id', $validated['user_id'])->where('status', 'Checked In')->exists()) {
             return $this->error('Student is already checked in.', 400);

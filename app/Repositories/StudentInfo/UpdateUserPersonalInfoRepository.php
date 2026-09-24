@@ -26,6 +26,13 @@ class UpdateUserPersonalInfoRepository extends BaseRepository
     {
         $validated = $request->validated();
 
+        if ($student && $student->trashed()) {
+            return $this->error(
+                'Cannot update personal info for an archived student.',
+                400
+            );
+        }
+
         if ($validated['form_version'] !== FormVersion::compute(PersonalInfoField::class)) {
             return $this->error(
                 'This form has changed since you loaded it. Please refresh the page and try again.',

@@ -7,6 +7,7 @@ use App\Models\{
     Item,
     DispensedItem,
     ActivityLog,
+    User,
 };
 use Illuminate\Support\Facades\DB;
 
@@ -16,6 +17,11 @@ class DispenseItemRepository extends BaseRepository
         DB::beginTransaction();
 
         $validated = $request->validated();
+
+        $dispensedTo = User::withTrashed()->find($validated['dispensed_to'] ?? null);
+        if ($dispensedTo && $dispensedTo->trashed()) {
+            return $this->error('Cannot dispense item to an archived user', 400);
+        }
 
         $item = Item::find($validated['item_id']);
         if (!$item) {

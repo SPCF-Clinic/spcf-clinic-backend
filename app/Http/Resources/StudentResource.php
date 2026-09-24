@@ -33,6 +33,7 @@ class StudentResource extends JsonResource
             'course' => $course,
             'age' => $age,
             'sex' => $sex,
+            'status' => $this->trashed() ? 'Archived' : 'Active',
         ];
     }
 }

@@ -25,6 +25,13 @@ class UpdateUserMedicalHistoryRepository extends BaseRepository
     {
         $validated = $request->validated();
 
+        if ($student && $student->trashed()) {
+            return $this->error(
+                'Cannot update medical history for an archived student.',
+                400
+            );
+        }
+
         if ($validated['form_version'] !== FormVersion::compute(MedicalHistoryField::class)) {
             return $this->error(
                 'This form has changed since you loaded it. Please refresh the page and try again.',

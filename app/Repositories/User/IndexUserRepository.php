@@ -17,7 +17,7 @@ class IndexUserRepository extends BaseRepository
             'search' => 'sometimes|nullable|string|max:255',
         ]);
 
-        $query = User::query();
+        $query = User::query()->withTrashed();
 
         if ($request->filled('search')) {
             $search = $request->search;
