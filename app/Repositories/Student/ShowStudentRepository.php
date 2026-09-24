@@ -76,6 +76,7 @@ class ShowStudentRepository extends BaseRepository
 
         return [
             'id' => $student->id,
+            'status' => $student->deleted_at ? 'Archived' : 'Active',
             'full_name' => $student->hasName() ? $student->getFullNameAttribute() : null,
             'username' => $student->username,
             'check_in' => [
