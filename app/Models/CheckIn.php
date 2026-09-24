@@ -8,7 +8,8 @@ class CheckIn extends Model
 {
     protected $fillable = [
         'user_id',
-        'bed_id',
+        'bed_id', // for historical data viewing; never set to null
+        'current_bed_id', // for current bed assignment; set to null when checked out or unassigned
         'reason_for_visit',
         'check_in_time',
         'check_out_time',
@@ -29,6 +30,11 @@ class CheckIn extends Model
     public function bed()
     {
         return $this->belongsTo(Bed::class, 'bed_id');
+    }
+
+    public function currentBed()
+    {
+        return $this->belongsTo(Bed::class, 'current_bed_id');
     }
 
     public function dispensedItems()

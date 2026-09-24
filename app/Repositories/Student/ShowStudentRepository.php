@@ -81,7 +81,7 @@ class ShowStudentRepository extends BaseRepository
             'check_in' => [
                 'id' => $student->latestCheckIn?->id,
                 'status' => $student->latestCheckIn?->status === 'Checked In' ? 'In Clinic' : 'Not In Clinic',
-                'bed' => $student->latestCheckIn?->bed?->bed_number,
+                'bed' => $student->latestCheckIn?->currentBed?->bed_number,
             ],
             'personal_info' => StudentPersonalInfoFieldResource::collection($personalInfoFields, $personalInfoAnswers),
             'medical_history' => StudentMedicalHistoryFieldResource::collection($medicalHistoryFields, $medicalHistoryAnswers),

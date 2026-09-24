@@ -35,6 +35,7 @@ class UpdateCheckInRepository extends BaseRepository
         try {
             if (isset($validated['check_out']) && $validated['check_out']) {
                 $checkIn->update([
+                    'current_bed_id' => null,
                     'check_out_time' => Carbon::now(),
                     'status' => 'Checked Out',
                 ]);
@@ -63,6 +64,10 @@ class UpdateCheckInRepository extends BaseRepository
 
             if (isset($validated['unassign_bed'])) {
                 if ($checkIn->bed) {
+                    $checkIn->update([
+                        'current_bed_id' => null,
+                    ]);
+
                     $checkIn->bed->update([
                         'status' => 'Empty',
                         'check_in_id' => null,
@@ -101,7 +106,8 @@ class UpdateCheckInRepository extends BaseRepository
                     ]);
 
                     $checkIn->update([
-                        'bed_id' => $newBed->id,
+                        'current_bed_id' => $newBed->id,
+                        'bed_id' => $newBed->id, // Update the historical bed assignment as well
                     ]);
 
                     broadcast(new BedTimerStarted($newBed->id, $newBed->timer_started_at, $newBed->timer_expires_at));

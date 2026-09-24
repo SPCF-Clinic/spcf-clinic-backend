@@ -25,7 +25,7 @@ class ShowCheckInRepository extends BaseRepository
             'check_out_time' => $checkIn->check_out_time ?? null,
             'reason_for_visit' => $checkIn->reason_for_visit,
             'remarks' => $checkIn->remarks,
-            'bed_id' => $checkIn->bed->bed_number ?? null,
+            'bed_id' => $checkIn->check_out_time ? $checkIn->bed_id : $checkIn->current_bed_id,
             'items_dispensed' => $checkIn->dispensedItems->map(function ($dispensedItem) {
                 return [
                     'item_name' => $dispensedItem->item->name,

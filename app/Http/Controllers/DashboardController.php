@@ -27,7 +27,7 @@ class DashboardController extends Controller
                     'id' => $checkIn->id,
                     'student_id' => $checkIn->user->username,
                     'name' => $checkIn->user->hasName() ? $checkIn->user->getStandardNameAttribute() : null,
-                    'bed_id' => $checkIn->bed->bed_number ?? null,
+                    'bed_id' => $checkIn->current_bed_id ? $checkIn->currentBed->bed_number : null,
                     'check_in_time' => $checkIn->check_in_time,
                 ];
             });

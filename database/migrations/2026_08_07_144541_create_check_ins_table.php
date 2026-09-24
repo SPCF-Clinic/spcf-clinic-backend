@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('bed_id')->nullable()->constrained('beds')->onDelete('set null');
+            $table->foreignId('current_bed_id')->nullable()->constrained('beds')->onDelete('set null');
             $table->string('reason_for_visit');
             $table->timestamp('check_in_time')->nullable();
             $table->timestamp('check_out_time')->nullable();

@@ -41,6 +41,7 @@ class StoreCheckInRepository extends BaseRepository
         $checkIn = CheckIn::create([
             'user_id' => $validated['user_id'],
             'bed_id' => $validated['bed_id'] ?? null,
+            'current_bed_id' => $validated['bed_id'] ?? null,
             'reason_for_visit' => $validated['reason_for_visit'],
             'check_in_time' => Carbon::now(),
             'check_out_time' => null,
