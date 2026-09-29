@@ -16,6 +16,7 @@ class ShowCheckInRepository extends BaseRepository
         
         $checkInData = [
             'id' => $checkIn->id,
+            'user_id' => $checkIn->user_id,
             'name' => $checkIn->user->getStandardNameAttribute(),
             'student_number' => $checkIn->user->username,
             'grade_level' => $gradeLevel,
