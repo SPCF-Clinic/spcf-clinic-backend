@@ -3,40 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\{
-    CheckIn,
-    User,
-};
+use App\Repositories\Dashboard\IndexDashboardRepository;
 
 class DashboardController extends Controller
 {
+    protected $index;
+
+    public function __construct(IndexDashboardRepository $index)
+    {
+        $this->index = $index;
+    }
+
     public function index()
     {
-        if (!auth()->user()->hasRole(['Admin', 'Super Admin'])) {
-            return $this->error('Unauthorized', 403);
-        }
-        $currentlyInClinicCount = CheckIn::where('status', 'Checked In')->count();
-        $totalStudents = User::role('Student')->count();
-        $totalVisits = CheckIn::count();
-
-        $currentlyInClinic = CheckIn::with('user')
-            ->where('status', 'Checked In')
-            ->get()
-            ->map(function ($checkIn) {
-                return [
-                    'id' => $checkIn->id,
-                    'student_id' => $checkIn->user->username,
-                    'name' => $checkIn->user->hasName() ? $checkIn->user->getStandardNameAttribute() : null,
-                    'bed_id' => $checkIn->current_bed_id ? $checkIn->currentBed->bed_number : null,
-                    'check_in_time' => $checkIn->check_in_time,
-                ];
-            });
-
-        return $this->success('Dashboard data retrieved successfully.', [
-            'currently_in_clinic_count' => $currentlyInClinicCount,
-            'total_students' => $totalStudents,
-            'total_visits' => $totalVisits,
-            'currently_in_clinic' => $currentlyInClinic,
-        ], 200);
+        return $this->index->execute();
     }
 }

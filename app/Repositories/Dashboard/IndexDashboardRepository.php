@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Repositories\Dashboard;
+
+use App\Repositories\BaseRepository;
+use App\Models\{
+    CheckIn,
+    User,
+};
+
+class IndexDashboardRepository extends BaseRepository
+{
+    public function execute(){
+        if (!auth()->user()->hasRole(['Admin', 'Super Admin'])) {
+            return $this->error('Unauthorized', 403);
+        }
+        $currentlyInClinicCount = CheckIn::where('status', 'Checked In')->count();
+        $totalStudents = User::role('Student')->count();
+        $totalVisits = CheckIn::count();
+
+        $currentlyInClinic = CheckIn::with('user')
+            ->where('status', 'Checked In')
+            ->get()
+            ->map(function ($checkIn) {
+                return [
+                    'id' => $checkIn->id,
+                    'student_id' => $checkIn->user->username,
+                    'name' => $checkIn->user->hasName() ? $checkIn->user->getStandardNameAttribute() : null,
+                    'bed_id' => $checkIn->current_bed_id ? $checkIn->currentBed->bed_number : null,
+                    'check_in_time' => $checkIn->check_in_time,
+                ];
+            });
+
+        return $this->success('Dashboard data retrieved successfully.', [
+            'currently_in_clinic_count' => $currentlyInClinicCount,
+            'total_students' => $totalStudents,
+            'total_visits' => $totalVisits,
+            'currently_in_clinic' => $currentlyInClinic,
+        ], 200);
+    }
+}
