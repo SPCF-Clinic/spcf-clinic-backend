@@ -53,6 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('students', StudentController::class)->only(['index', 'show', 'update'])->withTrashed();
 
     Route::get('enums/form-field-types', [EnumController::class, 'formFieldTypes']);
+    Route::get('enums/check-ins', [EnumController::class, 'checkInEnums']);
 
     Route::apiResource('items', ItemController::class);
     Route::post('dispense-item', [DispensedItemController::class, 'dispenseItem']);
