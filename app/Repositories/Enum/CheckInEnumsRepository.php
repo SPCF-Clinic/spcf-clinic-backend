@@ -10,7 +10,7 @@ class CheckInEnumsRepository extends BaseRepository
 {
     public function execute(){
         $checkIns = CheckIn::where('status', 'Checked In')
-            ->where('bed_id', null)
+            ->where('current_bed_id', null)
             ->get();
 
         return $this->success('Successfully retrieved check-in enums.', CheckInResource::collection($checkIns), 200);
