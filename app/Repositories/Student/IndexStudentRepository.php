@@ -5,12 +5,14 @@ namespace App\Repositories\Student;
 use App\Repositories\BaseRepository;
 use App\Models\User;
 use App\Http\Resources\StudentResource;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class IndexStudentRepository extends BaseRepository
 {
     public function execute($request)
     {
         $perPage = $request->input('per_page', 20);
+        $page = $request->input('page', 1);
         $sortBy = $request->input('sort_by') ?: 'id';
         $sortOrder = $request->input('sort_order') ?: 'asc';
         $students = User::role('Student')
@@ -18,30 +20,49 @@ class IndexStudentRepository extends BaseRepository
                 return $query->where('username', $student_id);
             })
             ->withTrashed()
-            ->paginate($perPage);
+            ->get();
 
-        $paginationData = $this->pagePaginationData($students);
-        $students = StudentResource::collection($students);
+        $students = $students->map(
+            fn ($student) => new StudentResource($student)
+        );
 
-        $students->collection = $students->collection
-            ->sortBy(function (StudentResource $student) use ($request, $sortBy) {
-                $studentData = $student->toArray($request);
+        $students = $students
+            ->sortBy(
+                function (StudentResource $student) use ($request, $sortBy) {
+                    $studentData = $student->toArray($request);
 
-                if ($sortBy === 'student_id') {
-                    return $studentData['username'];
-                }
+                    if ($sortBy === 'student_id') {
+                        return $studentData['username'];
+                    }
 
-                if ($sortBy === 'year_level') {
-                    return ($studentData['year_level'] ?? '') . ($studentData['grade_level'] ?? '');
-                }
+                    if ($sortBy === 'year_level') {
+                        return ($studentData['year_level'] ?? '')
+                            . ($studentData['grade_level'] ?? '');
+                    }
 
-                return $studentData[$sortBy] ?? null;
-            }, SORT_NATURAL | SORT_FLAG_CASE, $sortOrder === 'desc')
+                    return $studentData[$sortBy] ?? null;
+                },
+                SORT_NATURAL | SORT_FLAG_CASE,
+                $sortOrder === 'desc'
+            )
             ->values();
 
+        $paginator = new LengthAwarePaginator(
+            $students->forPage($page, $perPage)->values(),
+            $students->count(),
+            $perPage,
+            $page,
+            [
+                'path' => $request->url(),
+                'query' => $request->query(),
+            ]
+        );
+
+        $paginationData = $this->pagePaginationData($paginator);
+
         return $this->success('Students retrieved successfully.', [
-            'students' => $students,
-            'pagination' => $paginationData
+            'students' => StudentResource::collection($paginator),
+            'pagination' => $paginationData,
         ], 200);
     }
 }
