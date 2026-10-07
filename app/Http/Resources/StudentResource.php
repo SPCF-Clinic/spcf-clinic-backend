@@ -24,6 +24,24 @@ class StudentResource extends JsonResource
 
         $sex = $this->hasPersonalInfoValue(5) ? $this->getPersonalInfoValue(5) : null;
 
+        $latestCheckIn = $this->latestCheckIn ? $this->latestCheckIn : null;
+        $checkInStatus = $latestCheckIn ? $latestCheckIn->status : null;
+        $currentBed = $latestCheckIn && $latestCheckIn->currentBed ? $latestCheckIn->currentBed : null;
+
+        if ($latestCheckIn && $checkInStatus === 'Checked In') {
+            if ($currentBed) {
+                $status = $currentBed->bed_number;
+            } else {
+                $status = 'In Clinic';
+            }
+        } elseif ($latestCheckIn === null || $checkInStatus === 'Checked Out') {
+            $status = 'Not In Clinic';
+        }
+
+        if ($this->trashed()) {
+            $status = 'Archived';
+        }
+
         return [
             'id' => $this->id,
             'username' => $this->username,
@@ -33,7 +51,7 @@ class StudentResource extends JsonResource
             'course' => $course,
             'age' => $age,
             'sex' => $sex,
-            'status' => $this->trashed() ? 'Archived' : 'Active',
+            'status' => $status,
         ];
     }
 }
