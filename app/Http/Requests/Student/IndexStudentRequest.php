@@ -24,6 +24,8 @@ class IndexStudentRequest extends FormRequest
     {
         return [
             'student_id' => 'sometimes|nullable|string|max:255',
+            'sort_by' => 'sometimes|nullable|string|in:student_id,name,year_level,age,sex,status',
+            'sort_order' => 'sometimes|nullable|string|in:asc,desc',
             'per_page' => 'sometimes|nullable|integer|min:1|max:100',
             'page' => 'sometimes|nullable|integer|min:1',
         ];
