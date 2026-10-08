@@ -12,6 +12,7 @@ class Bed extends Model
         'status',
         'timer_started_at',
         'timer_paused_at',
+        'timer_resumed_at',
         'timer_expires_at',
         'timer_ended_broadcast_at'
     ];
@@ -19,6 +20,7 @@ class Bed extends Model
     protected $casts = [
         'timer_started_at' => 'datetime',
         'timer_paused_at' => 'datetime',
+        'timer_resumed_at' => 'datetime',
         'timer_expires_at' => 'datetime',
         'timer_ended_broadcast_at' => 'datetime',
     ];

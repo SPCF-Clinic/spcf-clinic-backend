@@ -47,6 +47,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'timer_expires_at' => null,
                         'timer_ended_broadcast_at' => null,
                         'timer_paused_at' => null,
+                        'timer_resumed_at' => null,
                     ]);
 
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
@@ -75,6 +76,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'timer_expires_at' => null,
                         'timer_ended_broadcast_at' => null,
                         'timer_paused_at' => null,
+                        'timer_resumed_at' => null,
                     ]);
 
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
@@ -179,6 +181,7 @@ class UpdateCheckInRepository extends BaseRepository
 
                     $checkIn->bed->update([
                         'timer_paused_at' => null,
+                        'timer_resumed_at' => Carbon::now(),
                     ]);
 
                     ActivityLog::create([
@@ -187,7 +190,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'performed_for' => $checkIn->user_id,
                     ]);
 
-                    broadcast(new BedTimerResumed($checkIn->bed->id, $checkIn->bed->timer_expires_at));
+                    broadcast(new BedTimerResumed($checkIn->bed->id, $checkIn->bed->timer_resumed_at, $checkIn->bed->timer_expires_at));
                 }
             }
 

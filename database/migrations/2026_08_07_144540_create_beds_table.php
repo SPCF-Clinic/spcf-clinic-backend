@@ -17,6 +17,7 @@ return new class extends Migration
             $table->enum('status', ['Empty', 'Occupied'])->default('Empty');
             $table->timestamp('timer_started_at')->nullable();
             $table->timestamp('timer_paused_at')->nullable();
+            $table->timestamp('timer_resumed_at')->nullable();
             $table->timestamp('timer_expires_at')->nullable();
             $table->timestamp('timer_ended_broadcast_at')->nullable();
             $table->timestamps();

@@ -14,6 +14,7 @@ class BedTimerResumed implements ShouldBroadcastNow
 
     public function __construct(
         public int $bedId,
+        public ?string $timerResumedAt = null,
         public ?string $timerExpiresAt = null,
     ) {}
 
@@ -31,6 +32,7 @@ class BedTimerResumed implements ShouldBroadcastNow
     {
         return [
             'bed_id' => $this->bedId,
+            'timer_resumed_at' => $this->timerResumedAt,
             'timer_expires_at' => $this->timerExpiresAt,
         ];
     }
