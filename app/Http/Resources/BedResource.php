@@ -26,7 +26,7 @@ class BedResource extends JsonResource
             'timer_resumed_at' => $this->timer_resumed_at ? Carbon::parse($this->timer_resumed_at)->format('Y-m-d H:i:s') : null,
             'current_occupant' => $this->currentCheckIn ? [
                 'user_id' => $this->currentCheckIn->user_id,
-                'occupant_name' => $this->currentCheckIn->user->getStandardNameAttribute(),
+                'occupant_name' => $this->currentCheckIn->user->getFullNameAttribute(),
                 'reason_for_visit' => $this->currentCheckIn->reason_for_visit,
             ] : null,
         ];

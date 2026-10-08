@@ -4,6 +4,7 @@ namespace App\Http\Requests\CheckIn;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
 
 class UpdateCheckInRequest extends FormRequest
 {
@@ -28,9 +29,14 @@ class UpdateCheckInRequest extends FormRequest
             'bed_id' => ['sometimes', 'nullable', 'exists:beds,id'],
             'dispensed_item_id' => ['sometimes', 'nullable', 'exists:items,id'],
             'dispensed_item_quantity' => ['sometimes', 'nullable', 'integer', 'min:1'],
-            'timer_expires_at' => ['sometimes', 'nullable', 'date', 'after:now', function ($attribute, $value, $fail) {
+            'timer_expires_at' => ['sometimes', 'nullable', 'date', function ($attribute, $value, $fail) {
                 if ($this->input('bed_id') && (!$value || $value === null || $value === '')) {
                     $fail('The timer expires at field is required when assigning a bed.');
+                }
+                $checkIn = $this->route('check_in');
+                $paused = $checkIn?->bed?->timer_paused_at !== null;
+                if (!$paused && $value && Carbon::parse($value)->isPast()) {
+                    $fail('The timer expires at field must be a date after now.');
                 }
             }],
             'pause_timer' => ['sometimes', 'nullable', 'boolean', function ($attribute, $value, $fail) {
