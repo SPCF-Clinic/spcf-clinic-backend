@@ -35,7 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index']);
 
-    Route::get('users', [UserController::class, 'index']);
+    Route::apiResource('users', UserController::class)->only(['index', 'update']);
 
     Route::post('personal-info-fields/reorder', [PersonalInfoFieldController::class, 'reorderForm']);
     Route::put('personal-info-fields/{field}', [PersonalInfoFieldController::class, 'update']);
@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('students/{student}/check-ins', [StudentController::class, 'indexCheckIns'])->withTrashed();
     Route::put('students/{student}/personal-info', [StudentInfoController::class, 'updatePersonalInfo'])->withTrashed();
     Route::put('students/{student}/medical-history', [StudentInfoController::class, 'updateMedicalHistory'])->withTrashed();
-    Route::apiResource('students', StudentController::class)->only(['index', 'show', 'update'])->withTrashed();
+    Route::apiResource('students', StudentController::class)->only(['index', 'show'])->withTrashed();
 
     Route::get('enums/form-field-types', [EnumController::class, 'formFieldTypes']);
     Route::get('enums/check-ins', [EnumController::class, 'checkInEnums']);

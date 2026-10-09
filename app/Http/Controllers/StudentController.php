@@ -5,30 +5,26 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Student\{
     IndexStudentRequest,
     IndexStudentCheckInsRequest,
-    UpdateStudentRequest
 };
 use App\Repositories\Student\{
     IndexStudentRepository,
     ShowStudentRepository,
     IndexStudentCheckInsRepository,
-    UpdateStudentRepository
 };
 use App\Models\User;
 
 class StudentController extends Controller
 {
-    protected $index, $show, $indexCheckIns, $update;
+    protected $index, $show, $indexCheckIns;
 
     public function __construct(
         IndexStudentRepository $index,
         ShowStudentRepository $show,
         IndexStudentCheckInsRepository $indexCheckIns,
-        UpdateStudentRepository $update
     ) {
         $this->index = $index;
         $this->show = $show;
         $this->indexCheckIns = $indexCheckIns;
-        $this->update = $update;
     }
 
     public function index(IndexStudentRequest $request)
@@ -49,9 +45,4 @@ class StudentController extends Controller
         return $this->indexCheckIns->execute($request, $student);
     }
 
-    public function update(UpdateStudentRequest $request, User $student)
-    {
-        $this->authorize('update', $student);
-        return $this->update->execute($request, $student);
-    }
 }
