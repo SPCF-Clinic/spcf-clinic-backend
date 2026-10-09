@@ -18,6 +18,8 @@ return new class extends Migration
             $table->timestamp('timer_started_at')->nullable();
             $table->timestamp('timer_paused_at')->nullable();
             $table->timestamp('timer_resumed_at')->nullable();
+            $table->timestamp('timer_effective_started_at')
+                ->nullable();
             $table->timestamp('timer_expires_at')->nullable();
             $table->timestamp('timer_ended_broadcast_at')->nullable();
             $table->timestamps();

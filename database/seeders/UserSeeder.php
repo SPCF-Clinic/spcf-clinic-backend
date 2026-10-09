@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         $personalInfoFields = $this->fieldsByName(PersonalInfoField::class);
         $medicalHistoryFields = $this->fieldsByName(MedicalHistoryField::class);
 
-        $students = ['student1', 'student2', 'student3'];
+        $students = ['student1', 'student2', 'student3', 'student4', 'student5', 'student6', 'student7', 'student8', 'student9', 'student10', 'student11', 'student12', 'student13', 'student14', 'student15', 'student16', 'student17', 'student18', 'student19', 'student20', 'student21', 'student22', 'student23', 'student24', 'student25', 'student26', 'student27', 'student28', 'student29', 'student30'];
         foreach ($students as $student) {
             $studentId = $this->generateStudentId();
 

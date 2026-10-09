@@ -87,6 +87,7 @@ class ShowStudentRepository extends BaseRepository
                     'timer_started_at' => $student->latestCheckIn->currentBed->timer_started_at,
                     'timer_expires_at' => $student->latestCheckIn->currentBed->timer_expires_at,
                     'timer_paused_at' => $student->latestCheckIn->currentBed->timer_paused_at,
+                    'effective_started_at' => $student->latestCheckIn->currentBed->timer_effective_started_at,
                 ]: null,
             ],
             'personal_info' => StudentPersonalInfoFieldResource::collection($personalInfoFields, $personalInfoAnswers),

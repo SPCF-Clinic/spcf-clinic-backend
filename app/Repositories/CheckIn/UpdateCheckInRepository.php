@@ -48,6 +48,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'timer_ended_broadcast_at' => null,
                         'timer_paused_at' => null,
                         'timer_resumed_at' => null,
+                        'timer_effective_started_at' => null,
                     ]);
 
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
@@ -77,6 +78,7 @@ class UpdateCheckInRepository extends BaseRepository
                         'timer_ended_broadcast_at' => null,
                         'timer_paused_at' => null,
                         'timer_resumed_at' => null,
+                        'timer_effective_started_at' => null,
                     ]);
 
                     broadcast(new BedTimerRemoved($checkIn->bed->id));
@@ -105,6 +107,10 @@ class UpdateCheckInRepository extends BaseRepository
                         'check_in_id' => $checkIn->id,
                         'timer_started_at' => Carbon::now(),
                         'timer_expires_at' => $validated['timer_expires_at'],
+                        'timer_paused_at' => null,
+                        'timer_resumed_at' => null,
+                        'timer_ended_broadcast_at' => null,
+                        'timer_effective_started_at' => Carbon::now(),
                     ]);
 
                     $checkIn->update([
@@ -175,6 +181,7 @@ class UpdateCheckInRepository extends BaseRepository
 
                     $checkIn->bed->update([
                         'timer_expires_at' => Carbon::parse($checkIn->bed->timer_expires_at)->addSeconds($offsetTime),
+                        'timer_effective_started_at' => Carbon::parse($checkIn->bed->timer_effective_started_at ?? $checkIn->bed->timer_started_at)->addSeconds($offsetTime),
                     ]);
 
                     // Adjust timer_expires_at first so that the timer doesn't immediately expire after resuming
