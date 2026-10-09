@@ -62,6 +62,7 @@ class StoreCheckInRepository extends BaseRepository
                 'timer_paused_at' => null,
                 'timer_expires_at' => $validated['timer_expires_at'] ?? null,
                 'timer_ended_broadcast_at' => null,
+                'timer_effective_started_at' => Carbon::now(),
             ]);
 
             broadcast(new BedTimerStarted($bed->id, $bed->timer_started_at, $bed->timer_expires_at));

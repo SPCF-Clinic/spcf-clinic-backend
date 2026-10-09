@@ -14,7 +14,8 @@ class Bed extends Model
         'timer_paused_at',
         'timer_resumed_at',
         'timer_expires_at',
-        'timer_ended_broadcast_at'
+        'timer_ended_broadcast_at',
+        'timer_effective_started_at',
     ];
 
     protected $casts = [
@@ -23,6 +24,7 @@ class Bed extends Model
         'timer_resumed_at' => 'datetime',
         'timer_expires_at' => 'datetime',
         'timer_ended_broadcast_at' => 'datetime',
+        'timer_effective_started_at' => 'datetime',
     ];
 
     protected $hidden = [
