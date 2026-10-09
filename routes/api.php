@@ -35,7 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index']);
 
-    Route::apiResource('users', UserController::class)->only(['index', 'update']);
+    Route::get('users', [UserController::class, 'index']);
+    Route::put('users/{user}', [UserController::class, 'update'])->withTrashed();
 
     Route::post('personal-info-fields/reorder', [PersonalInfoFieldController::class, 'reorderForm']);
     Route::put('personal-info-fields/{field}', [PersonalInfoFieldController::class, 'update']);

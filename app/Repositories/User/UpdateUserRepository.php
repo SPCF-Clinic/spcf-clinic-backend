@@ -13,6 +13,9 @@ class UpdateUserRepository extends BaseRepository
         $data = $request->validated();
 
         if (isset($data['status'])) {
+            if (!$user->hasRole('Student')) {
+                return $this->error('Only Students can be archived or unarchived.', 400);
+            }
             if (!auth()->user()->hasRole('Super Admin')) {
                 return $this->error('You are not authorized to update the status of a user.', 403);
             }
