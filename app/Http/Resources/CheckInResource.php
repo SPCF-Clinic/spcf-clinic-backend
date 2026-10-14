@@ -22,6 +22,8 @@ class CheckInResource extends JsonResource
         $birthDate = $this->user?->hasPersonalInfoValue(4) ? $this->user->getPersonalInfoValue(4) : null;
         $age = $birthDate ? Carbon::parse($birthDate)->age : null;
 
+        $gender = $this->user?->hasPersonalInfoValue(5) ? $this->user->getPersonalInfoValue(5) : null;
+
         return [
             'id' => $this->id,
             'user' => $this->user ? [
@@ -29,6 +31,7 @@ class CheckInResource extends JsonResource
                 'student_number' => $this->user->username,
                 'name' => $this->user->getFullNameAttribute(),
                 'age' => $age,
+                'gender' => $gender,
                 'grade_level' => $gradeLevel,
                 'year_level' => $yearLevel,
                 'course' => $course,
