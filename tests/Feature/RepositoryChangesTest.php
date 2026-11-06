@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Models\ActivityLog;
 use App\Models\Bed;
 use App\Models\CheckIn;
+use App\Models\PersonalInfoField;
 use App\Models\User;
+use App\Models\UserPersonalInfo;
 use App\Repositories\ActivityLog\IndexActivityLogRepository;
 use App\Repositories\CheckIn\IndexCheckInRepository;
 use App\Repositories\Student\IndexStudentCheckInsRepository;
@@ -51,6 +53,42 @@ class RepositoryChangesTest extends TestCase
             [$sameTimeHigherId->id, $sameTimeLowerId->id, $older->id],
             data_get($this->responseData($response), 'data.check_ins.*.id')
         );
+    }
+
+    public function test_check_ins_can_be_filtered_by_a_date_range(): void
+    {
+        $user = $this->createUser('student-1');
+
+        $before = CheckIn::create([
+            'user_id' => $user->id,
+            'reason_for_visit' => 'Before range',
+            'check_in_time' => '2026-11-05 23:59:59',
+        ]);
+        $inRange = CheckIn::create([
+            'user_id' => $user->id,
+            'reason_for_visit' => 'In range',
+            'check_in_time' => '2026-11-06 12:00:00',
+        ]);
+        $after = CheckIn::create([
+            'user_id' => $user->id,
+            'reason_for_visit' => 'After range',
+            'check_in_time' => '2026-11-07 00:00:00',
+        ]);
+
+        $response = app(IndexCheckInRepository::class)->execute(
+            Request::create('/check-ins', 'GET', [
+                'date_from' => '2026-11-06',
+                'date_to' => '2026-11-06',
+            ])
+        );
+
+        $this->assertSame(200, $response->status());
+        $this->assertSame(
+            [$inRange->id],
+            data_get($this->responseData($response), 'data.check_ins.*.id')
+        );
+        $this->assertNotContains($before->id, data_get($this->responseData($response), 'data.check_ins.*.id'));
+        $this->assertNotContains($after->id, data_get($this->responseData($response), 'data.check_ins.*.id'));
     }
 
     public function test_student_check_ins_are_ordered_newest_first_with_id_as_tie_breaker(): void
@@ -152,6 +190,44 @@ class RepositoryChangesTest extends TestCase
         $this->assertSame(
             [$first->id, $second->id],
             data_get($this->responseData($response), 'data.students.*.id')
+        );
+    }
+
+    public function test_student_lookup_matches_full_name_and_partial_username(): void
+    {
+        $role = Role::create(['name' => 'Student', 'guard_name' => 'web']);
+        $nameMatch = $this->createUser('student-100');
+        $usernameMatch = $this->createUser('student-200');
+        $nameMatch->assignRole($role);
+        $usernameMatch->assignRole($role);
+
+        PersonalInfoField::create(['id' => 1]);
+        PersonalInfoField::create(['id' => 2]);
+        UserPersonalInfo::create([
+            'user_id' => $nameMatch->id,
+            'personal_info_field_id' => 1,
+            'value' => 'Maria',
+        ]);
+        UserPersonalInfo::create([
+            'user_id' => $nameMatch->id,
+            'personal_info_field_id' => 2,
+            'value' => 'Santos',
+        ]);
+
+        $nameResponse = app(IndexStudentRepository::class)->execute(
+            Request::create('/students', 'GET', ['student_id' => 'Maria Santos'])
+        );
+        $usernameResponse = app(IndexStudentRepository::class)->execute(
+            Request::create('/students', 'GET', ['student_id' => '200'])
+        );
+
+        $this->assertSame(
+            [$nameMatch->id],
+            data_get($this->responseData($nameResponse), 'data.students.*.id')
+        );
+        $this->assertSame(
+            [$usernameMatch->id],
+            data_get($this->responseData($usernameResponse), 'data.students.*.id')
         );
     }
 

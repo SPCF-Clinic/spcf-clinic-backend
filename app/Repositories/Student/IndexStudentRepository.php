@@ -26,7 +26,8 @@ class IndexStudentRepository extends BaseRepository
         $query = User::role('Student')
             ->withTrashed()
             ->when($request->student_id, function ($query, $student_id) {
-                return $query->where('users.username', $student_id);
+                return $query->fullNameLike($student_id)
+                    ->orWhere('users.username', 'like', "%{$student_id}%");
             });
 
         // Sort and paginate in the database, then hydrate only the current

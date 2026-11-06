@@ -13,7 +13,7 @@ class BedSeeder extends Seeder
      */
     public function run(): void
     {
-        $beds = 20; // Number of beds to seed
+        $beds = 6; // Number of beds to seed
 
         for ($i = 1; $i <= $beds; $i++) {
             Bed::create([

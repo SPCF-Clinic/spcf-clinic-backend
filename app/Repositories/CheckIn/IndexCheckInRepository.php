@@ -13,6 +13,8 @@ class IndexCheckInRepository extends BaseRepository
             'per_page' => 'sometimes|nullable|integer|min:1|max:100',
             'page' => 'sometimes|nullable|integer|min:1',
             'search' => 'sometimes|nullable|string|max:255',
+            'date_from' => 'sometimes|nullable|date',
+            'date_to' => 'sometimes|nullable|date',
         ]);
 
         $checkIns = CheckIn::with(['user', 'bed']);
@@ -23,6 +25,13 @@ class IndexCheckInRepository extends BaseRepository
             $checkIns->whereHas('user', function ($q) use ($search) {
                     $q->fullNameLike($search);
                 })->orWhere('reason_for_visit', 'like', "%{$search}%");
+        }
+
+        if ($request->filled('date_from')) {
+            $checkIns->whereDate('check_in_time', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $checkIns->whereDate('check_in_time', '<=', $request->date_to);
         }
 
         // Newest first; id breaks ties so pages are stable.
