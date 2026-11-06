@@ -25,7 +25,11 @@ class IndexCheckInRepository extends BaseRepository
                 })->orWhere('reason_for_visit', 'like', "%{$search}%");
         }
 
-        $checkIns = $checkIns->paginate($request->input('per_page', 20));
+        // Newest first; id breaks ties so pages are stable.
+        $checkIns = $checkIns
+            ->orderByDesc('check_in_time')
+            ->orderByDesc('id')
+            ->paginate($request->input('per_page', 20));
 
         $paginationData = $this->pagePaginationData($checkIns);
         $checkIns = CheckInResource::collection($checkIns);

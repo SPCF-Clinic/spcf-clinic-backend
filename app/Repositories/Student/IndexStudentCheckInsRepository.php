@@ -20,7 +20,10 @@ class IndexStudentCheckInsRepository extends BaseRepository
             });
         }
 
-        $checkIns = $checkIns->paginate($perPage);
+        $checkIns = $checkIns
+            ->orderByDesc('check_in_time')
+            ->orderByDesc('id')
+            ->paginate($perPage);
         $paginationData = $this->pagePaginationData($checkIns);
 
         return $this->success('Student check-ins retrieved successfully.', [

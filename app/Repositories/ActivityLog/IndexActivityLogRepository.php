@@ -2,19 +2,22 @@
 
 namespace App\Repositories\ActivityLog;
 
-use App\Repositories\BaseRepository;
-use App\Models\ActivityLog;
 use App\Http\Resources\ActivityLogResource;
+use App\Models\ActivityLog;
+use App\Repositories\BaseRepository;
+use Carbon\Exceptions\InvalidFormatException;
+use Illuminate\Support\Carbon;
 
 class IndexActivityLogRepository extends BaseRepository
 {
-    public function execute($request){
+    public function execute($request)
+    {
         $perPage = $request->input('per_page', 20);
         $query = ActivityLog::query();
 
         $user = auth()->user();
 
-        if (!$user->hasRole('Super Admin')) {
+        if (! $user->hasRole('Super Admin')) {
             $query->whereNotIn('group', ['INVENTORY']);
         }
 
@@ -23,7 +26,16 @@ class IndexActivityLogRepository extends BaseRepository
         }
 
         if ($request->has('date')) {
-            $query->whereDate('created_at', $request->input('date'));
+            // Range instead of whereDate(): DATE(created_at) can't use the created_at index.
+            try {
+                $date = Carbon::make($request->input('date'));
+            } catch (InvalidFormatException) {
+                $date = null;
+            }
+
+            $date
+                ? $query->whereBetween('created_at', [$date->copy()->startOfDay(), $date->copy()->endOfDay()])
+                : $query->whereRaw('0 = 1');
         }
 
         $logs = $query->orderBy('created_at', 'desc')->cursorPaginate($perPage);

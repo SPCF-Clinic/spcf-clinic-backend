@@ -17,7 +17,7 @@ class BedSeeder extends Seeder
 
         for ($i = 1; $i <= $beds; $i++) {
             Bed::create([
-                'bed_number' => 'Bed ' . $i,
+                'bed_number' => 'Bed ' . str_pad($i, 2, '0', STR_PAD_LEFT),
                 'status' => 'Empty',
             ]);
         }
